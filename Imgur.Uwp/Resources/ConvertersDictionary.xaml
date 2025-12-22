@@ -1,0 +1,33 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local1="using:Imgur.Uwp.Converters">
+
+    <local1:BoolNegationConverter x:Key="BoolNegationConverter"/>
+    <local1:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+    <local1:BoolValueConverter x:Key="BoolValueConverter"/>
+    <local1:KiloConverter x:Key="KiloConverter"/>
+    <local1:CoverTypeConverter x:Key="CoverTypeConverter"/>
+    <local1:EqualBoolConverter x:Key="EqualBoolConverter"/>
+    <local1:NullTrueConverter x:Key="NullTrueConverter"/>
+    <local1:EnumToStringConverter x:Key="EnumToStringConverter"/>
+    <local1:StringToURIConverter x:Key="StringToURIConverter"/>
+    <local1:GallerySectionBrushConverter x:Key="GallerySectionBrushConverter"/>
+    <local1:TimestampToElapsedTimeConverter x:Key="TimestampToElapsedTimeConverter" />
+    <local1:ItemCountToMaxHeightConverter x:Key="ItemCountToMaxHeightConverter" />
+    <local1:EmbedURIConverter x:Key="EmbedURIConverter" />
+    <local1:LoginInterceptorEnumToStringConverter x:Key="LoginInterceptorEnumToStringConverter"/>
+
+
+    <local1:ValueConverterGroup x:Key="EqualtoVisibilityConverter">
+        <local1:EqualBoolConverter/>
+        <local1:BoolVisibilityConverter/>
+    </local1:ValueConverterGroup>
+
+    <local1:ValueConverterGroup x:Key="VisibilityNegationConverter">
+        <local1:BoolNegationConverter/>
+        <local1:BoolVisibilityConverter/>
+    </local1:ValueConverterGroup>
+    
+    
+</ResourceDictionary>

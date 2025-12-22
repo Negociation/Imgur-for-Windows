@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Name="NavigationViewItemControl"
+    x:Class="Imgur.Uwp.Controls.NavigationViewItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <Grid>
+        <Button x:Name="NavigationButton" Style="{StaticResource GlowUnSelectedButtonStyle}" Margin="8,4,8,4" Height="42" Windows10version1809:CornerRadius="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" CommandParameter="{Binding CommandParameter,ElementName=NavigationViewItemControl}" Command="{Binding Command,ElementName=NavigationViewItemControl}">
+            <Grid Opacity="0.9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="38" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <FontIcon x:Name="ItemIcon" Visibility="Visible"  Grid.Column="0" FontSize="20" Width="38"  FontWeight="Normal"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{Binding FontIcon, ElementName=NavigationViewItemControl}" Foreground="#7b7b7b" Opacity="0.9" Glyph="{Binding Icon,ElementName=NavigationViewItemControl,FallbackValue = '&#xE7FC;'}"/>
+                <TextBlock x:Name="ItemText" Grid.Column="1" Text="{Binding Text,ElementName=NavigationViewItemControl}" Margin="10,0,10,0"  FontWeight="SemiBold" FontSize="14" Foreground="White" Opacity="0.7"/>
+            </Grid>
+        </Button>
+
+        <toolkit:DropShadowPanel Grid.Column="0" Margin="0,5,0,5" x:Name="SelectedTag"   OffsetX="0" BlurRadius="5"  OffsetY="0" ShadowOpacity="1" Color="#01b96b"  Visibility="{Binding IsSelected,ElementName=NavigationViewItemControl,Mode=TwoWay}" HorizontalAlignment="Left">
+            <Rectangle  Fill="{StaticResource SystemControlHighlightAltListAccentLowBrush}" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Left"  RadiusX="2" RadiusY="2"></Rectangle>
+        </toolkit:DropShadowPanel>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Uid="NavigationViewItemTriggers">
+
+                <VisualState x:Name="SelectedState">
+                    <VisualState.Setters>
+                        <Setter Target="SelectedTag.Visibility" Value="Visible" />
+                        <Setter Target="NavigationButton.Style" Value="{StaticResource GlowSelectedButtonStyle}" />
+                        <Setter Target="ItemIcon.Foreground" Value="#22ce92" />
+                        <Setter Target="ItemText.Foreground" Value="#22ce92" />
+                        <Setter Target="ItemText.Opacity" Value="1" />
+                        <Setter Target="ItemIcon.Opacity" Value="1" />
+                    </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard>
+
+                        </Storyboard>
+                    </VisualState.Storyboard>
+                </VisualState>
+
+                <VisualState x:Name="UnselectedState">
+                    <VisualState.Setters>
+                        <Setter Target="SelectedTag.Visibility" Value="Collapsed" />
+                        <Setter Target="ItemIcon.Foreground" Value="#7b7b7b" />
+                        <Setter Target="ItemText.Foreground" Value="White" />
+                        <Setter Target="NavigationButton.Style" Value="{StaticResource GlowUnSelectedButtonStyle}" />
+                    </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard>
+
+                        </Storyboard>
+                    </VisualState.Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+
+</UserControl>

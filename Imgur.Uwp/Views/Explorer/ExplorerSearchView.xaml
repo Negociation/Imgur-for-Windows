@@ -1,0 +1,226 @@
+﻿<Page
+    x:Name="ExplorerSearchViewPage"
+    x:Class="Imgur.Uwp.Views.Explorer.ExplorerSearchView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:Imgur.Uwp.Controls"
+    xmlns:mediavm="using:Imgur.ViewModels.Media">
+
+    <Grid>
+
+        <!-- BACKGROUND -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.4">
+                <GradientStop Color="#292c30" Offset="0.6"/>
+                <GradientStop Color="#073169" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Uid="MediaViewTriggers">
+                <VisualState x:Name="RandomMediaGrid_Small">
+                    <VisualState.Setters>
+                        <Setter Target="RandomContentRepeatControl.DesiredWidth" Value="250" />
+                        <Setter Target="RandomContentRepeatControl.ItemHeight" Value="180" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="RandomMediaGrid_Medium">
+                    <VisualState.Setters>
+                        <Setter Target="RandomContentRepeatControl.DesiredWidth" Value="300" />
+                        <Setter Target="RandomContentRepeatControl.ItemHeight" Value="220" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="RandomMediaGrid_Larger">
+                    <VisualState.Setters>
+                        <Setter Target="RandomContentRepeatControl.DesiredWidth" Value="400" />
+                        <Setter Target="RandomContentRepeatControl.ItemHeight" Value="290" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Uid="StaffPicksTriggers">
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="500" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StaffPicksSubheader.Margin" Value="5,10,10,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+        <!-- LOADING -->
+        <ProgressRing
+            IsActive="{Binding Loading}"
+            Width="80"
+            Height="80"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"/>
+
+
+        <ScrollViewer Visibility="{Binding IsSearchMode}" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="5" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- HEADER -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,5,0,0" Grid.Row="0" Opacity="0.8">
+                    <Button Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="5,0,0,0" Width="34" Height="34" Background="Transparent" Opacity="0.9">
+                        <FontIcon Visibility="Visible" Grid.Column="0" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
+                    </Button>
+                    <TextBlock x:Uid="QueryTitle" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22">Search Query:</TextBlock>
+                    <TextBlock FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22" Text="{Binding SearchQuery}"/>
+                </StackPanel>
+
+                <!-- TAGS / OUTROS (mantidos) -->
+                <StackPanel Grid.Row="1" Margin="0,20,0,0"/>
+
+            </Grid>
+        </ScrollViewer>
+
+        <!-- NOTHING FOUND FOR SEARCH MODE -->
+        <Grid Visibility="{Binding IsSearchMode}">
+            <Grid x:Name="NotFoundRootGrid" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}">
+                <Grid  Visibility="{Binding NothingFound}" VerticalAlignment="Stretch">
+                    <Viewbox Stretch="None">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image MaxWidth="250" Source="ms-appx:///Assets/App/purr.png"/>
+                            <TextBlock TextAlignment="Center">Well this is purr-plexing.</TextBlock>
+                            <TextBlock TextAlignment="Center">There is nothing here.</TextBlock>
+                        </StackPanel>
+                    </Viewbox>
+                </Grid>
+            </Grid>
+
+        </Grid>
+        
+        
+        <!-- ================= EXPLORER MODE ================= -->
+        <ScrollViewer
+            Visibility="{Binding IsExplorerMode}"
+            VerticalScrollBarVisibility="Auto">
+
+            <Grid Margin="5" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Header -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Explorer Staff Picks Subheader -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Staff Picks Content -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Explorer Random SubHeader -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Random Grid -->
+                </Grid.RowDefinitions>
+
+                <!-- HEADER -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal"  HorizontalAlignment="Stretch" Margin="0,5,0,20" Opacity="0.8">
+                    <Button Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="5,0,0,0" Width="34" Height="34" Background="Transparent" Opacity="0.9" >
+                        <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
+                    </Button>
+                    <TextBlock x:Uid="ExploreContent" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22">Explore New Content</TextBlock>
+                </StackPanel>
+                
+                <!-- STAFF PICKS SUB-HEADER-->
+                <Grid x:Name="StaffPicksSubheader" Margin="5,10,5,0" VerticalAlignment="Center" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Grid.Row="0" FontSize="20" Margin="5,0,0,0" Glyph="&#xF133;" Foreground="{ThemeResource SystemAccentColor}" Width="30" Height="30"  VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="1" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center"  Foreground="{ThemeResource SystemAccentColor}" Text="{Binding StaffPicks.CurrentTag.Title}" />
+
+                    <Button Grid.Column="2" Style="{StaticResource FollowButtonStyle}">Follow</Button>
+                </Grid>
+
+                <!-- STAFF PICKS CONTENT-->
+                <ListView 
+                    Grid.Row="2"
+                    x:Name="StaffPicksRepeaterControl"  
+                    ItemsSource="{Binding StaffPicks.RetrievedMediaVmCollection,Mode=OneWay}" 
+                    IsItemClickEnabled="True" 
+                    SelectionMode="None"  
+                    Padding="0,0,0,10"
+                    Margin="10,10,10,10" 
+                    
+                    Visibility="{Binding LoadedStaffPicks}"
+                    ScrollViewer.HorizontalScrollMode="Enabled"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="mediavm:MediaViewModel">
+                            <controls:MediaTileControl ViewModel="{Binding}" Width="220" Height="200" Margin="0,0"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                
+                <!-- RANDOM HEADER -->
+                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Stretch" Margin="0,30,0,10" VerticalAlignment="Center" Opacity="0.8" Grid.Row="3">
+                    <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="16" Margin="10,0,0,0" Glyph="&#xE8B1;" Width="30" Height="30" Foreground="{ThemeResource SystemAccentColor}" FontWeight="Bold"  VerticalAlignment="Center"/>
+                    <TextBlock  FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center" Height="25" Foreground="{ThemeResource SystemAccentColor}" Text="Random Content"></TextBlock>
+                </StackPanel>
+
+                <!-- RANDOM CONTENT -->
+                <toolkit:AdaptiveGridView
+                    x:Name="RandomContentRepeatControl"
+                    Grid.Row="4"
+                    ItemsSource="{Binding RandomMediaVmCollection}"
+                    DesiredWidth="300"
+                    ItemHeight="220"
+                    SelectionMode="None"
+                    Margin="10,0,10,20"
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+
+                    <toolkit:AdaptiveGridView.ItemTemplate>
+                        <DataTemplate x:DataType="mediavm:MediaViewModel">
+                            <controls:MediaTileControl ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </toolkit:AdaptiveGridView.ItemTemplate>
+                </toolkit:AdaptiveGridView>
+
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Reload and Go to Top -->
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" x:Name="BottomNavigationBar" Visibility="Visible">
+            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4" Opacity="0.9">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Command="{Binding ReloadCurrentPage}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Gallery">
+                    <FontIcon Visibility="Visible" Grid.Column="0" FontSize="18" FontWeight="Normal"  VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4" Opacity="0.9"  Margin="10,0,0,0">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Click="NavigateToTop_Click" Width="48" Height="48" IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}" ToolTipService.ToolTip="Move to the top"  >
+                    <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="18" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE898;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+        </StackPanel>
+    </Grid>
+</Page>

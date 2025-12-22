@@ -1,0 +1,25 @@
+﻿<ContentDialog
+    x:Class="Imgur.Uwp.Dialogs.UploadDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imgur.Uwp.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    xmlns:controls="using:Imgur.Uwp.Controls"
+    mc:Ignorable="d"
+    PrimaryButtonText="Upload"
+    CloseButtonText="Cancel"
+    FullSizeDesired="False"
+    IsPrimaryButtonEnabled="{Binding IsReadyForUpload, Mode=OneWay}"
+    PrimaryButtonCommand="{Binding UploadContentAsync}"
+    RequestedTheme="Dark"
+    Background="#3c424b"
+    
+    Opacity="0.98"
+    Windows10version1809:CornerRadius="3"
+    DefaultButton="Primary">
+
+    <controls:UploadDialogControl></controls:UploadDialogControl>
+    
+</ContentDialog>

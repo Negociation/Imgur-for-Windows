@@ -1,0 +1,82 @@
+﻿<Page
+    x:Class="Imgur.Uwp.Views.Shell.ShutdownView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imgur.Uwp.Views.Shell"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Core1="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:core="http://microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d"
+       Background="#01b96b">
+
+    <Grid Background="#121211" x:Name="myStackPanel">
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Uid="errorViewTriggers">
+
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="500" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MessageGrid.MaxWidth" Value="500" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MessageGrid.MaxWidth" Value="800" />
+                    </VisualState.Setters>
+                </VisualState>
+
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Interactivity:Interaction.Behaviors>
+            <Core:EventTriggerBehavior EventName="Loaded">
+                <Core:InvokeCommandAction Command="{Binding InitializeShutdownRoutine, Mode=OneTime}" />
+            </Core:EventTriggerBehavior>
+        </Interactivity:Interaction.Behaviors>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.Resources>
+
+            <Storyboard x:Name="colorStoryboard">
+                <ColorAnimation Storyboard.TargetName="myStackPanel" 
+                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                From="#0e0b4e" To="#121211" Duration="0:0:3" Completed="ColorAnimation_Completed"/>
+            </Storyboard>
+        </Grid.Resources>
+
+        <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,10,0" VerticalAlignment="Center" x:Name="MessageGrid"  MaxWidth="340">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Image Width="100" Grid.Row="0" Source="ms-appx:///Assets/App/white_logo_transparent.png" Margin="0,0,0,0"  />
+            <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" TextAlignment="Center" Text="See Ya!" FontSize="40"/>
+        </Grid>
+
+
+    </Grid>
+</Page>
+    
