@@ -5,11 +5,28 @@
     xmlns:local="using:Imgur.Uwp.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winui="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid>
-        <MediaElement x:Name="MediaElement" Source="{x:Bind Source}" Stretch="UniformToFill"  AutoPlay="{x:Bind AutoPlay,Mode=OneWay}" IsLooping="{x:Bind AutoPlay,Mode=OneWay}" IsMuted="True" AreTransportControlsEnabled="False"/>
+    <Grid CornerRadius="5">
+
+        <Grid x:Name="ImagePlaceholder" x:Load="{x:Bind AutoPlay, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
+            <Border CornerRadius="5" Visibility="Visible">
+                <Border.Background>
+                    <ImageBrush x:Name="mediaThumb" Stretch="UniformToFill" ImageSource="{x:Bind ImageSource ,Mode=OneWay}"/>
+                </Border.Background>
+            </Border>
+        </Grid>
+
+        <Grid  x:Load="{x:Bind AutoPlay, Mode=OneWay}"  x:Name="videoPlaceholderContainer">
+            <Image x:Name="mediaPlaceholderImage" Stretch="UniformToFill" Source="{x:Bind VideoSourcePlaceholder }"/>
+            <Grid Background="Black" Opacity="0.8">
+            </Grid>
+            <winui:ProgressBar  x:Name="LoadingBar" VerticalAlignment="Top" MinHeight="4" IsEnabled="True" IsIndeterminate="True"  Margin="2,0,2,0" Foreground="White" />
+        </Grid>
+        
+        <MediaElement x:Name="MediaElement"   x:Load="{x:Bind AutoPlay, Mode=OneWay}" Source="{x:Bind VideoSource}" Stretch="UniformToFill"  AutoPlay="{x:Bind AutoPlay,Mode=OneWay}" IsLooping="{x:Bind AutoPlay,Mode=OneWay}" IsMuted="True" AreTransportControlsEnabled="False"/>
     </Grid>
 </UserControl>

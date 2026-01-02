@@ -505,7 +505,7 @@
                 <VisualState x:Name="MediaGrid_Small">
                     <VisualState.Setters>
                         <Setter Target="ContentRepeaterControl.DesiredWidth" Value="250" />
-                        <Setter Target="ContentRepeaterControl.ItemHeight" Value="180" />
+                        <Setter Target="ContentRepeaterControl.ItemHeight" Value="200" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MediaGrid_Medium">
@@ -517,7 +517,7 @@
                 <VisualState x:Name="MediaGrid_Larger">
                     <VisualState.Setters>
                         <Setter Target="ContentRepeaterControl.DesiredWidth" Value="400" />
-                        <Setter Target="ContentRepeaterControl.ItemHeight" Value="290" />
+                        <Setter Target="ContentRepeaterControl.ItemHeight" Value="280" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

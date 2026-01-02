@@ -32,6 +32,8 @@ namespace Imgur.Uwp.Views.Explorer
         public ExplorerSearchView()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Required;
+
             if (ViewModel == null)
             {
                 var vmFactory = App.Services.GetRequiredService<IExplorerSearchVmFactory>();
@@ -45,9 +47,19 @@ namespace Imgur.Uwp.Views.Explorer
         {
             if (e?.Parameter is ExplorerSearchViewModel viewModel)
             {
+                // Modo Search - recebeu um ViewModel com query
+                Debug.WriteLine($"Search mode: '{viewModel.SearchQuery}'");
                 this.DataContext = viewModel;
             }
+            else
+            {
+                // Modo Explore - não recebeu ViewModel, precisa criar um novo
+                Debug.WriteLine("Explore mode: creating new ViewModel");
 
+                var vmFactory = App.Services.GetRequiredService<IExplorerSearchVmFactory>();
+                var exploreVm = vmFactory.getExplorerViewModel();
+                this.DataContext = exploreVm;
+            }
 
             await ViewModel.InitializeAsync();
             UpdateThumbailsState();
@@ -55,28 +67,76 @@ namespace Imgur.Uwp.Views.Explorer
 
         private void NavigateToTop_Click(object sender, RoutedEventArgs e)
         {
-           //ResetScrollOffset();
+           ResetScrollOffset();
+        }
+
+
+        private void ResetScrollOffset()
+        {
+            if (ViewModel.IsExplorerMode)
+            {
+                if (ExplorerContentScrollView.VerticalOffset > 0)
+                {
+                    this.ExplorerContentScrollView.ChangeView(0, 0, null);
+                }
+            }
+
+            if (ViewModel.IsSearchMode)
+            {
+                if (SearchContentScrollView.VerticalOffset > 0)
+                {
+                    this.SearchContentScrollView.ChangeView(0, 0, null);
+                }
+            }
+        }
+
+        private void ExplorerContentScrollView_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (ViewModel.IsExplorerMode)
+            {
+                if (this.ExplorerContentScrollView.VerticalOffset > 0 && !ViewModel.CanScrollToTop)
+                {
+                    ViewModel.CanScrollToTop = true;
+                }
+                else if (this.ExplorerContentScrollView.VerticalOffset == 0 && ViewModel.CanScrollToTop)
+                {
+                    ViewModel.CanScrollToTop = false;
+                }
+            }
         }
 
         private void UpdateThumbailsState()
         {
-            VisualStateManager.GoToState(this, nameof(RandomMediaGrid_Medium), false);
-
-            /*
-            switch (ViewModel.ThumbSize)
+            if (ViewModel.IsExplorerMode)
             {
-                case 0:
-                    VisualStateManager.GoToState(this, nameof(MediaGrid_Small), false);
-                    break;
-                case 1:
-                    VisualStateManager.GoToState(this, nameof(MediaGrid_Medium), false);
-                    break;
-                case 2:
-                    VisualStateManager.GoToState(this, nameof(MediaGrid_Larger), false);
-                    break;
+                switch (ViewModel.ThumbSize)
+                {
+                    case 0:
+                        VisualStateManager.GoToState(this, nameof(RandomMediaGrid_Small), false);
+                        break;
+                    case 1:
+                        VisualStateManager.GoToState(this, nameof(RandomMediaGrid_Medium), false);
+                        break;
+                    case 2:
+                        VisualStateManager.GoToState(this, nameof(RandomMediaGrid_Larger), false);
+                        break;
+                }
             }
-            */
         }
 
+        private void SearchContentScrollView_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (ViewModel.IsSearchMode)
+            {
+                if (this.SearchContentScrollView.VerticalOffset > 0 && !ViewModel.CanScrollToTop)
+                {
+                    ViewModel.CanScrollToTop = true;
+                }
+                else if (this.SearchContentScrollView.VerticalOffset == 0 && ViewModel.CanScrollToTop)
+                {
+                    ViewModel.CanScrollToTop = false;
+                }
+            }
+        }
     }
 }

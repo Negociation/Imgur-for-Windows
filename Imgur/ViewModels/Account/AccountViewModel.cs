@@ -5,6 +5,7 @@ using Imgur.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Imgur.ViewModels.Account
@@ -39,12 +40,15 @@ namespace Imgur.ViewModels.Account
         //-- UserContext
         private readonly IUserContext _userContext;
 
+        //-- UserContext
+        private readonly INavigator _navigator;
 
-        public AccountViewModel(UserAccount account, IUserContext userContext, IDialogService dialogService)
+        public AccountViewModel(UserAccount account, IUserContext userContext, IDialogService dialogService, INavigator navigator)
         {
             this.UserAccountInfo = account;
             this._userContext = userContext;
             this._dialogService = dialogService;
+            this._navigator = navigator;
         }
 
 
@@ -70,5 +74,42 @@ namespace Imgur.ViewModels.Account
             }
         }
 
+
+        //-- Command para abrir a midia
+        private ICommand _navigateAccountViewCommand;
+
+        public ICommand NavigateAccountViewCommand
+        {
+            get
+            {
+                if (_navigateAccountViewCommand == null)
+                {
+                    _navigateAccountViewCommand = new RelayCommand(async () =>
+                    {
+                        await Task.Delay(500);
+                        _navigator.Navigate("accountView", this);
+                    });
+                }
+                return _navigateAccountViewCommand;
+            }
+        }
+
+        //-- Command de Back Button
+        private ICommand _leaveCurrentPage;
+
+        public ICommand LeaveCurrentPage
+        {
+            get
+            {
+                if (_leaveCurrentPage == null)
+                {
+                    _leaveCurrentPage = new RelayCommand(() =>
+                    {
+                        _navigator.GoBack();
+                    });
+                }
+                return _leaveCurrentPage;
+            }
+        }
     }
 }

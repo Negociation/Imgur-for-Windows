@@ -9,6 +9,7 @@ namespace Imgur.Enums
         Like,
         FollowUser,
         Vote,
-        Upload
+        Upload,
+        FollowTag
     }
 }

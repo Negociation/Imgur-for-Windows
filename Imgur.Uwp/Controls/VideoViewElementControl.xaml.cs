@@ -186,15 +186,15 @@ namespace Imgur.Uwp.Controls
 
 
         //Interaction Events
-        private void NextTapGridArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        private async void NextTapGridArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            _mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
+            await _mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
             this._mediaPlayerService.GoForward();
         }
 
-        private void BackTapGridArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        private async void BackTapGridArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            _mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
+            await _mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
             this._mediaPlayerService.GoBackward();
         }
 
@@ -211,16 +211,18 @@ namespace Imgur.Uwp.Controls
         }
 
 
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
-            this.SetPlayingStatus();
-            this.PlayerTransportControls.Visibility = Visibility.Visible;
-            this.playerTransportControlsVisibility.Start();
+            if(await this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement))
+            {
+                this.SetPlayingStatus();
+                this.PlayerTransportControls.Visibility = Visibility.Visible;
+                this.playerTransportControlsVisibility.Start();
+            }
         }
 
 
-        private void TransportControlPlay_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void TransportControlPlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (this.Player.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing)
             {
@@ -229,8 +231,12 @@ namespace Imgur.Uwp.Controls
             }
             else
             {
-                this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
-                this.SetPlayingStatus();
+
+               var success =  await this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
+               if (success)
+               {
+                    this.SetPlayingStatus();
+               }
             }
         }
 

@@ -20,9 +20,10 @@ namespace Imgur.Factories
         {
             var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
             var userContext = _serviceProvider.GetRequiredService<IUserContext>();
+            var navigatorService = _serviceProvider.GetRequiredService<INavigator>();
 
 
-            AccountViewModel vm = new AccountViewModel(m, userContext, dialogService);
+            AccountViewModel vm = new AccountViewModel(m, userContext, dialogService, navigatorService);
             return vm;
         }
     }

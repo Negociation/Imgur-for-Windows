@@ -3,6 +3,8 @@ using Imgur.Api.Services.Models.Response.Account;
 using Imgur.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace Imgur.Mappers
@@ -22,7 +24,34 @@ namespace Imgur.Mappers
 
             return account;
         }
+
+        public List<UserAccount> ToUserAccountList(List<AccountResponse> dtoList)
+        {
+            try
+            {
+                if (dtoList == null)
+                {
+                    Debug.WriteLine("ToAccountList: dtoList veio NULL");
+                    return new List<UserAccount>();
+                }
+
+                // Mapear usando LINQ
+                return dtoList.Select(item => this.ToUserAccount(item)).ToList();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Erro ao converter TagResponse para Tag:");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+
+                // opcional: retornar lista vazia para não quebrar a UI
+                return new List<UserAccount>();
+            }
+        }
+
+
     }
+
 }
 
 

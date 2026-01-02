@@ -129,6 +129,9 @@
     <Compile Include="Controls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AccountTileControl.xaml.cs">
+      <DependentUpon>AccountTileControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ImageViewElementControl.xaml.cs">
       <DependentUpon>ImageViewElementControl.xaml</DependentUpon>
     </Compile>
@@ -143,6 +146,9 @@
     </Compile>
     <Compile Include="Controls\SettingBox.xaml.cs">
       <DependentUpon>SettingBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TagTileControl.xaml.cs">
+      <DependentUpon>TagTileControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\UploadDialogControl.xaml.cs">
       <DependentUpon>UploadDialogControl.xaml</DependentUpon>
@@ -189,6 +195,9 @@
     <Compile Include="Services\TokenService.cs" />
     <Compile Include="TemplateSelectors\MediaContainerTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\MediaElementTemplateSelector.cs" />
+    <Compile Include="Views\Accounts\AccountView.xaml.cs">
+      <DependentUpon>AccountView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Explorer\ExplorerSearchView.xaml.cs">
       <DependentUpon>ExplorerSearchView.xaml</DependentUpon>
     </Compile>
@@ -209,6 +218,9 @@
     </Compile>
     <Compile Include="Views\Tags\TagsView.xaml.cs">
       <DependentUpon>TagsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tags\TagView.xaml.cs">
+      <DependentUpon>TagView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -257,6 +269,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\AccountTileControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ImageViewElementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -274,6 +290,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SettingBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TagTileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -309,6 +329,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Accounts\AccountView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Explorer\ExplorerSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -334,6 +358,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Tags\TagsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Tags\TagView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,6 +7,7 @@ namespace Imgur.Contracts
 
         event EventHandler<string> NavigateInvoked;
 
+        event EventHandler<bool> FullScreenModeChanged;
 
         object RootFrame { get; set; }
 

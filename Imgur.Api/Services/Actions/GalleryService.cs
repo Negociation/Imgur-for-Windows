@@ -2,6 +2,8 @@
 using Imgur.Api.Services.Models.Common;
 using Imgur.Api.Services.Models.Enum;
 using Imgur.Api.Services.Models.Response;
+using Imgur.Api.Services.Models.Response.Suggest;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,5 +57,47 @@ namespace Imgur.Api.Services.Actions
             return await GetAsync<TagResponse>(url);
         }
 
+        public async Task<ApiResponse<List<TagResponse>>> TagSearchAsync(string query, int page = 0)
+        {
+            //Buscar Sugestões (Max 10 Itens)...
+            var urlSuggest = $"suggest?inflate=tags&q={query}&types=tags";
+            var suggestTags = await GetAsync<SuggestResponse>(urlSuggest);
+
+            if (!suggestTags.Success)
+            {
+                var errorResponse = new ApiResponse<List<TagResponse>>();
+                errorResponse.Status = suggestTags.Status;
+                errorResponse.Success = suggestTags.Success;
+                return errorResponse;
+            }
+
+            var successResponse = new ApiResponse<List<TagResponse>>();
+            successResponse.Data = new List<TagResponse>();
+            successResponse.Success = true;
+            successResponse.Status = 200;
+            //Debug.WriteLine(JsonConvert.SerializeObject(suggestTags, Formatting.Indented));
+
+            foreach (var tag in suggestTags.Data.tags)
+            {
+                var url = $"gallery/t/{tag.name}";
+                var response = await GetAsync<TagResponse>(url);
+
+                if (!response.Success)
+                {
+                    //skip
+                    continue;
+                }
+
+                successResponse.Data.Add(response.Data);
+            }
+
+            return successResponse;
+        }
+
+        public async Task<ApiResponse<List<GalleryItemResponse>>> GallerySearchAsync(string query, int page = 0)
+        {
+            var url = $"gallery/search/{page}?q_any={query}";
+            return await GetAsync<List<GalleryItemResponse>>(url);
+        }
     }
 }

@@ -329,9 +329,6 @@
     <value>Ano</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
   <data name="Tags.Text" xml:space="preserve">
     <value>Explorar Etiquetas</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
@@ -368,5 +365,82 @@
   <data name="LoginOrRegister.Text" xml:space="preserve">
     <value>Entre ou Registre-se</value>
     <comment>LoginInterceptorDialog</comment>
+  </data>
+  <data name="Follow.Text" xml:space="preserve">
+    <value>Seguir</value>
+  </data>
+  <data name="GalleriesSection.Text" xml:space="preserve">
+    <value>Galerias</value>
+  </data>
+  <data name="notification_open_gallery" xml:space="preserve">
+    <value>Abrir Galeria ?</value>
+  </data>
+  <data name="TagsSection.Text" xml:space="preserve">
+    <value>Marcadores</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="UsersSection.Text" xml:space="preserve">
+    <value>Usuarios</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="BestComments.Text" xml:space="preserve">
+    <value>OS MELHORES</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="Comment.Text" xml:space="preserve">
+    <value>COMENTAR</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="CommentsHeader.Header" xml:space="preserve">
+    <value>Comentarios</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
+    <value>Parece que ainda não ha nenhum comentário.</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="EmptyCommentsParagraphSecond.Text" xml:space="preserve">
+    <value>SEJA O PRIMEIRO!</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="ExpandMore.Text" xml:space="preserve">
+    <value>VER TUDO</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="FavouritesHeader.Header" xml:space="preserve">
+    <value>Favoritos</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="LoadingMedia.Text" xml:space="preserve">
+    <value>Carregando o que tá bombando…</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="Points.Text" xml:space="preserve">
+    <value>Pontos</value>
+  </data>
+  <data name="Posts.Text" xml:space="preserve">
+    <value>Postagens</value>
+  </data>
+  <data name="PostsHeader.Header" xml:space="preserve">
+    <value>Postagens</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="QueryTitle.Text" xml:space="preserve">
+    <value>Busca por: </value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="RandomSection.Text" xml:space="preserve">
+    <value>Conteúdo Aleatório</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="InterceptorHeader_FollowTag" xml:space="preserve">
+    <value>Você esta tentando seguir um Marcador!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="notification_clipboard_content" xml:space="preserve">
+    <value>Copiado com Sucesso para Área de Transferencia.</value>
+  </data>
+  <data name="notification_generic" xml:space="preserve">
+    <value>Notificação!</value>
   </data>
 </root>

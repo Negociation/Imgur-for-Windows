@@ -88,6 +88,23 @@ namespace Imgur.Services
             return Result<IReadOnlyList<Media>>.Success(explorerListMapped);
         }
 
+        public async Task<Result<IReadOnlyList<Media>>> SearchGalleries(string query, int page = 0)
+        {
+            ApiResponse<List<GalleryItemResponse>> items = null;
+
+            items = await _apiService.GallerySearchAsync(query,page);
+
+            if (!items.Success)
+            {
+                return Result<IReadOnlyList<Media>>.Failure(items.Status.ToString(), ErrorType.Server);
+            }
+
+            //Mapear Usando Linq
+            var explorerListMapped = _galleryMapper.ToMediaList(items.Data);
+
+            return Result<IReadOnlyList<Media>>.Success(explorerListMapped);
+        }
+
         public async Task<Result<Media>> GetGalleryAlbumById(string id)
         {
             var item = await _apiService.GetGalleryAlbumAsync(id);

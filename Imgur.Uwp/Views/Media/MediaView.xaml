@@ -52,8 +52,16 @@
         </DataTemplate>
         <local1:MediaElementTemplateSelector x:Key="MediaDataTemplateSelector" ImageTemplate="{StaticResource ImageTemplate}" VideoTemplate="{StaticResource VideoTemplate}" />
     </Page.Resources>
-
+    <Page.Background>
+        <LinearGradientBrush StartPoint="0,0" Opacity="0.4"
+            EndPoint="0,1">
+            <GradientStop Color="#073169" Offset="1" />
+            <GradientStop Color="#292c30" Offset="0.6" />
+        </LinearGradientBrush>
+    </Page.Background>
     <Grid x:Name="RootGrid" Margin="0,0,0,0" SizeChanged="RootGrid_SizeChanged"  MaxWidth="1100" >
+
+        
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup  x:Uid="PageTriggers">
                 <VisualState x:Name="Minimal">
@@ -102,13 +110,15 @@
                         </Storyboard>
                     </VisualState.Storyboard>
                 </VisualState>
+
+                
                 <VisualState x:Name="Extended">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1000" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="CompactVerticalBar.Visibility" Value="Visible" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,0,10,10" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,15,10,10" />
                         <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="1" />
                         <Setter Target="CommentsPlacementBorder.(Grid.Column)" Value="1" />
                         <Setter Target="CommentsPlacementBorder.ShadowOpacity" Value="0.4" />
@@ -118,7 +128,7 @@
                         <Setter Target="CommentsPlacement.VerticalAlignment" Value="Stretch" />
                         <Setter Target="MediaPlacement.(Grid.Row)" Value="1" />
                         <Setter Target="MediaPlacement.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="MediaPlacement.Margin" Value="5,0,0,10" />
+                        <Setter Target="MediaPlacement.Margin" Value="5,15,0,10" />
                         <Setter Target="MediaPlacement.CornerRadius" Value="5,0,0,5" />
                         <Setter Target="DockDyanmicData.Margin" Value="0,-4" />
                         <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
@@ -126,7 +136,10 @@
                         <Setter Target="RootScrollView.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="LeaveFloatButton.(Grid.Column)" Value="1" />
                         <Setter Target="LeaveFloatButton.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="AppendMoreButton.Margin" Value="10" />
                         <Setter Target="RootGrid.MaxHeight" Value="900" />
+                        <Setter Target="CommentsPlacement.CornerRadius" Value="0,5,5,0" />
+                        <Setter Target="LeaveFloatButton.Margin" Value="11,33,0,0" />
                     </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard>
@@ -134,6 +147,42 @@
                         </Storyboard>
                     </VisualState.Storyboard>
                 </VisualState>
+                <VisualState x:Name="Extended2">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CompactVerticalBar.Visibility" Value="Visible" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,30,10,10" />
+                        <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="1" />
+                        <Setter Target="CommentsPlacementBorder.(Grid.Column)" Value="1" />
+                        <Setter Target="CommentsPlacementBorder.ShadowOpacity" Value="0.4" />
+                        <Setter Target="CommentsPlacementBorder.OffsetY" Value="0" />
+                        <Setter Target="CommentsPlacementBorder.OffsetX" Value="-2" />
+                        <Setter Target="CommentsPlacementBorder.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="CommentsPlacement.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="MediaPlacement.(Grid.Row)" Value="1" />
+                        <Setter Target="MediaPlacement.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="MediaPlacement.Margin" Value="5,30,0,10" />
+                        <Setter Target="MediaPlacement.CornerRadius" Value="5,0,0,5" />
+                        <Setter Target="DockDyanmicData.Margin" Value="0,-4" />
+                        <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
+                        <Setter Target="RootScrollView.(Grid.Column)" Value="1" />
+                        <Setter Target="RootScrollView.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="LeaveFloatButton.(Grid.Column)" Value="1" />
+                        <Setter Target="LeaveFloatButton.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="AppendMoreButton.Margin" Value="10" />
+                        <Setter Target="RootGrid.MaxHeight" Value="900" />
+                        <Setter Target="CommentsPlacement.CornerRadius" Value="0,5,5,0" />
+                        <Setter Target="LeaveFloatButton.Margin" Value="11,48,0,0" />
+                    </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard>
+
+                        </Storyboard>
+                    </VisualState.Storyboard>
+                </VisualState>
+
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.ColumnDefinitions>
@@ -145,7 +194,7 @@
         <!-- Loading Overlay -->
         <Grid x:Name="LoadingOverlay" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}" Opacity="0.97" Canvas.ZIndex="100"  Visibility="{Binding LoadingElementsStatus,Mode=OneWay}" HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Opacity="0.7">
-                <TextBlock FontWeight="Bold"  FontSize="16" HorizontalAlignment="Center">Getting the hot stuff!</TextBlock>
+                <TextBlock x:Uid="LoadingMedia" FontWeight="Bold"  FontSize="16" HorizontalAlignment="Center">Getting the hot stuff!</TextBlock>
                 <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="20,5" />
             </StackPanel>
         </Grid>
@@ -193,21 +242,15 @@
                         </Grid>
                         <ProgressBar IsIndeterminate="{Binding ReloadingCurrentMediaInfo}" Grid.Row="1" Visibility="{Binding ReloadingCurrentMediaInfo}" Margin="0,-10,0,0" HorizontalAlignment="Stretch" Foreground="White"  Grid.ColumnSpan="2" />
 
-                        <Grid Grid.Row="2" Margin="0,-5" Visibility="{Binding LoadedSuccessfully}">
+                        <Grid Grid.Row="2" Margin="-10,-10,0,0" Visibility="{Binding LoadedSuccessfully}">
                             <Grid  DataContext="{Binding UserAccount}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"  />
                                     <ColumnDefinition Width="auto"  />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock FontWeight="SemiBold"  Text="{Binding UserAccountInfo.Username,FallbackValue='...'}" Opacity="0.7" FontSize="12">
-                                <Interactivity:Interaction.Behaviors>
-                                    <Core:EventTriggerBehavior EventName="Tapped">
-                                            
-                                
-                                    </Core:EventTriggerBehavior>
-                                </Interactivity:Interaction.Behaviors>
-                                </TextBlock>
-                                <Button Grid.Column="1"  Width="18" Height="18" Padding="0" Style="{StaticResource CircleButtonStyle}" Command="{Binding Path=FollowAuthor }" Background="#BCC0C9"  Margin="5,0" Opacity="0.4">
+                                <HyperlinkButton Command="{Binding NavigateAccountViewCommand}" FontWeight="SemiBold"  Content="{Binding UserAccountInfo.Username,FallbackValue='...'}" Foreground="{ThemeResource SystemAccentColor}" Height="20" Padding="6,1" Opacity="0.7" FontSize="12">
+                                </HyperlinkButton>
+                                <Button Grid.Column="1"  Width="18" Height="18" Padding="0" Style="{StaticResource CircleButtonStyle}" Command="{Binding Path=FollowAuthor }" Background="#BCC0C9"  Margin="2,0" Opacity="0.4">
                                     <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="12" Glyph="&#xE948;" Foreground="Black" Margin="0,1,0,0" HorizontalAlignment="Center" />
                                 </Button>
                             </Grid>
@@ -251,7 +294,7 @@
                     </ListView>
                     
                     <!-- Append More Button -->
-                    <Grid  Grid.Row="2" HorizontalAlignment="Stretch" Visibility="{Binding IsPartialLoading}">
+                    <Grid x:Name="AppendMoreButton" Grid.Row="2" HorizontalAlignment="Stretch" Visibility="{Binding IsPartialLoading}">
                         <Button Visibility="{Binding IsAppendingMediaData, Converter={StaticResource BoolNegationConverter}}" HorizontalAlignment="Center"  Command="{Binding LoadRemaningItensCommand}" VerticalAlignment="Center" Margin="0, 0, 00, 40" Style="{StaticResource AppRoundedButtonStyle}">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock x:Uid="LoadMore"/>
@@ -290,13 +333,13 @@
                         <Button Grid.Column="0" HorizontalAlignment="Left" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal" Opacity="0.7">
                                 <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="14" Glyph="&#xE8CB;" Margin="0,0,0,0" HorizontalAlignment="Center" />
-                                <TextBlock FontSize="16" Margin="5,0" >BEST COMMENTS</TextBlock>
+                                <TextBlock x:Uid="BestComments" FontSize="16" Margin="5,0" >BEST COMMENTS</TextBlock>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="1" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent">
                             <StackPanel Orientation="Horizontal" Opacity="0.7">
                                 <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontWeight="ExtraBold" FontSize="14" Glyph="&#xF716;" Margin="0,0,0,0" HorizontalAlignment="Center" />
-                                <TextBlock FontSize="16" Margin="5,0" >COMMENT</TextBlock>
+                                <TextBlock x:Uid="Comment" FontSize="16" Margin="5,0" >COMMENT</TextBlock>
                             </StackPanel>
                         </Button>
                         <Grid Grid.Row="1" Grid.ColumnSpan="2" Visibility="Collapsed">
@@ -309,8 +352,14 @@
                                 <ColumnDefinition Width="0.5*" />
                             </Grid.ColumnDefinitions>
                             <RichTextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"  Padding="10" TextWrapping="Wrap">
-                                <Paragraph Foreground="#b4b9c2">Looks like there aren't any comments yet.</Paragraph>
-                                <Paragraph Foreground="SteelBlue">BE THE FIRST!</Paragraph>
+                                <Paragraph  Foreground="#b4b9c2">
+                                    <Run x:Uid="EmptyCommentsParagraphFirst" >Looks like there aren't any comments yet.</Run>
+                                </Paragraph>
+                                <Paragraph  Foreground="SteelBlue">
+                                    <Run x:Uid="EmptyCommentsParagraphSecond"> 
+                                        BE THE FIRST!
+                                    </Run>
+                                </Paragraph>
                             </RichTextBlock>
                             <Image  MaxWidth="50" Opacity="0.7" Grid.Column="1"   HorizontalAlignment="Right" VerticalAlignment="Bottom"  Source="ms-appx:///Assets/App/giraffe_faded.png"  />
                         </Grid>
@@ -358,9 +407,9 @@
                     </Button>
                     <Grid x:Name="VotesPanel" MinWidth="0" Width="40" Visibility="{Binding ReloadingCurrentMediaInfo,Converter={StaticResource BoolNegationConverter}}">
                         <FontIcon Margin="0,-30,0,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="20" Glyph="&#xE971;" Opacity="0.5"/>
-                        <Grid>
-                            <TextBlock Padding="10,0,10,0" Width="40"   Margin="0,0,0,0"  VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Text="{Binding CurrentMedia.Votes}" HorizontalAlignment="Center"/>
-                        </Grid>
+                        
+                        <TextBlock  TextAlignment="Center" Padding="10,0,10,0" Width="40"   Margin="0,0,0,0"  VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Text="{Binding CurrentMedia.Votes}" HorizontalAlignment="Center"/>
+                        
                         <Interactivity:Interaction.Behaviors>
 
                             <Core:EventTriggerBehavior EventName="Tapped">

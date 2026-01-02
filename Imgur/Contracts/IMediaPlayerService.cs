@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 
 namespace Imgur.Contracts
@@ -9,7 +10,7 @@ namespace Imgur.Contracts
     public interface IMediaPlayerService
     {
 
-        void PlayMedia (MediaPlayerElement mediaPlayer, Element element = null);
+        Task<bool> PlayMedia (MediaPlayerElement mediaPlayer, Element element = null);
 
         void StopMedia(MediaPlayerElement mediaPlayer);
 

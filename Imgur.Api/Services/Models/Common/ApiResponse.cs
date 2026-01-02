@@ -9,6 +9,7 @@ namespace Imgur.Api.Services.Models.Common
         public T Data { get; set; }
         public bool Success { get; set; }
         public int Status { get; set; }
+
     }
 
 }

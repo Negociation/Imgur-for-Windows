@@ -240,7 +240,7 @@
                     <VisualState.Setters>
                         <Setter Target="SearchBox.(Grid.Column)" Value="0" />
                         <Setter Target="SearchBox.(Grid.ColumnSpan)" Value="3" />
-                        <Setter Target="SearchBox.Margin" Value="50,20,50,15" />
+                        <Setter Target="SearchBox.Margin" Value="60,20,60,15" />
                         <Setter Target="SearchBox.HorizontalAlignment" Value="Stretch" />
                         <Setter Target="SearchBox.MaxWidth" Value="600" />
                     </VisualState.Setters>
@@ -250,7 +250,7 @@
                         <Setter Target="SearchBox.(Grid.Column)" Value="0" />
                         <Setter Target="SearchBox.HorizontalAlignment" Value="Center" />
                         <Setter Target="AutoSuggestSearchBox.MinWidth" Value="200" />
-                        <Setter Target="SearchBox.Margin" Value="50,30,50,10" />
+                        <Setter Target="SearchBox.Margin" Value="50,30,50,0" />
                         <Setter Target="SearchBox.(Grid.ColumnSpan)" Value="3" />
                     </VisualState.Setters>
                 </VisualState>
@@ -286,7 +286,8 @@
                         <Setter Target="NavigationView.PaneDisplayMode" Value="Left" />
                         <Setter Target="NavigationView.IsPaneOpen" Value="True" />
                         <Setter Target="SearchBox.Visibility" Value="Visible" />
-                        <Setter Target="MainFrame.Padding" Value="10,10,0,0" />
+                        <Setter Target="MainFrame.Padding" Value="10,15,0,0" />
+
                         <Setter Target="NavigationViewContent.Margin" Value="0" />
 
                     </VisualState.Setters>
@@ -338,8 +339,37 @@
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
-
             
+            <VisualStateGroup x:Name="CompactHeaderStates">
+                <VisualState x:Name="CompactHeaderDefaultVisibleState">
+                    <Storyboard>
+                        <DoubleAnimation
+                Storyboard.TargetName="HeaderTranslate"
+                Storyboard.TargetProperty="X"
+                To="0"
+                Duration="0:0:0.25">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+
+                <VisualState x:Name="CompactHeaderFullScreenVisibleState">
+                    <Storyboard>
+                        <DoubleAnimation
+                Storyboard.TargetName="HeaderTranslate"
+                Storyboard.TargetProperty="X"
+                To="45"
+                Duration="0:0:0.25">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
         <Grid x:Name="PaneTitle" Height="32" VerticalAlignment="Top" Grid.Column="2"  Background="Transparent"/>
@@ -443,11 +473,14 @@
                         <StackPanel x:Name="HeaderCompactContent" Orientation="Horizontal" Padding="15,10,0,0" Height="48" Grid.ColumnSpan="3" Visibility="Collapsed" >
                             <Image Height="24"  Source="ms-appx:///Assets/App/logo_transparent.png" VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
                             <Image Height="20"  Margin="4,0,0,0"  Source="ms-appx:///Assets/App/sign_transparent.png"  VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
+                            <StackPanel.RenderTransform>
+                                <TranslateTransform x:Name="HeaderTranslate"/>
+                            </StackPanel.RenderTransform>
                         </StackPanel>
-                        <toolkit:DropShadowPanel  Grid.Column="0" Grid.ColumnSpan="2" BlurRadius="20" OffsetX="0" OffsetY="0" ShadowOpacity="1" Color="#01b96b" HorizontalContentAlignment="Stretch" x:Name="SearchBox" Visibility="Collapsed" HorizontalAlignment="Left"   Margin="15,15,30,10">
-                            <AutoSuggestBox x:Uid="ShellSearchBox" Style="{StaticResource RoundedAutoSuggestBoxStyle}"  x:Name="AutoSuggestSearchBox" QuerySubmitted="SearchBox_QuerySubmitted"  QueryIcon="Find" BorderBrush="#1b1c1d" Windows10version1809:CornerRadius="15" Opacity="1" BorderThickness="2" FocusVisualSecondaryBrush="BlueViolet" IsTabStop="False"  Background="#1b1c1d" VerticalAlignment="Top" />
+                        <toolkit:DropShadowPanel  Grid.Column="0" Opacity="1" Grid.ColumnSpan="2" BlurRadius="20" OffsetX="0" OffsetY="0" ShadowOpacity="1" Color="#01b96b" HorizontalContentAlignment="Stretch" x:Name="SearchBox" Visibility="Collapsed" HorizontalAlignment="Left"   Margin="15,15,30,10">
+                            <AutoSuggestBox x:Uid="ShellSearchBox"  Style="{StaticResource RoundedAutoSuggestBoxStyle}"  x:Name="AutoSuggestSearchBox" QuerySubmitted="SearchBox_QuerySubmitted"  QueryIcon="Find" BorderBrush="#1b1c1d" Windows10version1809:CornerRadius="15" BorderThickness="2" FocusVisualSecondaryBrush="BlueViolet" IsTabStop="False"  Background="#1b1c1d" VerticalAlignment="Top" />
                         </toolkit:DropShadowPanel>
-                        <Frame Grid.Row="1" Background="Transparent" Padding="0,10,0,0" Grid.ColumnSpan="3" Visibility="Visible" x:Name="MainFrame"/>
+                        <Frame Grid.Row="1" Visibility="Visible" Canvas.ZIndex="-1" Background="Transparent" Padding="0,10,0,0" Grid.ColumnSpan="3"  x:Name="MainFrame"/>
                     </Grid>
                 </winui:NavigationView.Content>
             </winui:NavigationView>

@@ -30,5 +30,9 @@ namespace Imgur.Api.Services.Contracts
             int page = 0
         );
 
+        Task<ApiResponse<List<GalleryItemResponse>>> GallerySearchAsync(string query, int page = 0);
+
+        Task<ApiResponse<List<TagResponse>>> TagSearchAsync(string query, int page = 0);
+
     }
 }

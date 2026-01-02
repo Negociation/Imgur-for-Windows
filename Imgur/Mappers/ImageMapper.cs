@@ -21,7 +21,7 @@ namespace Imgur.Mappers
                 return new List<Element>();
             }
 
-            return dtoList.Select(item => this.ToElement(item)).ToList();
+            return dtoList.Select(item => this.ToElement(item,mediaTitle,mediaAuthor)).ToList();
 
         }
         public Element ToElement(ImageResponse dto, string mediaTitle = null, string mediaAuthor = null)
@@ -34,7 +34,7 @@ namespace Imgur.Mappers
                 Width = dto.Width,
                 Height = dto.Height,
                 MediaTitle = (dto.Title ?? mediaTitle) ?? "Imgur",
-                MediaAuthor = (dto.AccountUrl ?? "--") ?? "--"
+                MediaAuthor = (mediaAuthor ?? "--")
             };
 
             return element;

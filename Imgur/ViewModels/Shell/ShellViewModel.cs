@@ -15,6 +15,20 @@ namespace Imgur.ViewModels.Shell
         public int CurrentPageIndex { get; set; }
         public bool IsAuthenticated => _userContext.IsAuthenticated;
 
+        private bool _isFullScreenMode;
+
+        public bool IsFullScreenMode
+        {
+            get => _isFullScreenMode;
+            private set
+            {
+                if (_isFullScreenMode != value)
+                {
+                    _isFullScreenMode = value;
+                    OnPropertyChanged(nameof(IsFullScreenMode));
+                }
+            }
+        }
 
         public User CurrentUser => _userContext.CurrentUser;
 
@@ -25,7 +39,7 @@ namespace Imgur.ViewModels.Shell
 
         private readonly IExplorerSearchVmFactory _explorerSearchVmFactory;
 
-        public ObservableCollection<Notification> NotificationStack { get; } = new ObservableCollection<Notification>();
+        public ObservableCollection<NotificationViewModel> NotificationStack { get; } = new ObservableCollection<NotificationViewModel>();
         public ShellViewModel(
             INavigator Navigator,
             IAppNotificationService notification,
@@ -39,6 +53,8 @@ namespace Imgur.ViewModels.Shell
             _dialogService = dialogService;
             _userContext = userContext;
             _explorerSearchVmFactory = explorerSearchVmFactory;
+
+
         }
 
 
@@ -112,6 +128,7 @@ namespace Imgur.ViewModels.Shell
         {
             //Get Events
             this._notification.NotificationAdded += OnNotificationRecieved;
+            this._navigator.FullScreenModeChanged += OnViewPageFullscreenModeChanged;
             this._navigator.NavigateInvoked += NavigateInvoked;
             this.CurrentPageIndex = 0;
         }
@@ -141,11 +158,15 @@ namespace Imgur.ViewModels.Shell
             }
         }
 
-        private void OnNotificationRecieved(object sender, Notification e)
+        private void OnNotificationRecieved(object sender, NotificationViewModel e)
         {
             this.NotificationStack.Add(e);
             OnPropertyChanged(nameof(NotificationStack));
         }
-        
+
+        private void OnViewPageFullscreenModeChanged(object sender, bool e)
+        {
+            IsFullScreenMode = e;
+        }
     }
 }

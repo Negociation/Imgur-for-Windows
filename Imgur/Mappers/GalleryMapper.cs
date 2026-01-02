@@ -92,11 +92,17 @@ namespace Imgur.Mappers
             }
             else
             {
-                media.CoverUri = dto.Link;
+                media.CoverUri = GetCoverUri(dto.id, dto.type);
             }
 
             media.CoverPlaceholder = GetCoverPlaceholder(media.CoverLink, media.CoverType);
             media.CoverImage = media.CoverUri;
+
+            if (media.CoverType == "video/mp4")
+            {
+                media.CoverVideo = "https://i.imgur.com/" + media.CoverLink + "_lq.mp4";
+            }
+
             if (media.IsAlbum)
             {
                 media.Elements = new ObservableCollection<Element>(
@@ -123,9 +129,6 @@ namespace Imgur.Mappers
             {
                 case "image/gif":
                     url += hdOnWifi ? "_d.jpeg?maxwidth=520&fidelity=low" : ".gif?maxwidth=500&fidelity=high";
-                    break;
-                case "video/mp4":
-                    url += "_lq.mp4";
                     break;
                 default:
                     string ext = hdOnWifi ? "jpeg" : "gif";

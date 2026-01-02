@@ -1,6 +1,8 @@
 ﻿using Imgur.Constants;
 using Imgur.Contracts;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -28,14 +30,22 @@ namespace Imgur.Uwp.Controls
         private ILocalSettings _localSettings;
         private void OnSettingSet(object sender, string settingsKey)
         {
-            if (settingsKey == LocalSettingsConstants.AutoPlay)
+            try
             {
-                this.AutoPlay = _localSettings.Get<bool>(LocalSettingsConstants.AutoPlay);
-                if (!this.AutoPlay)
+                if (settingsKey == LocalSettingsConstants.AutoPlay)
                 {
-                    MediaElement.Stop();
+                    this.AutoPlay = _localSettings.Get<bool>(LocalSettingsConstants.AutoPlay);
+                    if (!this.AutoPlay)
+                    {
+                        MediaElement.Stop();
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
         }
 
         private bool AutoPlay
@@ -50,15 +60,35 @@ namespace Imgur.Uwp.Controls
 
 
 
-        public string Source
+        public string ImageSource
         {
-            get { return (string)GetValue(SourceProperty); }
-            set { SetValue(SourceProperty, value); }
+            get { return (string)GetValue(ImageSourceProperty); }
+            set { SetValue(ImageSourceProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Source.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(string), typeof(MediaElementControl), new PropertyMetadata(0));
+        public static readonly DependencyProperty ImageSourceProperty =
+            DependencyProperty.Register("ImageSource", typeof(string), typeof(MediaElementControl), new PropertyMetadata(0));
+
+        public string VideoSource
+        {
+            get { return (string)GetValue(VideoSourceProperty); }
+            set { SetValue(VideoSourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Source.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VideoSourceProperty =
+            DependencyProperty.Register("VideoSource", typeof(string), typeof(MediaElementControl), new PropertyMetadata(0));
+
+        public string VideoSourcePlaceholder
+        {
+            get { return (string)GetValue(VideoSourcePlaceholderProperty); }
+            set { SetValue(VideoSourcePlaceholderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Source.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VideoSourcePlaceholderProperty =
+            DependencyProperty.Register("VideoSourcePlaceholder", typeof(string), typeof(MediaElementControl), new PropertyMetadata(0));
 
 
     }

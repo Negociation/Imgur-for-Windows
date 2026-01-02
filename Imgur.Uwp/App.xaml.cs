@@ -130,10 +130,14 @@ namespace Imgur.Uwp
 
             }
 
+            //Set Visual Kind
             this.FocusVisualKind = FocusVisualKind.Reveal;
 
-
+            //Set Rootframe on Navigation Service
             Services.GetRequiredService<INavigator>().RootFrame = rootFrame;
+
+            //Start Monitoring Clipboard for changes
+            Services.GetRequiredService<IClipboardService>().StartMonitoring();
         }
 
 
@@ -188,6 +192,7 @@ namespace Imgur.Uwp
                 .AddTransient<Imgur.Services.AlbumService>()
                 .AddTransient<Imgur.Services.AccountService>()
                 .AddTransient<Imgur.Services.TagsService>()
+                .AddTransient<Imgur.Services.UrlHandlerService>()
 
                 //Mappers
                 .AddTransient<GalleryMapper>()

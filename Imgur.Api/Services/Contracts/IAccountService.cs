@@ -10,5 +10,7 @@ namespace Imgur.Api.Services.Contracts
     public interface IAccountService
     {
         Task<ApiResponse<AccountResponse>> GetAccountAsync(string id);
+
+        Task<ApiResponse<List<AccountResponse>>> AccountSearchAsync(string query, int page = 0);
     }
 }

@@ -6,6 +6,7 @@ using Imgur.Mappers;
 using Imgur.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,5 +42,22 @@ namespace Imgur.Services
 
             return Result<Tag>.Success(tagMapped);
         }
+
+        public async Task<Result<IReadOnlyList<Tag>>> SearchTags(string query, int page = 0)
+        {
+            ApiResponse<List<TagResponse>> items = null;
+            items = await _apiService.TagSearchAsync(query);
+
+            if (!items.Success)
+            {
+                return Result<IReadOnlyList<Tag>>.Failure(items.Status.ToString(), ErrorType.Server);
+
+            }
+
+            Debug.WriteLine(items.Data.Count);
+            var tagListMapped =_tagMapper.ToTagList(items.Data);
+            return Result<IReadOnlyList<Tag>>.Success(tagListMapped);
+        }
+
     }
 }

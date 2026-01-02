@@ -377,4 +377,82 @@
     <value>Sign in or Sign Up!</value>
     <comment>LoginInterceptorDialog</comment>
   </data>
+  <data name="BestComments.Text" xml:space="preserve">
+    <value>BEST COMMENTS</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="Comment.Text" xml:space="preserve">
+    <value>COMMENT</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="CommentsHeader.Header" xml:space="preserve">
+    <value>Comments</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
+    <value>Looks like there aren't any comments yet.</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="EmptyCommentsParagraphSecond.Text" xml:space="preserve">
+    <value>BE THE FIRST!</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="ExpandMore.Text" xml:space="preserve">
+    <value>SEE ALL</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="FavouritesHeader.Header" xml:space="preserve">
+    <value>Favourites</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="Follow.Text" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="GalleriesSection.Text" xml:space="preserve">
+    <value>Galleries</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="InterceptorHeader_FollowTag" xml:space="preserve">
+    <value>You're about to Follow a Tag!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="LoadingMedia.Text" xml:space="preserve">
+    <value>Getting the Hot Stuff!</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="notification_clipboard_content" xml:space="preserve">
+    <value>Copied to Clipboard</value>
+  </data>
+  <data name="notification_generic" xml:space="preserve">
+    <value>New Notification!</value>
+  </data>
+  <data name="notification_open_galllery" xml:space="preserve">
+    <value>Open Gallery ? </value>
+  </data>
+  <data name="Points.Text" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="Posts.Text" xml:space="preserve">
+    <value>Posts</value>
+  </data>
+  <data name="PostsHeader.Header" xml:space="preserve">
+    <value>Posts</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="QueryTitle.Text" xml:space="preserve">
+    <value>Search Query:</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="RandomSection.Text" xml:space="preserve">
+    <value>Random Content</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="TagsSection.Text" xml:space="preserve">
+    <value>Tags</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="UsersSection.Text" xml:space="preserve">
+    <value>Users</value>
+    <comment>ExploreSearchView</comment>
+  </data>
 </root>

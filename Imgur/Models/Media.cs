@@ -16,6 +16,8 @@ namespace Imgur.Models
         public string CoverLink { get; set; }
         public string CoverUri { get; set; }
 
+
+        public string CoverVideo { get; set; }
         public string CoverImage { get; set; }
         public string CoverPlaceholder { get; set; }
 

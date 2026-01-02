@@ -45,6 +45,9 @@ namespace Imgur.Factories
             var tagVmFactory = _serviceProvider.GetRequiredService<ITagVmFactory>();
             var galleryService = _serviceProvider.GetRequiredService<GalleryService>();
             var mediaVmFactory = _serviceProvider.GetRequiredService<IMediaVmFactory>();
+            var localSettings = _serviceProvider.GetRequiredService<ILocalSettings>();
+            var accountService = _serviceProvider.GetRequiredService<AccountService>();
+            var accountVmFactory = _serviceProvider.GetRequiredService<IAccountVmFactory>();
 
             var vm = new ExplorerSearchViewModel
             (
@@ -53,7 +56,10 @@ namespace Imgur.Factories
                 tagsService,
                 tagVmFactory,
                 galleryService,
-                mediaVmFactory
+                mediaVmFactory,
+                localSettings,
+                accountService,
+                accountVmFactory
             );
 
             return vm;

@@ -5,7 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls="using:Imgur.Uwp.Controls"
-    xmlns:mediavm="using:Imgur.ViewModels.Media">
+    xmlns:mediavm="using:Imgur.ViewModels.Media"
+    xmlns:tagvm="using:Imgur.ViewModels.Tags"
+    xmlns:accountvm="using:Imgur.ViewModels.Account">
 
     <Grid>
 
@@ -22,7 +24,7 @@
                 <VisualState x:Name="RandomMediaGrid_Small">
                     <VisualState.Setters>
                         <Setter Target="RandomContentRepeatControl.DesiredWidth" Value="250" />
-                        <Setter Target="RandomContentRepeatControl.ItemHeight" Value="180" />
+                        <Setter Target="RandomContentRepeatControl.ItemHeight" Value="200" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="RandomMediaGrid_Medium">
@@ -34,7 +36,7 @@
                 <VisualState x:Name="RandomMediaGrid_Larger">
                     <VisualState.Setters>
                         <Setter Target="RandomContentRepeatControl.DesiredWidth" Value="400" />
-                        <Setter Target="RandomContentRepeatControl.ItemHeight" Value="290" />
+                        <Setter Target="RandomContentRepeatControl.ItemHeight" Value="280" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -61,26 +63,187 @@
             VerticalAlignment="Center"/>
 
 
-        <ScrollViewer Visibility="{Binding IsSearchMode}" VerticalScrollBarVisibility="Auto">
-            <Grid Margin="5" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <ScrollViewer Visibility="{Binding IsSearchMode}" x:Name="SearchContentScrollView" VerticalScrollBarVisibility="Auto" ViewChanged="SearchContentScrollView_ViewChanged" >
+            <Grid  Visibility="{Binding NothingFound, Converter={StaticResource BoolNegationConverter}}" Padding="0,0,0,80">
+                <Grid Margin="5" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}">
+                    <Grid.RowDefinitions>
+                        <!-- Header -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Search Tags Subheader -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Search Tags Content -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Search Galleries Subheader -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Search Galleries Content -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Search Users Subheader -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Search Users Content -->
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <!-- HEADER -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,5,0,0" Grid.Row="0" Opacity="0.8">
-                    <Button Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="5,0,0,0" Width="34" Height="34" Background="Transparent" Opacity="0.9">
-                        <FontIcon Visibility="Visible" Grid.Column="0" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
-                    </Button>
-                    <TextBlock x:Uid="QueryTitle" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22">Search Query:</TextBlock>
-                    <TextBlock FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22" Text="{Binding SearchQuery}"/>
-                </StackPanel>
+                    <!-- HEADER -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,5,0,10" Grid.Row="0" Opacity="0.8">
+                        <Button Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="5,0,0,0" Width="34" Height="34" Background="Transparent" Opacity="0.9">
+                            <FontIcon Visibility="Visible" Grid.Column="0" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
+                        </Button>
+                        <TextBlock x:Uid="QueryTitle" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22">Search Query:</TextBlock>
+                        <TextBlock FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22" Text="{Binding SearchQuery}"/>
+                    </StackPanel>
 
-                <!-- TAGS / OUTROS (mantidos) -->
-                <StackPanel Grid.Row="1" Margin="0,20,0,0"/>
+                    <!-- TAGS SUBHEADER -->
+                    <Grid x:Name="SearchTagsSubheader" Margin="5,10,5,0" VerticalAlignment="Center" Grid.Row="1" Visibility="{Binding TagsAvaliableToShow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Grid.Row="0" FontSize="20" Margin="5,0,0,0" Glyph="&#xE8EC;" Foreground="{ThemeResource SystemAccentColor}" Width="30" Height="30"  VerticalAlignment="Center"/>
+
+                        <TextBlock x:Uid="TagsSection" Grid.Column="1" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center"  Foreground="{ThemeResource SystemAccentColor}" Text="Tags" />
+
+                        <Button Grid.Column="2" Style="{StaticResource MoreButtonStyle}"  IsEnabled="False">
+                            <TextBlock x:Uid="ExpandMore">SEE ALL</TextBlock>
+                        </Button>
+                    </Grid>
+
+                    <!-- TAGS LIST -->
+                    <ScrollViewer Grid.Row="2" MaxHeight="220" Height="220" Visibility="{Binding TagsAvaliableToShow}">
+                        <toolkit:AdaptiveGridView 
+                            DesiredWidth="300"
+                            ItemHeight="200"
+                            OneRowModeEnabled="True" 
+                            ScrollViewer.HorizontalScrollMode="Enabled"  
+                            x:Name="SearchTagsRepeaterControl"  
+                            ItemsSource="{Binding TagsSearchMediaVmCollection,Mode=OneWay}" 
+                            IsItemClickEnabled="True" 
+                            SelectionMode="None"  
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            Margin="10,10,10,0" 
+                            Visibility="Visible">
+                            <toolkit:AdaptiveGridView.ItemTemplate>
+                                <DataTemplate x:Name="UserTagsItemTemplate" x:DataType="tagvm:TagViewModel">
+                                    <controls:TagTileControl  ViewModel="{Binding}" />
+                                </DataTemplate>
+                            </toolkit:AdaptiveGridView.ItemTemplate>
+                            <toolkit:AdaptiveGridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="MinWidth" Value="220"/>
+                                    <Setter Property="MaxWidth" Value="220"/>
+                                    <Setter Property="Width" Value="220"/>
+                                    <Setter Property="Height" Value="200"/>
+                                </Style>
+                            </toolkit:AdaptiveGridView.ItemContainerStyle>
+                        </toolkit:AdaptiveGridView>
+                    </ScrollViewer>
+
+                    <!-- GALLERIES SUBHEADER  -->
+                    <Grid  x:Name="SearchGalleriesSubheader" Margin="5,20,5,0" VerticalAlignment="Center" Grid.Row="3" Visibility="{Binding GalleriesAvaliableToShow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Grid.Row="0" FontSize="20" Margin="5,0,0,0" Glyph="&#xE8B9;" Foreground="{ThemeResource SystemAccentColor}" Width="30" Height="30"  VerticalAlignment="Center"/>
+
+                        <TextBlock x:Uid="GalleriesSection" Grid.Column="1" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center"  Foreground="{ThemeResource SystemAccentColor}" Text="Galleries" />
+
+                        <Button Grid.Column="2" Style="{StaticResource MoreButtonStyle}"  IsEnabled="False">
+                            <TextBlock x:Uid="ExpandMore">SEE ALL</TextBlock>
+                        </Button>
+                    </Grid>
+                    
+                    <!-- GALLERIES LIST CONTENT -->
+                    <ScrollViewer Grid.Row="4" MaxHeight="220" Height="220"  Visibility="{Binding GalleriesAvaliableToShow}">
+                        <toolkit:AdaptiveGridView 
+                            DesiredWidth="300"
+                            ItemHeight="200"
+                            OneRowModeEnabled="True" 
+                            ScrollViewer.HorizontalScrollMode="Enabled"  
+                            x:Name="SearchGalleriesRepeaterControl"  
+                            ItemsSource="{Binding GallerySearchMediaVmCollection,Mode=OneWay}" 
+                            IsItemClickEnabled="True" 
+                            SelectionMode="None"  
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            Margin="10,10,10,0" 
+                            Visibility="{Binding GalleriesAvaliableToShow}">
+                            <toolkit:AdaptiveGridView.ItemTemplate>
+                                <DataTemplate x:Name="SearchGalleriesItemTemplate" x:DataType="mediavm:MediaViewModel">
+                                    <controls:MediaTileControl ViewModel="{Binding}" />
+                                </DataTemplate>
+                            </toolkit:AdaptiveGridView.ItemTemplate>
+                            <toolkit:AdaptiveGridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="MinWidth" Value="220"/>
+                                    <Setter Property="MaxWidth" Value="220"/>
+                                    <Setter Property="Width" Value="220"/>
+                                    <Setter Property="Height" Value="200"/>
+                                </Style>
+                            </toolkit:AdaptiveGridView.ItemContainerStyle>
+                        </toolkit:AdaptiveGridView>
+                    </ScrollViewer>
+
+                    <!-- USERS SUBHEADER -->
+                    <Grid  x:Name="SearchUsersSubheader" Margin="5,20,5,0" VerticalAlignment="Center" Grid.Row="5" Visibility="{Binding UsersAvaliableToShow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Grid.Row="0" FontSize="20" Margin="5,0,0,0" Glyph="&#xebda;" Foreground="{ThemeResource SystemAccentColor}" Width="30" Height="30"  VerticalAlignment="Center"/>
+
+                        <TextBlock x:Uid="UsersSection" Grid.Column="1" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center"  Foreground="{ThemeResource SystemAccentColor}" Text="Users" />
+
+                        <Button Grid.Column="2" Style="{StaticResource MoreButtonStyle}"  IsEnabled="False">
+                            <TextBlock x:Uid="ExpandMore">SEE ALL</TextBlock>
+                         </Button>
+                    </Grid>
+
+                    <!-- USERS LIST -->
+                    <ScrollViewer Grid.Row="6" MaxHeight="220" Height="220"  Visibility="{Binding UsersAvaliableToShow}">
+                        <toolkit:AdaptiveGridView 
+                            DesiredWidth="300"
+                            ItemHeight="200"
+                            OneRowModeEnabled="True" 
+                            ScrollViewer.HorizontalScrollMode="Enabled"  
+                            x:Name="SearchUsersRepeaterControl"  
+                            ItemsSource="{Binding UsersSearchMediaVmCollection,Mode=OneWay}" 
+                            IsItemClickEnabled="True" 
+                            SelectionMode="None"  
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            Margin="10,10,10,0" 
+                            Visibility="Visible">
+                            <toolkit:AdaptiveGridView.ItemTemplate>
+                                <DataTemplate x:Name="SearchTagsItemTemplate" x:DataType="accountvm:AccountViewModel">
+                                    <controls:AccountTileControl ViewModel="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:AdaptiveGridView.ItemTemplate>
+                            <toolkit:AdaptiveGridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="MinWidth" Value="220"/>
+                                    <Setter Property="MaxWidth" Value="220"/>
+                                    <Setter Property="Width" Value="220"/>
+                                    <Setter Property="Height" Value="200"/>
+                                </Style>
+                            </toolkit:AdaptiveGridView.ItemContainerStyle>
+                        </toolkit:AdaptiveGridView>
+                    </ScrollViewer>
+
+
+                </Grid>
             </Grid>
         </ScrollViewer>
 
@@ -103,10 +266,12 @@
         
         <!-- ================= EXPLORER MODE ================= -->
         <ScrollViewer
+            x:Name="ExplorerContentScrollView"
             Visibility="{Binding IsExplorerMode}"
+            ViewChanged="ExplorerContentScrollView_ViewChanged"
             VerticalScrollBarVisibility="Auto">
 
-            <Grid Margin="5" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}">
+            <Grid Margin="5" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}" Padding="0,0,0,25">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <!-- Header -->
@@ -125,7 +290,7 @@
                     <Button Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="5,0,0,0" Width="34" Height="34" Background="Transparent" Opacity="0.9" >
                         <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
                     </Button>
-                    <TextBlock x:Uid="ExploreContent" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22">Explore New Content</TextBlock>
+                    <TextBlock x:Uid="Explorer" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22">Explore New Content</TextBlock>
                 </StackPanel>
                 
                 <!-- STAFF PICKS SUB-HEADER-->
@@ -140,51 +305,49 @@
 
                     <TextBlock Grid.Column="1" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center"  Foreground="{ThemeResource SystemAccentColor}" Text="{Binding StaffPicks.CurrentTag.Title}" />
 
-                    <Button Grid.Column="2" Style="{StaticResource FollowButtonStyle}">Follow</Button>
+                    <Button Grid.Column="2" Style="{StaticResource FollowButtonStyle}" Command="{Binding StaffPicks.FollowTagCommand}">
+                        <TextBlock x:Uid="Follow"></TextBlock>
+                    </Button>
                 </Grid>
 
                 <!-- STAFF PICKS CONTENT-->
-                <ListView 
-                    Grid.Row="2"
-                    x:Name="StaffPicksRepeaterControl"  
-                    ItemsSource="{Binding StaffPicks.RetrievedMediaVmCollection,Mode=OneWay}" 
-                    IsItemClickEnabled="True" 
-                    SelectionMode="None"  
-                    Padding="0,0,0,10"
-                    Margin="10,10,10,10" 
-                    
-                    Visibility="{Binding LoadedStaffPicks}"
-                    ScrollViewer.HorizontalScrollMode="Enabled"
-                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                    ScrollViewer.VerticalScrollMode="Disabled"
-                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
-
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsStackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="mediavm:MediaViewModel">
-                            <controls:MediaTileControl ViewModel="{Binding}" Width="220" Height="200" Margin="0,0"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Margin" Value="0"/>
-                            <Setter Property="Padding" Value="0"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                <ScrollViewer Grid.Row="2" MaxHeight="220" Height="220">
+                    <toolkit:AdaptiveGridView 
+                            DesiredWidth="300"
+                            ItemHeight="200"
+                            OneRowModeEnabled="True" 
+                            ScrollViewer.HorizontalScrollMode="Enabled"  
+                            x:Name="StaffPicksRepeaterControl"  
+                            ItemsSource="{Binding StaffPicksItems,Mode=OneWay}" 
+                            IsItemClickEnabled="True" 
+                            SelectionMode="None"  
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            Margin="10,10,10,0" 
+                            Visibility="{Binding LoadedStaffPicks}">
+                        <toolkit:AdaptiveGridView.ItemTemplate>
+                            <DataTemplate x:Name="StaffPickItemTemplate" x:DataType="mediavm:MediaViewModel">
+                                <controls:MediaTileControl ViewModel="{Binding}" />
+                            </DataTemplate>
+                        </toolkit:AdaptiveGridView.ItemTemplate>
+                        <toolkit:AdaptiveGridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="MinWidth" Value="220"/>
+                                <Setter Property="MaxWidth" Value="220"/>
+                                <Setter Property="Width" Value="220"/>
+                                <Setter Property="Height" Value="200"/>
+                            </Style>
+                        </toolkit:AdaptiveGridView.ItemContainerStyle>
+                    </toolkit:AdaptiveGridView>
+                </ScrollViewer>
                 
+
                 <!-- RANDOM HEADER -->
                 <StackPanel Orientation="Horizontal"  HorizontalAlignment="Stretch" Margin="0,30,0,10" VerticalAlignment="Center" Opacity="0.8" Grid.Row="3">
                     <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="16" Margin="10,0,0,0" Glyph="&#xE8B1;" Width="30" Height="30" Foreground="{ThemeResource SystemAccentColor}" FontWeight="Bold"  VerticalAlignment="Center"/>
-                    <TextBlock  FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center" Height="25" Foreground="{ThemeResource SystemAccentColor}" Text="Random Content"></TextBlock>
+                    <TextBlock x:Uid="RandomSection" FontWeight="SemiBold" Margin="5,0,0,0" FontSize="16" VerticalAlignment="Center" Height="25" Foreground="{ThemeResource SystemAccentColor}" Text="Random Content"></TextBlock>
                 </StackPanel>
 
                 <!-- RANDOM CONTENT -->
@@ -195,7 +358,7 @@
                     DesiredWidth="300"
                     ItemHeight="220"
                     SelectionMode="None"
-                    Margin="10,0,10,20"
+                    Margin="5,0,5,20"
                     ScrollViewer.VerticalScrollMode="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
 
@@ -210,7 +373,7 @@
         </ScrollViewer>
 
         <!-- Reload and Go to Top -->
-        <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" x:Name="BottomNavigationBar" Visibility="Visible">
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" x:Name="BottomNavigationBar" Visibility="{Binding Loading, Converter={StaticResource BoolNegationConverter}}">
             <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4" Opacity="0.9">
                 <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Command="{Binding ReloadCurrentPage}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Gallery">
                     <FontIcon Visibility="Visible" Grid.Column="0" FontSize="18" FontWeight="Normal"  VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>

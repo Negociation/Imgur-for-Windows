@@ -359,7 +359,7 @@ namespace Imgur.ViewModels.Media
                 {
                     _navigateMediaCommand = new RelayCommand(async () =>
                     {
-                        await Task.Delay(1000);
+                        await Task.Delay(100);
                         _navigator.Navigate("media", this);
                     });
                 }
@@ -380,11 +380,10 @@ namespace Imgur.ViewModels.Media
                         if (await this._clipboard.GetTextAsync() != this.CurrentMedia.Link)
                         {
                             this._clipboard.SetText(this.CurrentMedia.Link);
-                            Notification notification = new Notification();
-                            notification.Message = "Copied to Clipboard";
+                            NotificationViewModel notification = new NotificationViewModel();
+                            notification.Message = "notification_clipboard_content";
                             this._appNotification.AddNotification(notification);
-                        }
-                        
+                        }      
                     });
                 }
                 return _copy;

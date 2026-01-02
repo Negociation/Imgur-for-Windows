@@ -9,5 +9,7 @@ namespace Imgur.Contracts
 
         Task<string> GetTextAsync();
 
+        void StartMonitoring();
+        void StopMonitoring();
     }
 }

@@ -13,6 +13,10 @@ namespace Imgur.Models
         public string Description { get; set; }
 
         public string Background { get; set; }
+        public string BackgroundTile { get; set; }
+
+        public long ItemsCount { get; set; }
+
         public ObservableCollection<Media> Items { get; set; }
 
     }

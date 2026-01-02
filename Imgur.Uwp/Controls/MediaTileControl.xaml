@@ -15,26 +15,30 @@
     xmlns:controls="using:Imgur.Uwp.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
+    xmlns:media="using:Windows.UI.Xaml.Media"
     d:DesignWidth="400"
     HorizontalAlignment="Stretch"
     VerticalAlignment="Stretch">
     <UserControl.Resources>
-
         <!-- DEFAULT IMAGE TEMPLATE -->
         <DataTemplate x:Key="ImageTemplate" x:DataType="models:Media">
-            <Grid Background="#474a51" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Windows10version1809:CornerRadius="5">
+            <Grid Background="#474a51" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="5">
                 <Grid.RowDefinitions>
                     <RowDefinition  />
                     <RowDefinition MaxHeight="90"  />
                 </Grid.RowDefinitions>
 
                 <!-- Loading -->
-                <ProgressRing x:Name="LoadingRing" VerticalAlignment="Center" Grid.RowSpan="2" Width="50" Height="50" IsActive="True"  />
+                <ProgressRing x:Name="ImageLoadingRing" VerticalAlignment="Center" Grid.RowSpan="2" Width="50" Height="50" IsActive="True"  />
                 <FontIcon  Grid.RowSpan="2" FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="25" Foreground="#01b96b"  Glyph="&#xE91B;"/>
 
                 <!-- Data Container -->
-                <Grid x:Name="mediaContainer" Grid.RowSpan="2">
-                    <Image x:Name="mediaThumb" Stretch="UniformToFill"  Visibility="Visible" Source="{Binding CoverImage,Mode=OneWay}" />
+                <Grid x:Name="mediaContainer" Grid.RowSpan="2" >
+                    <Border CornerRadius="5" Visibility="Visible" Loaded="ImageBorder_Loaded">
+                        <Border.Background>
+                            <ImageBrush ImageOpened="MediaThumb_ImageOpened" x:Name="mediaThumb" Stretch="UniformToFill"  ImageSource="{Binding CoverImage,Mode=OneWay}"/>
+                        </Border.Background>
+                    </Border>
                 </Grid>
 
                 <StackPanel x:Name="mediaInfoContainer" Orientation="Horizontal" VerticalAlignment="Top" Opacity="0.9" HorizontalAlignment="Right" Margin="15" Grid.Row="0">
@@ -47,32 +51,32 @@
                         <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" Margin="5,-1,0,0" Text="{Binding ImagesCount,FallbackValue=0,Mode=OneWay}" FontSize="12" FontWeight="Bold" />
                     </Grid>
                 </StackPanel>
-                <Grid Grid.Row="1" x:Name="MediaFooter" Background="{StaticResource AcrylicInAppFillColorDefaultBrush}"  RequestedTheme="Dark" Margin="-1" contract5Present:CornerRadius="0,0,5,5" Opacity="0.9">
+                <Grid Grid.Row="1" x:Name="MediaFooter" Background="#3F4147"  RequestedTheme="Dark" Margin="-1" CornerRadius="0,0,5,5" Opacity="0.9">
                     <Grid Grid.Row="2" Margin="0,0,0,0" Padding="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"  />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Margin="10,0,10,0" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{Binding  Title,Mode=OneWay}" FontWeight="SemiBold"  Text="{Binding Title,FallbackValue='Image Title',Mode=OneWay }"/>
-                        <Grid Grid.Row="1" >
+                        <Grid Grid.Row="1" Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel HorizontalAlignment="Left" Margin="15,0,0,0" Grid.Column="0" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  VerticalAlignment="Center" FontSize="12" Glyph="&#xE74A;"/>
-                                <TextBlock FontSize="12" TextAlignment="End" Margin="10,7,0,0" Text="{Binding Ups,FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  VerticalAlignment="Center" Glyph="&#xE74A;" FontSize="14" Foreground="#CDD2DE" FontWeight="ExtraBold" />
+                                <TextBlock TextAlignment="End" Margin="4,4,0,0" FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Text="{Binding Ups,FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
 
                             <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"  VerticalAlignment="Center" FontSize="12" Glyph="&#xE90A;"/>
-                                <TextBlock FontSize="12" Margin="10,5,0,0" Text="{Binding CommentCount,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"  Foreground="#CDD2DE"  FontWeight="ExtraBold" VerticalAlignment="Center" FontSize="14" Glyph="&#xE90A;"/>
+                                <TextBlock FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Margin="5,3,0,0" Text="{Binding CommentCount,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
 
                             <StackPanel HorizontalAlignment="Right" Margin="0,0,15,0" Grid.Column="2" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  FontSize="12" VerticalAlignment="Center" Glyph="&#xE890;"/>
-                                <TextBlock FontSize="12" Margin="10,5,0,0" Text="{Binding Views,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" Foreground="#CDD2DE" FontWeight="ExtraBold" VerticalAlignment="Center" FontSize="14" Glyph="&#xE890;"/>
+                                <TextBlock FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Margin="5,3,0,0" Text="{Binding Views,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -91,25 +95,35 @@
 
         <!-- GIF TEMPLATE -->
         <DataTemplate x:Key="GifTemplate" x:DataType="models:Media" >
-            <Grid Background="#474a51" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Windows10version1809:CornerRadius="5"  ContextRequested="Media_ContextRequested">
+            <Grid Background="#474a51" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="5"  ContextRequested="Media_ContextRequested">
                 <Grid.RowDefinitions>
                     <RowDefinition  />
                     <RowDefinition MaxHeight="90"  />
                 </Grid.RowDefinitions>
 
                 <!-- Loading -->
-                <ProgressRing x:Name="LoadingRing" VerticalAlignment="Center" Margin="0,0,0,0" Grid.RowSpan="2" Width="50" Height="50" IsActive="True"  />
+                <ProgressRing x:Name="GifLoadingRing" VerticalAlignment="Center" Margin="0,0,0,0" Grid.RowSpan="2" Width="50" Height="50" IsActive="True"  />
                 <FontIcon  Grid.RowSpan="2" FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="25" Foreground="#01b96b"  Glyph="&#xE91B;"/>
 
                 <!-- Data Container -->
                 <Grid x:Name="mediaContainer" Grid.RowSpan="2">
                     <Grid x:Name="gifPlaceholderContainer">
-                        <Image x:Name="mediaPlaceholderImage" Stretch="UniformToFill" Source="{Binding CoverPlaceholder,Mode=OneWay}"/>
-                        <Grid Background="Black" Opacity="1">
-                            <winui:ProgressBar  x:Name="LoadingBar" MinHeight="4" IsEnabled="True" IsIndeterminate="True" VerticalAlignment="Top" Margin="0,0,0,0" />
-                        </Grid>
+                        <Border CornerRadius="5">
+                            <Border.Background>
+                                <ImageBrush x:Name="mediaPlaceholderImage" Stretch="UniformToFill"  ImageSource="{Binding CoverPlaceholder,Mode=OneWay}"/>
+                            </Border.Background>
+                        </Border>
+                        <Grid Background="Black" Opacity="0.8" CornerRadius="5"></Grid>
+                        <winui:ProgressBar  x:Name="LoadingBar" VerticalAlignment="Top" MinHeight="4" IsEnabled="True" IsIndeterminate="True"  Margin="2,0,2,0" Foreground="White" />
                     </Grid>
-                    <Image x:Name="mediaThumb" Stretch="UniformToFill"  Visibility="Visible" Source="{Binding CoverImage,Mode=OneWay}" />
+
+                    <Grid x:Name="gifContainer" Grid.RowSpan="2">
+                        <Border CornerRadius="5" Visibility="Visible" Loaded="GifBorder_Loaded">
+                            <Border.Background>
+                                <ImageBrush x:Name="mediaThumb" Stretch="UniformToFill" ImageOpened="MediaThumb_GifOpened"  ImageSource="{Binding CoverImage,Mode=OneWay}"/>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
                 </Grid>
                 <StackPanel x:Name="mediaInfoContainer" Orientation="Horizontal" VerticalAlignment="Top" Opacity="0.9" HorizontalAlignment="Right" Margin="15" Grid.Row="0">
                     <Grid x:Name="GifCountContainer" HorizontalAlignment="Right"  Margin="0,0,0,0" Background="#2e3035" Padding="5,0,5,0" Height="22"  CornerRadius="3">
@@ -124,32 +138,32 @@
                         <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" Margin="5,-1,0,0" Text="{Binding ImagesCount,FallbackValue=0,Mode=OneWay}" FontSize="12" FontWeight="Bold" />
                     </Grid>
                 </StackPanel>
-                <Grid Grid.Row="1" x:Name="MediaFooter" Background="{StaticResource AcrylicInAppFillColorDefaultBrush}"  RequestedTheme="Dark" Margin="-1" contract5Present:CornerRadius="0,0,5,5" Opacity="0.9">
+                <Grid Grid.Row="1" x:Name="MediaFooter" Background="#3F4147" RequestedTheme="Dark" Margin="-1" CornerRadius="0,0,5,5" Opacity="0.9">
                     <Grid Grid.Row="2" Margin="0,0,0,0" Padding="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"  />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Margin="10,0,10,0" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" ToolTipService.ToolTip="{Binding  Title,Mode=OneWay}"  Text="{Binding Title,FallbackValue='Image Title',Mode=OneWay }"/>
-                        <Grid Grid.Row="1" >
+                        <Grid Grid.Row="1" Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel HorizontalAlignment="Left" Margin="15,0,0,0" Grid.Column="0" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  VerticalAlignment="Center" FontSize="12" Glyph="&#xE74A;"/>
-                                <TextBlock FontSize="12" TextAlignment="End" Margin="10,7,0,0" Text="{Binding Ups,FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  VerticalAlignment="Center" Glyph="&#xE74A;" FontSize="14" Foreground="#CDD2DE" FontWeight="ExtraBold" />
+                                <TextBlock TextAlignment="End" Margin="4,4,0,0" FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Text="{Binding Ups,FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
 
                             <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"  VerticalAlignment="Center" FontSize="12" Glyph="&#xE90A;"/>
-                                <TextBlock FontSize="12" Margin="10,5,0,0" Text="{Binding CommentCount,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"  Foreground="#CDD2DE"  FontWeight="ExtraBold" VerticalAlignment="Center" FontSize="14" Glyph="&#xE90A;"/>
+                                <TextBlock FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Margin="5,3,0,0" Text="{Binding CommentCount,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
 
                             <StackPanel HorizontalAlignment="Right" Margin="0,0,15,0" Grid.Column="2" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  FontSize="12" VerticalAlignment="Center" Glyph="&#xE890;"/>
-                                <TextBlock FontSize="12" Margin="10,5,0,0" Text="{Binding Views,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" Foreground="#CDD2DE" FontWeight="ExtraBold" VerticalAlignment="Center" FontSize="14" Glyph="&#xE890;"/>
+                                <TextBlock FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Margin="5,3,0,0" Text="{Binding Views,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -180,13 +194,7 @@
 
                 <!-- Data Container -->
                 <Grid x:Name="mediaContainer" Grid.RowSpan="2">
-                    <Grid x:Name="videoPlaceholderContainer">
-                        <Image x:Name="mediaPlaceholderImage" Stretch="UniformToFill" Source="{Binding CoverPlaceholder,Mode=OneWay}"/>
-                        <Grid Background="Black" Opacity="1">
-                            <winui:ProgressBar  x:Name="LoadingBar" VerticalAlignment="Top" MinHeight="4" IsEnabled="True" IsIndeterminate="True"  Margin="0,0,0,0" />
-                        </Grid>
-                    </Grid>
-                    <controls:MediaElementControl Source="{Binding CoverImage,Mode=OneWay}"  />
+                    <controls:MediaElementControl VideoSource="{Binding CoverVideo,Mode=OneWay}" ImageSource="{Binding CoverImage, Mode= OneWay}" VideoSourcePlaceholder="{Binding CoverPlaceholder,Mode=OneWay}" />
                 </Grid>
                 <StackPanel x:Name="mediaInfoContainer" Orientation="Horizontal" VerticalAlignment="Top" Opacity="0.9" HorizontalAlignment="Right" Margin="15" Grid.Row="0">
                     <Grid  x:Name="VideoCountContainer" HorizontalAlignment="Right"  Margin="1,0,0,0" Background="#2e3035" Padding="5,0,5,0" Height="22" CornerRadius="3">
@@ -201,32 +209,32 @@
                         <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" Margin="5,-1,0,0" Text="{Binding  ImagesCount,FallbackValue=0,Mode=OneWay}" FontSize="12" FontWeight="Bold" />
                     </Grid>
                 </StackPanel>
-                <Grid Grid.Row="1" x:Name="MediaFooter" Background="{StaticResource AcrylicInAppFillColorDefaultBrush}"  RequestedTheme="Dark" Margin="-1" contract5Present:CornerRadius="0,0,5,5" Opacity="0.9">
+                <Grid Grid.Row="1" x:Name="MediaFooter" Background="#3F4147" RequestedTheme="Dark" Margin="-1" CornerRadius="0,0,5,5" Opacity="0.95">
                     <Grid Grid.Row="2" Margin="0,0,0,0" Padding="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"  />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Margin="10,0,10,0" TextWrapping="Wrap" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{Binding  Title,Mode=OneWay}"  Text="{Binding Title,FallbackValue='Image Title',Mode=OneWay }"/>
-                        <Grid Grid.Row="1" >
+                        <Grid Grid.Row="1" Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel HorizontalAlignment="Left" Margin="15,0,0,0" Grid.Column="0" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  VerticalAlignment="Center" FontSize="12" Glyph="&#xE74A;"/>
-                                <TextBlock FontSize="12" TextAlignment="End" Margin="10,7,0,0" Text="{Binding Ups,FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  VerticalAlignment="Center" Glyph="&#xE74A;" FontSize="14" Foreground="#CDD2DE" FontWeight="ExtraBold" />
+                                <TextBlock TextAlignment="End" Margin="4,4,0,0" FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Text="{Binding Ups,FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
 
                             <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"  VerticalAlignment="Center" FontSize="12" Glyph="&#xE90A;"/>
-                                <TextBlock FontSize="12" Margin="10,5,0,0" Text="{Binding CommentCount,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"  Foreground="#CDD2DE"  FontWeight="ExtraBold" VerticalAlignment="Center" FontSize="14" Glyph="&#xE90A;"/>
+                                <TextBlock FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Margin="5,3,0,0" Text="{Binding CommentCount,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
 
                             <StackPanel HorizontalAlignment="Right" Margin="0,0,15,0" Grid.Column="2" Orientation="Horizontal">
-                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"  FontSize="12" VerticalAlignment="Center" Glyph="&#xE890;"/>
-                                <TextBlock FontSize="12" Margin="10,5,0,0" Text="{Binding Views,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" Foreground="#CDD2DE" FontWeight="ExtraBold" VerticalAlignment="Center" FontSize="14" Glyph="&#xE890;"/>
+                                <TextBlock FontSize="14" Foreground="#CDD2DE" FontWeight= "SemiBold"  Margin="5,3,0,0" Text="{Binding Views,Converter={StaticResource KiloConverter},FallbackValue=0,Mode=OneWay}"/>
                             </StackPanel>
                         </Grid>
                     </Grid>

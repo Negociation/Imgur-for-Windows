@@ -1,0 +1,325 @@
+﻿<Page
+    x:Name="TagViewPage"
+    x:Class="Imgur.Uwp.Views.Tags.TagView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imgur.Uwp.Views.Tags"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:mediavm="using:Imgur.ViewModels.Media"
+    xmlns:controls="using:Imgur.Uwp.Controls"
+    Margin="0"
+    mc:Ignorable="d">
+
+    <Grid Margin="0">
+
+        <!-- Navigation View Adapters -->
+
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="LeaveButton">
+                <VisualState x:Name="LeaveButtonMobileInlineState">
+                    <VisualState.Setters>
+                        <Setter Target="LeaveFloatButton.Margin" Value="10,14,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            
+            <VisualStateGroup  x:Uid="RootViewTriggers">
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="300" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TagViewPage.Margin" Value="0,-10,0,0"/>
+                        <Setter Target="ExpandedHeader.Height" Value="200"/>
+                        <Setter Target="TitleContainer.Margin" Value="10"/>
+                        <Setter Target="StickOptionsBarContent.Height" Value="55"/>
+                        <Setter Target="StickOptionsBarContent.Padding" Value="10,5,10,5"/>
+                        <Setter Target="TagMiniatureBackground.Visibility" Value="Collapsed"/>
+                        <Setter Target="HeaderSeparator.Visibility" Value="Collapsed"/>
+
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="500" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TagViewPage.Margin" Value="-5,-50,0,0"/>
+                        <Setter Target="TagViewPage.Padding" Value="0"/>
+                        <Setter Target="StickOptionsBarContent.Height" Value="105"/>
+                        <Setter Target="StickOptionsBarContent.Padding" Value="15,50,15,0"/>
+                        <Setter Target="LeaveFloatButton.Margin" Value="17,17,0,0"/>
+                        <Setter Target="LeaveFloatButton.Background" Value="#AD19191C"/>
+                        <Setter Target="TagMiniatureBackground.Visibility" Value="Visible"/>
+                        <Setter Target="HeaderSeparator.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TagViewPage.Margin" Value="-5,-77,0,0"/>
+                        <Setter Target="TagViewPage.Padding" Value="0"/>
+                        <Setter Target="LeaveFloatButton.Margin" Value="17,30,0,0"/>
+                        <Setter Target="LeaveFloatButton.MinWidth" Value="34"/>
+                        <Setter Target="LeaveFloatButton.MinHeight" Value="34"/>
+
+                        <Setter Target="TagMiniatureBackground.Visibility" Value="Visible"/>
+                        <Setter Target="HeaderSeparator.Visibility" Value="Visible"/>
+                        <Setter Target="StickOptionsBarContent.Height" Value="140"/>
+                        <Setter Target="StickOptionsBarContent.Padding" Value="15,80,15,0"/>
+
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1100" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TagViewPage.Margin" Value="-5,-77,0,0"/>
+                        <Setter Target="TagViewPage.Padding" Value="0"/>
+                        <Setter Target="LeaveFloatButton.Margin" Value="17,30,0,0"/>
+                        <Setter Target="LeaveFloatButton.MinWidth" Value="34"/>
+                        <Setter Target="LeaveFloatButton.MinHeight" Value="34"/>
+
+                        <Setter Target="TagMiniatureBackground.Visibility" Value="Visible"/>
+                        <Setter Target="HeaderSeparator.Visibility" Value="Visible"/>
+                        <Setter Target="StickOptionsBarContent.Height" Value="160"/>
+                        <Setter Target="StickOptionsBarContent.Padding" Value="15,100,15,0"/>
+
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TagViewPage.Margin" Value="-5,-62,0,0"/>
+                        <Setter Target="TagViewPage.Padding" Value="0"/>
+                        <Setter Target="LeaveFloatButton.Margin" Value="17,30,0,0"/>
+                        <Setter Target="LeaveFloatButton.MinWidth" Value="34"/>
+                        <Setter Target="LeaveFloatButton.MinHeight" Value="34"/>
+                        <Setter Target="ExpandedHeader.Height" Value="400"/>
+
+                        <Setter Target="TagMiniatureBackground.Visibility" Value="Visible"/>
+                        <Setter Target="HeaderSeparator.Visibility" Value="Visible"/>
+                        <Setter Target="StickOptionsBarContent.Height" Value="160"/>
+                        <Setter Target="StickOptionsBarContent.Padding" Value="15,100,15,0"/>
+
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+           
+            <VisualStateGroup x:Uid="MediaViewTriggers">
+                <VisualState x:Name="MediaGrid_Small">
+                    <VisualState.Setters>
+                        <Setter Target="ContentRepeaterControl.DesiredWidth" Value="250" />
+                        <Setter Target="ContentRepeaterControl.ItemHeight" Value="200" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MediaGrid_Medium">
+                    <VisualState.Setters>
+                        <Setter Target="ContentRepeaterControl.DesiredWidth" Value="300" />
+                        <Setter Target="ContentRepeaterControl.ItemHeight" Value="220" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MediaGrid_Larger">
+                    <VisualState.Setters>
+                        <Setter Target="ContentRepeaterControl.DesiredWidth" Value="400" />
+                        <Setter Target="ContentRepeaterControl.ItemHeight" Value="280" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+        
+        <ScrollViewer x:Name="MainScrollViewer" 
+                      Padding="0,0,0,0"
+                      VerticalScrollBarVisibility="Auto"
+                      ViewChanging="MainScrollViewer_ViewChanging"
+                      ViewChanged="MainScrollViewer_ViewChanged">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <!-- Header expandido com background -->
+                <Grid x:Name="ExpandedHeader" 
+                      Height="250"
+                      VerticalAlignment="Top">
+                    <Grid.Background>
+                        <ImageBrush Opacity="0.8" ImageSource="{Binding CurrentTag.Background}"
+                            Stretch="UniformToFill"
+                            AlignmentX="Center"
+                            AlignmentY="Center"/>
+                    </Grid.Background>
+                    <Grid Background="Black" Opacity="0.3"></Grid>
+
+                    <!-- Título grande centralizado -->
+                    <Grid x:Name="TitleContainer" 
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          Margin="0,50,0,0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="ExpandedTitle"
+                                       Text="{Binding CurrentTag.Title}"
+                                       FontSize="48"
+                                       FontWeight="SemiBold"
+                                       Foreground="White"
+                                       RenderTransformOrigin="0,0.5">
+                            <TextBlock.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform x:Name="TitleScale"/>
+                                    <TranslateTransform x:Name="TitleTranslate"/>
+                                </TransformGroup>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+
+
+                        <!-- Subtitle -->
+                        <StackPanel Orientation="Horizontal" x:Name="PostsPreview"  HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock x:Name="PostCount"
+                               Text="{Binding CurrentTag.ItemsCount}"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="White"
+                               Opacity="1"
+                             
+                               Margin="0,70,0,0"/>
+                            <TextBlock x:Name="PostCountLabel"
+                               x:Uid="Posts"
+                               Text="posts"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="White"
+                               Opacity="1"
+                               Margin="10,70,0,0"/>
+
+                            
+                            
+                        </StackPanel>
+                        <toolkit:DropShadowPanel 
+                    Grid.Row="1" 
+                    BlurRadius="20" 
+                    OffsetX="0" 
+                    Margin="0,10,0,0"
+                OffsetY="2" 
+                ShadowOpacity="0.5" 
+                HorizontalContentAlignment="Stretch" 
+                    HorizontalAlignment="Center" 
+                    Padding="50,0"
+                VerticalContentAlignment="Stretch">
+                            <Button  Style="{StaticResource FollowButtonStyle}" Command="{Binding FollowTagCommand}"  Opacity="1">
+                                <TextBlock x:Uid="Follow"></TextBlock>
+                            </Button>
+                        </toolkit:DropShadowPanel>
+                    </Grid>
+                </Grid>
+
+                <!-- Conteúdo da página -->
+                <toolkit:AdaptiveGridView Grid.Row="1 " Padding="0,0,0,70" ScrollViewer.VerticalScrollMode="Disabled" x:Name="ContentRepeaterControl"  ItemsSource="{Binding RetrievedMediaVmCollectionSmall,Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"  Margin="10,50,10,0">
+                    <toolkit:AdaptiveGridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </toolkit:AdaptiveGridView.ItemContainerStyle>
+
+                    <toolkit:AdaptiveGridView.ItemTemplate>
+                        <DataTemplate x:Name="MediaItemTemplate" x:DataType="mediavm:MediaViewModel">
+                            <controls:MediaTileControl ViewModel="{Binding}" />
+                        </DataTemplate>
+                    </toolkit:AdaptiveGridView.ItemTemplate>
+                </toolkit:AdaptiveGridView>
+            </Grid>
+        </ScrollViewer>
+
+        <toolkit:DropShadowPanel x:Name="StickOptionsBar" 
+                         OffsetY="5" 
+                         BlurRadius="20" 
+                         ShadowOpacity="0.4" 
+                         Opacity="0" 
+                         Visibility="Collapsed"
+                         VerticalAlignment="Top"
+                                 
+                         HorizontalContentAlignment="Stretch">
+
+            <Grid x:Name="StickOptionsBarContent" Height="150" Background="#2F3035" Padding="0,80,0,0"  HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Border Height="1" 
+                            x:Name="HeaderSeparator"
+                            Visibility="Visible"
+                            VerticalAlignment="Top"
+                            Margin="-18,5,-20,0"
+                            Opacity="0.3"
+                            Background="Gray" 
+                            HorizontalAlignment="Stretch"/>
+                
+                <Grid Grid.Row="1" x:Name="StickCommands" Height="50" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="45"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="TagMiniatureBackground" CornerRadius="5" Width="30" Height="30" Margin="0,0,10,0">
+                        <Border.Background>
+                            <ImageBrush x:Name="tagThumb" Stretch="UniformToFill" ImageSource="{Binding CurrentTag.BackgroundTile,Mode=OneWay}" />
+                        </Border.Background>
+                    </Border>
+                    
+                    <TextBlock Grid.Column="1" Margin="0,0,0,0" FontWeight="SemiBold" VerticalAlignment="Center" Text="{Binding CurrentTag.Title}"></TextBlock>
+                    <toolkit:DropShadowPanel 
+                    Grid.Column="2" 
+                    BlurRadius="9" 
+                    OffsetX="0" 
+                    Margin="0,0,0,0"
+                    OffsetY="2" 
+                ShadowOpacity="0.1" 
+                HorizontalContentAlignment="Stretch" 
+                    HorizontalAlignment="Center" 
+                    Padding="0"
+                VerticalContentAlignment="Stretch">
+                        <Button  Style="{StaticResource FollowButtonStyle}" Command="{Binding FollowTagCommand}"  Opacity="1">Follow</Button>
+                    </toolkit:DropShadowPanel>
+                </Grid>
+               
+            </Grid>
+        </toolkit:DropShadowPanel>
+
+        <!-- Go Back Button -->
+        <Button Grid.Column="0" x:Name="LeaveFloatButton" Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="11,15,0,0" Width="30" Height="30" Background="#19191C" Opacity="1" >
+            <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="14" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" Glyph="&#xE72B;"/>
+        </Button>
+
+        <!-- Bottom Navigation Bar -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="10" VerticalAlignment="Bottom" x:Name="BottomNavigationBar" Visibility="Visible">
+            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Gallery">
+                    <FontIcon Visibility="Visible" Grid.Column="0" FontSize="20" FontWeight="SemiLight"  VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.5" Margin="10,0,0,0">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Click="NavigateToTop_Click" Width="48" Height="48" IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}" ToolTipService.ToolTip="Move to the top">
+                    <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="20" Margin="1,0,0,0" FontWeight="SemiLight" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE898;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+        </StackPanel>
+        
+    </Grid>
+</Page>

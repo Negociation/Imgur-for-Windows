@@ -71,7 +71,7 @@ namespace Imgur.ViewModels.Media
                         if (await this._clipboardService.GetTextAsync() != this.CurrentMedia.Embed)
                         {
                             this._clipboardService.SetText(this.CurrentMedia.Embed);
-                            Notification notification = new Notification();
+                            NotificationViewModel notification = new NotificationViewModel();
                             notification.Message = "Embed Content Copied to Clipboard";
                             this._appNotification.AddNotification(notification);
                         }
