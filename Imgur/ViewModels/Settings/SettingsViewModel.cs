@@ -1,6 +1,7 @@
 ﻿using Imgur.Constants;
 using Imgur.Contracts;
 using Imgur.Helpers;
+using System;
 using System.Windows.Input;
 
 namespace Imgur.ViewModels.Settings
@@ -11,13 +12,21 @@ namespace Imgur.ViewModels.Settings
         private ILocalSettings _localSettings;
         private INavigator _navigator;
         private ILiveTilesService _liveTilesService;
-
-        public SettingsViewModel(ILocalSettings localSettings, INavigator navigator, ILiveTilesService liveTilesService)
+        private IDialogService _dialogService;
+        private IAppLifeCycleService _appLifecycle;
+        public SettingsViewModel(
+            ILocalSettings localSettings,
+            INavigator navigator,
+            ILiveTilesService liveTilesService,
+            IDialogService dialogService,
+            IAppLifeCycleService appLifecycle
+            )
         {
             _localSettings = localSettings;
             _navigator = navigator;
             _liveTilesService = liveTilesService;
-
+            _dialogService = dialogService;
+            _appLifecycle = appLifecycle;
         }
 
 
@@ -61,6 +70,19 @@ namespace Imgur.ViewModels.Settings
             set => _localSettings.Set(LocalSettingsConstants.ThumbSize, value);
         }
 
+
+        public string CustomAppId
+        {
+            get => _localSettings.Get<string>(LocalSettingsConstants.CustomClientId);
+            set => _localSettings.Set(LocalSettingsConstants.CustomClientId, value);
+        }
+
+        public string CustomClientSecret
+        {
+            get => _localSettings.Get<string>(LocalSettingsConstants.CustomClientSecret);
+            set => _localSettings.Set(LocalSettingsConstants.CustomClientSecret, value);
+        }
+
         private ICommand _leaveCurrentPage;
 
         public ICommand LeaveCurrentPage
@@ -77,5 +99,35 @@ namespace Imgur.ViewModels.Settings
                 return _leaveCurrentPage;
             }
         }
+
+        private ICommand _openCustomApiKeyDialog;
+
+        public ICommand OpenCustomApiKeyDialog
+        {
+            get
+            {
+                if (_openCustomApiKeyDialog == null)
+                {
+                    _openCustomApiKeyDialog = new RelayCommand(async () =>
+                    {
+                        try
+                        {
+                            await _dialogService.ShowCustomApiKeyDialog(this);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        return;
+                    });
+                }
+                return _openCustomApiKeyDialog;
+            }
+        }
+
+        public ICommand RestartAppCommand => new RelayCommand(async () =>
+        {
+            await _appLifecycle.RestartToApplyCustomApiSettings();
+        });
+
     }
 }

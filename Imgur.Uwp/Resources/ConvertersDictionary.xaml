@@ -17,7 +17,9 @@
     <local1:ItemCountToMaxHeightConverter x:Key="ItemCountToMaxHeightConverter" />
     <local1:EmbedURIConverter x:Key="EmbedURIConverter" />
     <local1:LoginInterceptorEnumToStringConverter x:Key="LoginInterceptorEnumToStringConverter"/>
-
+    <local1:EmptyStringVisibilityConverter x:Key="EmptyStringVisibilityConverter" />
+    <local1:BoolToGridLengthConverter x:Key="BoolToGridLengthConverter" />
+    
 
     <local1:ValueConverterGroup x:Key="EqualtoVisibilityConverter">
         <local1:EqualBoolConverter/>
@@ -28,6 +30,5 @@
         <local1:BoolNegationConverter/>
         <local1:BoolVisibilityConverter/>
     </local1:ValueConverterGroup>
-    
     
 </ResourceDictionary>

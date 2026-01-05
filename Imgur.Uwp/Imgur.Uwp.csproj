@@ -157,8 +157,10 @@
       <DependentUpon>VideoViewElementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\Base64BitmapConverter.cs" />
+    <Compile Include="Converters\BoolToGridLengthConverter.cs" />
     <Compile Include="Converters\BoolNegationConverter.cs" />
     <Compile Include="Converters\BoolValueConverter.cs" />
+    <Compile Include="Converters\EmptyStringVisibilityConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\CoverTypeConverter.cs" />
     <Compile Include="Converters\EmbedURIConverter.cs" />
@@ -172,6 +174,9 @@
     <Compile Include="Converters\StringToURIConverter.cs" />
     <Compile Include="Converters\TimestampToElapsedTimeConverter .cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="Dialogs\CustomApiKeySettingsDialog.xaml.cs">
+      <DependentUpon>CustomApiKeySettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\EmbedDialog.xaml.cs">
       <DependentUpon>EmbedDialog.xaml</DependentUpon>
     </Compile>
@@ -182,6 +187,7 @@
       <DependentUpon>UploadDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AppLifeCycleService.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\DispatcherService.cs" />
@@ -232,6 +238,8 @@
     <Content Include="Assets\Fonts\Imgur.ttf" />
     <Content Include="Assets\Fonts\segmdl2.ttf" />
     <None Include="Imgur.Uwp_TemporaryKey.pfx" />
+    <PRIResource Include="Strings\vi-VI\Resources.resw" />
+    <PRIResource Include="Strings\id-ID\Resources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
     <PRIResource Include="Strings\uk-UA\Resources.resw" />
     <PRIResource Include="Strings\pt-BR\Resources.resw" />
@@ -302,6 +310,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\VideoViewElementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\CustomApiKeySettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -416,9 +428,7 @@
       <Name>Imgur</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Strings\cs-CZ\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -443,4 +443,83 @@
   <data name="notification_generic" xml:space="preserve">
     <value>Notificação!</value>
   </data>
+  <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Salvar Configurações</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
+    <value>Para Aplicar novas configurações de Api Key o App foi reiniciado.</value>
+  </data>
+  <data name="NotificationTitleRestartMsg" xml:space="preserve">
+    <value>Reinicio Necessário!</value>
+  </data>
+  <data name="Save.Text" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="SettingsApiKey.Header" xml:space="preserve">
+    <value>Configurar uma Api Key Personalizada</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKey.Text" xml:space="preserve">
+    <value>Armazene uma Api Key propria para uso do aplicativo invés da padrão. Pode ser necessário para alguns recursos de alto consumo.</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKeyButton.Text" xml:space="preserve">
+    <value>Configurar</value>
+  </data>
+  <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
+    <value>Configurar uma Api Key</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
+    <value>Para o uso das Api Keys padrões do aplicativo, basta deixar os campos em branco e salvar.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
+    <value>Configurações Avançadas</value>
+  </data>
+  <data name="SignInIntercetorMsg.Text" xml:space="preserve">
+    <value>Entre para continuar!</value>
+    <comment>LoginInterceptorDialog</comment>
+  </data>
+  <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
+    <value>Armazene uma Api Key propria para uso do aplicativo invés da padrão. Pode ser necessário para alguns recursos de alto consumo.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="AppCloseCancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="AppCloseConfirm" xml:space="preserve">
+    <value>Certeza</value>
+  </data>
+  <data name="AppCloseContent" xml:space="preserve">
+    <value>Tem certeza que deseja fechar o Aplicativo ?</value>
+  </data>
+  <data name="AppCloseTitle" xml:space="preserve">
+    <value>Já vai embora ?</value>
+  </data>
+  <data name="notification_api_warning" xml:space="preserve">
+    <value>Alerta sobre Serviços de Api!</value>
+  </data>
+  <data name="notification_api_warning_content" xml:space="preserve">
+    <value>A Apí do Imgur aparentemente esta apresentando problemas de degradação de performance. Alguns recursos do aplicativo podem se comportar de forma inesperada.</value>
+  </data>
+  <data name="notification_open_account" xml:space="preserve">
+    <value>Abrir Perfil do Imguriano ?</value>
+  </data>
+  <data name="notification_open_album" xml:space="preserve">
+    <value>Abrir Album</value>
+  </data>
+  <data name="notification_open_image" xml:space="preserve">
+    <value>Abrir Imagem ?</value>
+  </data>
+  <data name="notification_open_tag" xml:space="preserve">
+    <value>Navegar pelo Marcador ?</value>
+  </data>
+  <data name="Hidden.Text" xml:space="preserve">
+    <value>Oculto</value>
+  </data>
+  <data name="HiddenAuthor" xml:space="preserve">
+    <value>Oculto</value>
+  </data>
 </root>

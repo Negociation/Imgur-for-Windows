@@ -31,18 +31,16 @@ namespace Imgur.Services
             _accountMapper = accountMapper;
         }
 
-        public async Task<UserAccount> GetAccountById(string id)
+        public async Task<Result<UserAccount>> GetAccountById(string id)
         {
             var retrievedAccount = await _apiService.GetAccountAsync(id);
 
             if (!retrievedAccount.Success)
             {
-                throw new Exception("Erro busca");
+                return Result<UserAccount>.Failure(retrievedAccount.Status.ToString(), ErrorType.Server);
             }
 
-            return this._accountMapper.ToUserAccount(retrievedAccount.Data);
-
-           
+            return Result<UserAccount>.Success(this._accountMapper.ToUserAccount(retrievedAccount.Data));
         }
 
         public async Task<Result<IReadOnlyList<UserAccount>>> SearchAccounts(string query, int page = 0)
@@ -56,7 +54,6 @@ namespace Imgur.Services
 
             }
 
-            Debug.WriteLine(items.Data.Count);
             var tagListMapped = _accountMapper.ToUserAccountList(items.Data);
             return Result<IReadOnlyList<UserAccount>>.Success(tagListMapped);
         }

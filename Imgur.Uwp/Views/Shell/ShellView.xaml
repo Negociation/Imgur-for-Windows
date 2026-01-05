@@ -274,7 +274,6 @@
                         <Setter Target="PaneSearchBox.Visibility" Value="Collapsed" />
                         <Setter Target="MainFrame.Padding" Value="10,0,0,0" />
                         <Setter Target="NavigationViewContent.Margin" Value="0" />
-
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="InlineState">
@@ -287,9 +286,7 @@
                         <Setter Target="NavigationView.IsPaneOpen" Value="True" />
                         <Setter Target="SearchBox.Visibility" Value="Visible" />
                         <Setter Target="MainFrame.Padding" Value="10,15,0,0" />
-
                         <Setter Target="NavigationViewContent.Margin" Value="0" />
-
                     </VisualState.Setters>
                 </VisualState>
 
@@ -312,10 +309,8 @@
                     <VisualState.Setters>
                         <Setter Target="NavigationView.IsPaneToggleButtonVisible" Value="True" />
                         <Setter Target="NavigationView.IsPaneOpen" Value="False" />
-
                         <Setter Target="MainFrame.Padding" Value="0,15,0,0" />
                         <Setter Target="NavigationViewContent.Margin" Value="0" />
-
                     </VisualState.Setters>
                 </VisualState>
 
@@ -325,6 +320,7 @@
                         <Setter Target="PaneTitle.Column" Value="0" />
                         <Setter Target="PaneTitle.(Grid.ColumnSpan)" Value="2" />
                         <Setter Target="NavigationViewContent.Margin" Value="0,0,0,30" />
+                        <Setter Target="MainFrame.Padding" Value="0,15,0,0" />
                     </VisualState.Setters>
                     <Storyboard>
                         <DoubleAnimation
@@ -382,7 +378,7 @@
             Grid.Column="0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"/>
-        
+
         <Grid x:Name="NavigationViewContent" Margin="0" Background="Transparent" Grid.RowSpan="2" Grid.ColumnSpan="2">
             <!-- Animation Tranformers for Desktop (If width < 500px) -->
             <winui:NavigationView x:Name="NavigationView" Style="{StaticResource NavigationViewStyle}" Grid.RowSpan="2" Margin="0,0,0 0" IsSettingsVisible="False" PaneOpening="NavigationView_PaneOpening" CompactPaneLength="58"  OpenPaneLength="280" IsTitleBarAutoPaddingEnabled="False"  IsBackButtonVisible="Collapsed">
@@ -485,7 +481,7 @@
                 </winui:NavigationView.Content>
             </winui:NavigationView>
         </Grid>
-
         <Grid x:Name="ShellNotificationGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Blue" />
+
     </Grid>
 </Page>

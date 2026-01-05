@@ -22,17 +22,23 @@ namespace Imgur.Uwp.Services
         private readonly IAppNotificationService _notification;
         private readonly UrlHandlerService _urlHandler;
         private readonly IMediaVmFactory _mediaVmFactory;
+        private readonly ITagVmFactory _tagVmFactory;
+        private readonly IAccountVmFactory _accountVmFactory;
 
         //-- Construtor
         public ClipboardService(
             IAppNotificationService notification,
             UrlHandlerService urlHandler,
-            IMediaVmFactory mediaVmFactory
+            IMediaVmFactory mediaVmFactory,
+            ITagVmFactory tagVmFactory,
+            IAccountVmFactory accountVmFactory
             )
         {
             this._notification = notification;
             this._urlHandler = urlHandler;
             this._mediaVmFactory = mediaVmFactory;
+            this._tagVmFactory = tagVmFactory;
+            this._accountVmFactory = accountVmFactory;
             this._clipboardHistory = new Stack<string>();
         }
 
@@ -126,9 +132,21 @@ namespace Imgur.Uwp.Services
         {
             switch (result.Type)
             {
-                case ImgurUrlType.Album:
+                case ImgurUrlType.Gallery:
                     var galleryViewModel = this._mediaVmFactory.GetMediaViewModel(result.Data as Media);
-                    _notification.AddMediaClipboardNotification(galleryViewModel);
+                    _notification.AddMediaClipboardNotification(galleryViewModel, ImgurUrlType.Gallery);
+                    break;
+                case ImgurUrlType.Album:
+                    var albumViewModel = this._mediaVmFactory.GetMediaViewModel(result.Data as Media);
+                    _notification.AddMediaClipboardNotification(albumViewModel, ImgurUrlType.Album);
+                    break;
+                case ImgurUrlType.Tag:
+                    var tagViewModel = this._tagVmFactory.GetTagViewModel(result.Data as Tag);
+                    _notification.AddTagClipboardNotification(tagViewModel);
+                    break;
+                case ImgurUrlType.Account:
+                    var accountViewModel = this._accountVmFactory.GetAccountViewModel(result.Data as UserAccount);
+                    _notification.AddUserClipboardNotification(accountViewModel);
                     break;
             }
         }

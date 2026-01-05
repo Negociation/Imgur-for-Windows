@@ -49,13 +49,12 @@
                         <Setter Target="LeftAbout.Visibility" Value="Visible" />
                         <Setter Target="BottomAbout.Visibility" Value="Collapsed" />
                         <Setter Target="RootGrid.Margin" Value="0,10,0,0" />
-
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.65*" MaxWidth="600" MinWidth="290" />
+            <ColumnDefinition Width="0.65*" MaxWidth="1800" MinWidth="290" />
             <ColumnDefinition Width="0.4*" />
 
         </Grid.ColumnDefinitions>
@@ -101,7 +100,7 @@
                 </StackPanel>
                 <controls:SettingBox  Margin="5" x:Uid="SettingsThumbnail" BoxBrush="#7d54fa"  Header="Thumbnail Size" Text="Size of galleries thumbnails.">
                     <controls:SettingBox.Control>
-                        <ComboBox Margin="10" SelectedIndex="{Binding ThumbnailsSize,Mode=TwoWay}" >
+                        <ComboBox  Margin="20" SelectedIndex="{Binding ThumbnailsSize,Mode=TwoWay}" >
 
                             <ComboBoxItem x:Uid="SettingsThumbnailSmall" />
                             <ComboBoxItem x:Uid="SettingsThumbnailMedium" />
@@ -121,6 +120,19 @@
                         <ToggleSwitch Style="{StaticResource ToggleSwitchStyle}" OnContent="{x:Null}" OffContent="{x:Null}" IsOn="{Binding LiveTilesEnabled,Mode=TwoWay}"  Margin="0,0,10,0" Grid.Row="0" Grid.RowSpan="2"  Grid.Column="1"  HorizontalAlignment="Right" AutomationProperties.Name="simple ToggleSwitch"/>
                     </controls:SettingBox.Control>
                 </controls:SettingBox>
+                
+                <StackPanel Orientation="Horizontal" Margin="5,20,0,5">
+                    <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="Normal" FontSize="18" Margin="0,2,8,0" Glyph="&#xEC7A;"  HorizontalAlignment="Center" />
+                    <TextBlock x:Uid="SettingsPageAdvancedTitle"  FontWeight="SemiBold" FontSize="17"></TextBlock>
+                </StackPanel>
+                <controls:SettingBox x:Uid="SettingsApiKey" Margin="5" BoxBrush="#7d54fa">
+                    <controls:SettingBox.Control>
+                        <Button Margin="10,0,20,0"  Grid.Row="0" Grid.RowSpan="2"  Grid.Column="1" Command="{Binding OpenCustomApiKeyDialog}"  HorizontalAlignment="Right" >
+                            <TextBlock x:Uid="SettingsApiKeyButton"></TextBlock>
+                        </Button>
+                    </controls:SettingBox.Control>
+                </controls:SettingBox>
+                
                 <controls:AboutControl x:Name="BottomAbout"  HorizontalAlignment="Left" Margin="5,0,10,20" />
             </StackPanel>
         </ScrollViewer>

@@ -33,7 +33,7 @@ namespace Imgur.Api.Services.Actions
 
             var url = $"gallery/{section.ToString().ToLower()}/{sort.ToString().ToLower()}/{page}/{window}{query}";
 
-            Debug.WriteLine("Url Alvo:" + url);
+            //Debug.WriteLine("Url Alvo:" + url);
 
             return await GetAsync<List<GalleryItemResponse>>(url);
         }

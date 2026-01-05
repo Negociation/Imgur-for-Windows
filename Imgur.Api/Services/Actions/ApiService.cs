@@ -46,17 +46,30 @@ namespace Imgur.Api.Services
         protected async Task<ApiResponse<T>> GetAsync<T>(string endpoint)
         {
             string json = null;
+            HttpResponseMessage response = null;
+
             try
             {
                 using (var request = new HttpRequestMessage(HttpMethod.Get, endpoint))
                 {
                     SetAuthHeader(request);
-
-                    var response = await _httpClient.SendAsync(request);
+                    response = await _httpClient.SendAsync(request);
                     json = await response.Content.ReadAsStringAsync();
 
+                    // Verifica se o status HTTP é de erro
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Debug.WriteLine($"HTTP Error {response.StatusCode} endpoint: {endpoint}");
+                        return new ApiResponse<T>
+                        {
+                            Success = false,
+                            Status = (int)response.StatusCode,
+                            Data = default(T)
+                        };
+                    }
+
+                    // Desserializa a resposta da API do Imgur
                     var result = JsonConvert.DeserializeObject<ApiResponse<T>>(json);
-                    //Debug.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
                     return result;
                 }
             }
@@ -64,13 +77,47 @@ namespace Imgur.Api.Services
             {
                 Debug.WriteLine("Erro na desserialização JSON: " + ex.Message);
                 Debug.WriteLine("Conteúdo do JSON: " + json);
-                throw;
+
+                return new ApiResponse<T>
+                {
+                    Success = false,
+                    Status = response?.StatusCode != null ? (int)response.StatusCode : 0,
+                    Data = default(T)
+                };
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine("Erro de rede: " + ex.Message);
+
+                return new ApiResponse<T>
+                {
+                    Success = false,
+                    Status = 0,
+                    Data = default(T)
+                };
+            }
+            catch (TaskCanceledException ex)
+            {
+                Debug.WriteLine("Timeout da requisição: " + ex.Message);
+
+                return new ApiResponse<T>
+                {
+                    Success = false,
+                    Status = 408, // Request Timeout
+                    Data = default(T)
+                };
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Erro genérico: " + ex.Message);
                 Debug.WriteLine("Conteúdo do JSON: " + json);
-                throw;
+
+                return new ApiResponse<T>
+                {
+                    Success = false,
+                    Status = 0,
+                    Data = default(T)
+                };
             }
         }
 

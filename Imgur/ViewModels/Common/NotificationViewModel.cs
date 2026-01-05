@@ -13,6 +13,8 @@ namespace Imgur.Models
         public string ImageUrl { get; set; }
         public string Extra { get; set; }
 
+        public bool IsImageAvatarInfo { get; set; }
+
         public ICommand ActionCommand { get; set; }
     }
 }

@@ -54,10 +54,27 @@ namespace Imgur.Services
 
             }
 
-            Debug.WriteLine(items.Data.Count);
-            var tagListMapped =_tagMapper.ToTagList(items.Data);
+            var tagListMapped = _tagMapper.ToTagList(items.Data);
             return Result<IReadOnlyList<Tag>>.Success(tagListMapped);
         }
 
+        public async Task<Result<Tag>> GetTagById(string id)
+        {
+            ApiResponse<TagResponse> item = null;
+            item = await _apiService.GetTagAsync(
+                id
+                );
+
+            if (!item.Success)
+            {
+                return Result<Tag>.Failure(item.Status.ToString(), ErrorType.Server);
+
+            }
+
+            //Mapear Usando Linq
+            var tagMapped = _tagMapper.ToTag(item.Data);
+
+            return Result<Tag>.Success(tagMapped);
+        }
     }
 }

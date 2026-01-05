@@ -190,6 +190,7 @@ namespace Imgur.ViewModels.Media
             _userContext = userContext;
         }
 
+
         //-- Initialize
         public void Initialize()
         {
@@ -234,9 +235,24 @@ namespace Imgur.ViewModels.Media
                         try
                         {
                             this.LoadedSuccessfully = true;
-                            var account = await this._accountService.GetAccountById(this.CurrentMedia.AccountId);
+                            if (!this.CurrentMedia.IsBasicAlbum)
+                            {
+                                var account = await this._accountService.GetAccountById(this.CurrentMedia.AccountId);
+                                if (account.IsSuccess)
+                                {
+                                this.UserAccount = this._accountVmFactory.GetAccountViewModel(account.Data);
+                                }
+                                else
+                                {
+                                    throw new Exception("User Account couldn't be reached");
+                                }
+                            }
+                            else
+                            {
+                                var account = Imgur.Models.UserAccount.CreateAnonymous();
+                                this.UserAccount = this._accountVmFactory.GetAccountViewModel(account);
+                            }
 
-                            this.UserAccount = this._accountVmFactory.GetAccountViewModel(account);
                         }
                         catch (Exception ex)
                         {
@@ -268,19 +284,22 @@ namespace Imgur.ViewModels.Media
                             await Task.Delay(1000);
 
                             var hashId = this.CurrentMedia.Id;
-                            var AlbumInfo = await _galleryService.GetGalleryAlbumById(hashId);
-
-                            if (!AlbumInfo.IsSuccess)
+                            if (!CurrentMedia.IsBasicAlbum)
                             {
-                                throw new Exception("Erro durante a busca dos metadados de album: " + AlbumInfo.Error);
+                                var AlbumInfo = await _galleryService.GetGalleryAlbumById(hashId);
+
+
+                                if (!AlbumInfo.IsSuccess)
+                                {
+                                    throw new Exception("Erro durante a busca dos metadados de album: " + AlbumInfo.Error);
+                                }
+
+                                CurrentMedia.Likes = AlbumInfo.Data.Likes;
+                                CurrentMedia.Ups = AlbumInfo.Data.Ups;
+                                CurrentMedia.Downs = AlbumInfo.Data.Downs;
+                                CurrentMedia.CommentCount = AlbumInfo.Data.CommentCount;
+                                CurrentMedia.Votes = AlbumInfo.Data.Votes;
                             }
-
-                            CurrentMedia.Likes = AlbumInfo.Data.Likes;
-                            CurrentMedia.Ups = AlbumInfo.Data.Ups;
-                            CurrentMedia.Downs = AlbumInfo.Data.Downs;
-                            CurrentMedia.CommentCount = AlbumInfo.Data.CommentCount;
-                            CurrentMedia.Votes = AlbumInfo.Data.Votes;
-
                             LoadedSuccessfully = true;
                         }
                         catch (Exception ex)

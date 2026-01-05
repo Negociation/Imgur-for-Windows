@@ -18,7 +18,7 @@ namespace Imgur.Api.Services.Actions
         public async Task<ApiResponse<AlbumResponse>> GetAlbumAsync(string id)
         {
             return await GetAsync<AlbumResponse>(
-               $"gallery/album/{id}");
+               $"album/{id}");
         }
     }
 }

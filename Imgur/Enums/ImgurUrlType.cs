@@ -6,6 +6,7 @@ namespace Imgur.Enums
 {
     public enum ImgurUrlType
     {
+        Gallery,
         Album,
         Image,
         Tag,

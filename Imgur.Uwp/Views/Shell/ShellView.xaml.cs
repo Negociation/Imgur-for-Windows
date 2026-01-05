@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 // O modelo de item de Página em Branco está documentado em https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -113,7 +114,6 @@ namespace Imgur.Uwp.Views.Shell
         {
             if (e.Size.Width >= 800)
             {
-                Debug.WriteLine("deveria mudar");
                 VisualStateManager.GoToState(this, "SearchMobileInlineState", false);
             }
         }
@@ -151,13 +151,14 @@ namespace Imgur.Uwp.Views.Shell
         {
             var notificationTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(10)
+                Interval = TimeSpan.FromSeconds(20)
             };
 
             var teachingTip = new TeachingTip
             {
                 Title = notification.Title ?? "New Message!",
                 IsOpen = true,
+                IsLightDismissEnabled = false,
                 PreferredPlacement = TeachingTipPlacementMode.BottomRight,
                 PlacementMargin = new Thickness(0, 0, -20, 40),
                 Background = new SolidColorBrush(Color.FromArgb(255, 100, 50, 249)),
@@ -169,18 +170,19 @@ namespace Imgur.Uwp.Views.Shell
                 notification.ActionCommand = CreateCommandWithClose(notification.ActionCommand, teachingTip);
                 teachingTip.DataContext = notification;
                 teachingTip.Content = CreateNotificationContent();
-
             }
             else
             {
                 teachingTip.Subtitle = notification.Message;
+                
                 notificationTimer.Tick += (s, e) =>
                 {
                     teachingTip.IsOpen = false;
                     notificationTimer.Stop();
                 };
 
-                notificationTimer.Start();
+
+                notificationTimer.Start();     
             }
 
             teachingTip.Closed += RemoveUINotification;
@@ -215,29 +217,68 @@ namespace Imgur.Uwp.Views.Shell
             rootGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
             rootGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-            // 🖼️ Imagem
-            var image = new Image
+            // 🖼️ Container da imagem (será preenchido no Loaded)
+            var imageContainer = new Grid();
+            Grid.SetColumn(imageContainer, 0);
+
+            // Quando o button carregar e herdar o DataContext do TeachingTip
+            button.Loaded += (s, e) =>
             {
-                Width = 50,
-                Height = 50,
-                Margin = new Thickness(0, 0, 12, 0),
-                Stretch = Stretch.UniformToFill,
-                VerticalAlignment = VerticalAlignment.Top
+                var notification = button.DataContext as NotificationViewModel;
+                bool isCircular = notification?.IsImageAvatarInfo ?? false;
+
+                FrameworkElement imageElement;
+
+                if (isCircular)
+                {
+                    var ellipse = new Ellipse
+                    {
+                        Width = 50,
+                        Height = 50,
+                        Margin = new Thickness(0, 0, 10, 0),
+                        VerticalAlignment = VerticalAlignment.Top
+                    };
+
+                    var brush = new ImageBrush { Stretch = Stretch.UniformToFill };
+
+                    if (!string.IsNullOrEmpty(notification?.ImageUrl))
+                    {
+                        brush.ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(notification.ImageUrl));
+                    }
+
+                    ellipse.Fill = brush;
+                    imageElement = ellipse;
+                }
+                else
+                {
+                    var image = new Image
+                    {
+                        Width = 50,
+                        Height = 50,
+                        Margin = new Thickness(0, 0, 12, 0),
+                        Stretch = Stretch.UniformToFill,
+                        VerticalAlignment = VerticalAlignment.Top
+                    };
+
+                    image.SetBinding(Image.SourceProperty, new Binding
+                    {
+                        Path = new PropertyPath("ImageUrl")
+                    });
+
+                    imageElement = image;
+                }
+
+                imageContainer.Children.Clear();
+                imageContainer.Children.Add(imageElement);
             };
 
-            image.SetBinding(Image.SourceProperty, new Binding
-            {
-                Path = new PropertyPath("ImageUrl")
-            });
-
-            Grid.SetColumn(image, 0);
+            rootGrid.Children.Add(imageContainer);
 
             // 🔹 Grid de texto (controle vertical real)
             var textGrid = new Grid
             {
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, -5, 0, 0),
-
             };
 
             textGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -283,13 +324,11 @@ namespace Imgur.Uwp.Views.Shell
 
             Grid.SetColumn(textGrid, 1);
 
-            rootGrid.Children.Add(image);
             rootGrid.Children.Add(textGrid);
 
             button.Content = rootGrid;
             return button;
         }
-
         private void RemoveUINotification(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
         {
             ShellGrid.Children.Remove(sender);
@@ -333,8 +372,25 @@ namespace Imgur.Uwp.Views.Shell
 
         private void NavigationView_PaneOpening(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
         {
-            //FocusCatcher.Focus(FocusState.Keyboard);
+            FocusCatcher.Focus(FocusState.Keyboard);
             InputPane.GetForCurrentView().TryHide();
         }
     }
 }
+
+// 🖼️ Imagem
+/*
+var image = new Image
+{
+    Width = 50,
+    Height = 50,
+    Margin = new Thickness(0, 0, 12, 0),
+    Stretch = Stretch.UniformToFill,
+    VerticalAlignment = VerticalAlignment.Top
+};
+
+image.SetBinding(Image.SourceProperty, new Binding
+{
+    Path = new PropertyPath("ImageUrl")
+});
+*/

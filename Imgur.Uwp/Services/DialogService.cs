@@ -3,6 +3,7 @@ using Imgur.Enums;
 using Imgur.Factories;
 using Imgur.Models;
 using Imgur.Uwp.Dialogs;
+using Imgur.ViewModels.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,20 @@ namespace Imgur.Uwp.Services
 
             var resultado = await dialog.ShowAsync();
             return resultado == ContentDialogResult.Primary;
+
+        }
+
+        public async Task<bool?> ShowCustomApiKeyDialog(SettingsViewModel settingsVm)
+        {
+            
+            var dialog = new CustomApiKeySettingsDialog
+            {
+                DataContext = settingsVm
+            };
+
+            var resultado = await dialog.ShowAsync();
+            return resultado == ContentDialogResult.Primary;
+            
 
         }
     }

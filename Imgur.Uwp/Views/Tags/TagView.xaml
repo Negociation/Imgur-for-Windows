@@ -244,17 +244,9 @@
                 </toolkit:AdaptiveGridView>
             </Grid>
         </ScrollViewer>
-
-        <toolkit:DropShadowPanel x:Name="StickOptionsBar" 
-                         OffsetY="5" 
-                         BlurRadius="20" 
-                         ShadowOpacity="0.4" 
-                         Opacity="0" 
-                         Visibility="Collapsed"
-                         VerticalAlignment="Top"
-                                 
-                         HorizontalContentAlignment="Stretch">
-
+        
+        <!-- STRICK SCROLLBAR -->
+        <toolkit:DropShadowPanel x:Name="StickOptionsBar" OffsetY="5" BlurRadius="20" ShadowOpacity="0.4" Opacity="0" Visibility="Collapsed" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
             <Grid x:Name="StickOptionsBarContent" Height="150" Background="#2F3035" Padding="0,80,0,0"  HorizontalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -295,7 +287,9 @@
                     HorizontalAlignment="Center" 
                     Padding="0"
                 VerticalContentAlignment="Stretch">
-                        <Button  Style="{StaticResource FollowButtonStyle}" Command="{Binding FollowTagCommand}"  Opacity="1">Follow</Button>
+                        <Button  Style="{StaticResource FollowButtonStyle}" Command="{Binding FollowTagCommand}"  Opacity="1">
+                            <TextBlock x:Uid="Follow"></TextBlock>
+                        </Button>
                     </toolkit:DropShadowPanel>
                 </Grid>
                

@@ -160,6 +160,9 @@
     <value>Поделиться содержимым</value>
     <comment>AppBar</comment>
   </data>
+  <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
+    <value>In order to apply the new api settings , the application was restarted.</value>
+  </data>
   <data name="AppBranch.Text" xml:space="preserve">
     <value>Ветка</value>
     <comment>AboutControl</comment>
@@ -176,6 +179,10 @@
     <value>Версия</value>
     <comment>AboutControl</comment>
   </data>
+  <data name="BestComments.Text" xml:space="preserve">
+    <value>BEST COMMENTS</value>
+    <comment>MediaView</comment>
+  </data>
   <data name="category_hot" xml:space="preserve">
     <value>Самое популярное</value>
     <comment>Enum -&gt; Sections</comment>
@@ -188,6 +195,14 @@
     <value>Предложено пользователями</value>
     <comment>Enum -&gt; Sections</comment>
   </data>
+  <data name="Comment.Text" xml:space="preserve">
+    <value>COMMENT</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="CommentsHeader.Header" xml:space="preserve">
+    <value>Comments</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
   <data name="Connect.Text" xml:space="preserve">
     <value>Присоединиться</value>
     <comment>ShellView -&gt; NavigationViewItem </comment>
@@ -196,21 +211,108 @@
     <value>{0} дней</value>
     <comment>Converter Timestamp</comment>
   </data>
+  <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
+    <value>Looks like there aren't any comments yet.</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="EmptyCommentsParagraphSecond.Text" xml:space="preserve">
+    <value>BE THE FIRST!</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="ExpandMore.Text" xml:space="preserve">
+    <value>SEE ALL</value>
+    <comment>ExploreSearchView</comment>
+  </data>
   <data name="Explorer.Text" xml:space="preserve">
     <value>Изучите новый контент!</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
+  </data>
+  <data name="FavouritesHeader.Header" xml:space="preserve">
+    <value>Favourites</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="Follow.Text" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="GalleriesSection.Text" xml:space="preserve">
+    <value>Galleries</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="Home.Text" xml:space="preserve">
+    <value>Главная страница</value>
   </data>
   <data name="HoursElapsedFormat" xml:space="preserve">
     <value>{0} часов</value>
     <comment>Converter Timestamp</comment>
   </data>
+  <data name="InterceptorHeader_FollowTag" xml:space="preserve">
+    <value>You're about to Follow a Tag!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="InterceptorHeader_FollowUser" xml:space="preserve">
+    <value>You're about to Follow a Imgurian!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="InterceptorHeader_Like" xml:space="preserve">
+    <value>You're about to like a Imgur Post!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="InterceptorHeader_Upload" xml:space="preserve">
+    <value>You're about to make an Imgur Post!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="InterceptorHeader_Vote" xml:space="preserve">
+    <value>You're about to vote on an Imgur Post!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="LoadingMedia.Text" xml:space="preserve">
+    <value>Getting the Hot Stuff!</value>
+    <comment>MediaView</comment>
+  </data>
+  <data name="LoadMore.Text" xml:space="preserve">
+    <value>Показать ещё </value>
+  </data>
+  <data name="LoginOrRegister.Text" xml:space="preserve">
+    <value>Sign in or Sign Up!</value>
+    <comment>LoginInterceptorDialog</comment>
+  </data>
   <data name="MinutesElapsedFormat" xml:space="preserve">
     <value>{0} минут</value>
     <comment>Converter Timestamp</comment>
   </data>
+  <data name="notification_clipboard_content" xml:space="preserve">
+    <value>Copied to Clipboard</value>
+  </data>
+  <data name="notification_generic" xml:space="preserve">
+    <value>New Notification!</value>
+  </data>
+  <data name="notification_open_gallery" xml:space="preserve">
+    <value>Open Gallery ? </value>
+  </data>
+  <data name="NotificationTitleRestartMsg" xml:space="preserve">
+    <value>Restart Required!</value>
+  </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
     <value>Изображения, хэштеги, @пользователи, ого!</value>
     <comment>ShellView -&gt; AutoSugestBox</comment>
+  </data>
+  <data name="Points.Text" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="Posts.Text" xml:space="preserve">
+    <value>Posts</value>
+  </data>
+  <data name="PostsHeader.Header" xml:space="preserve">
+    <value>Posts</value>
+    <comment>AccountView -&gt;Pivot</comment>
+  </data>
+  <data name="QueryTitle.Text" xml:space="preserve">
+    <value>Search Query:</value>
+    <comment>ExploreSearchView</comment>
+  </data>
+  <data name="RandomSection.Text" xml:space="preserve">
+    <value>Random Content</value>
+    <comment>ExploreSearchView</comment>
   </data>
   <data name="SecondsElapsedFormat" xml:space="preserve">
     <value>{0} секунд</value>
@@ -263,6 +365,9 @@
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>О приложении</value>
     <comment>AboutControl</comment>
+  </data>
+  <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
   <data name="SettingsPageAppearanceTitle.Text" xml:space="preserve">
     <value>Внешний вид</value>
@@ -344,17 +449,89 @@
     <value>Посмотреть Хэштеги</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
+  <data name="TagsSection.Text" xml:space="preserve">
+    <value>Tags</value>
+    <comment>ExploreSearchView</comment>
+  </data>
   <data name="Upload.Text" xml:space="preserve">
     <value>Загрузить новый файл</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
+  <data name="UsersSection.Text" xml:space="preserve">
+    <value>Users</value>
+    <comment>ExploreSearchView</comment>
+  </data>
   <data name="Views.Text" xml:space="preserve">
     <value>Просмотры</value>
   </data>
-  <data name="LoadMore.Text" xml:space="preserve">
-    <value>Показать ещё </value>
+  <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Save</value>
+    <comment>CustomApiKeySettingsDialog</comment>
   </data>
-  <data name="Home.Text" xml:space="preserve">
-    <value>Главная страница</value>
+  <data name="Save.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SettingsApiKey.Header" xml:space="preserve">
+    <value>Set a Custom Api Key</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKey.Text" xml:space="preserve">
+    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKeyButton.Text" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
+    <value>Set a Custom Api Key</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
+    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
+    <value>In order to use the default Api Keys, just leave the fields blank and save it.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SignInIntercetorMsg.Text" xml:space="preserve">
+    <value>Sign in to save it!</value>
+    <comment>LoginInterceptorDialog</comment>
+  </data>
+  <data name="AppCloseCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AppCloseConfirm" xml:space="preserve">
+    <value>Leave</value>
+  </data>
+  <data name="AppCloseContent" xml:space="preserve">
+    <value>Are you sure you want to close the app ?</value>
+  </data>
+  <data name="AppCloseTitle" xml:space="preserve">
+    <value>Leaving Already ?</value>
+  </data>
+  <data name="Hidden.Text" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="HiddenAuthor" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="notification_api_warning" xml:space="preserve">
+    <value>Api Status Notice!</value>
+  </data>
+  <data name="notification_api_warning_content" xml:space="preserve">
+    <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
+  </data>
+  <data name="notification_open_account" xml:space="preserve">
+    <value>Open Imgurian Profile ?</value>
+  </data>
+  <data name="notification_open_album" xml:space="preserve">
+    <value>Open Album</value>
+  </data>
+  <data name="notification_open_image" xml:space="preserve">
+    <value>Open Image ?</value>
+  </data>
+  <data name="notification_open_tag" xml:space="preserve">
+    <value>Open Tag ?</value>
   </data>
 </root>

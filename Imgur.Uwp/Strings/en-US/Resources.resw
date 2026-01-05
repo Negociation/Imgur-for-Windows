@@ -426,7 +426,7 @@
   <data name="notification_generic" xml:space="preserve">
     <value>New Notification!</value>
   </data>
-  <data name="notification_open_galllery" xml:space="preserve">
+  <data name="notification_open_gallery" xml:space="preserve">
     <value>Open Gallery ? </value>
   </data>
   <data name="Points.Text" xml:space="preserve">
@@ -454,5 +454,85 @@
   <data name="UsersSection.Text" xml:space="preserve">
     <value>Users</value>
     <comment>ExploreSearchView</comment>
+  </data>
+  <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
+    <value>In order to apply the new api settings , the application was restarted.</value>
+  </data>
+  <data name="NotificationTitleRestartMsg" xml:space="preserve">
+    <value>Restart Required!</value>
+  </data>
+  <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Save</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="Save.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SettingsApiKey.Header" xml:space="preserve">
+    <value>Set a Custom Api Key</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKey.Text" xml:space="preserve">
+    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKeyButton.Text" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
+    <value>Set a Custom Api Key</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
+    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
+    <value>In order to use the default Api Keys, just leave the fields blank and save it.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
+    <value>Advanced Settings</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SignInIntercetorMsg.Text" xml:space="preserve">
+    <value>Sign in to save it!</value>
+    <comment>LoginInterceptorDialog</comment>
+  </data>
+  <data name="AppCloseCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AppCloseConfirm" xml:space="preserve">
+    <value>Leave</value>
+  </data>
+  <data name="AppCloseContent" xml:space="preserve">
+    <value>Are you sure you want to close the app ?</value>
+  </data>
+  <data name="AppCloseTitle" xml:space="preserve">
+    <value>Leaving Already ?</value>
+  </data>
+  <data name="Hidden.Text" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="HiddenAuthor" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="notification_api_warning" xml:space="preserve">
+    <value>Api Status Notice!</value>
+  </data>
+  <data name="notification_api_warning_content" xml:space="preserve">
+    <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
+  </data>
+  <data name="notification_open_account" xml:space="preserve">
+    <value>Open Imgurian Profile ?</value>
+  </data>
+  <data name="notification_open_album" xml:space="preserve">
+    <value>Open Album</value>
+  </data>
+  <data name="notification_open_image" xml:space="preserve">
+    <value>Open Image ?</value>
+  </data>
+  <data name="notification_open_tag" xml:space="preserve">
+    <value>Open Tag ?</value>
   </data>
 </root>

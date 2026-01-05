@@ -1,6 +1,7 @@
 ﻿using Imgur.Enums;
 using Imgur.Models;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,11 +11,24 @@ namespace Imgur.Services
     {
         private const string ImgurDomain = "imgur.com";
         private const string ImgurSecureDomain = "https://imgur.com";
-        private readonly GalleryService _galleryService;
 
-        public UrlHandlerService(GalleryService galleryService)
+
+        private readonly GalleryService _galleryService;
+        private readonly AlbumService _albumService;
+        private readonly TagsService _tagService;
+        private readonly AccountService _accountService;
+
+        public UrlHandlerService(
+            GalleryService galleryService,
+            AlbumService albumService,
+            TagsService tagService,
+            AccountService accountService
+            )
         {
             _galleryService = galleryService;
+            _albumService = albumService;
+            _tagService = tagService;
+            _accountService = accountService;
         }
 
         /// <summary>
@@ -53,6 +67,22 @@ namespace Imgur.Services
                 {
                     case "gallery":
                         return await GalleryHandlerAsync(segments, result);
+                    case "a":
+                        //Check for Gallery First
+                        Debug.WriteLine("Verificar Galeria");
+                        var galleryResult = await GalleryHandlerAsync(segments, result, ImgurUrlType.Album);
+                        if (galleryResult.IsValid)
+                        {
+                            return galleryResult;
+                        }
+                        Debug.WriteLine("Verificar Album");
+                        //Check Default Album ( Less Info )
+                        return await AlbumHandlerAsync(segments, result);
+                    case "t":
+                        return await TagHandlerAsync(segments, result);
+                    case "user":
+                        return await UserHandlerAsync(segments, result);
+
                 }
 
                 result.ErrorMessage = "Tipo de URL não suportado";
@@ -87,7 +117,7 @@ namespace Imgur.Services
         /// <summary>
         /// Handler para URLs do tipo /gallery/
         /// </summary>
-        private async Task<ImgurUrl> GalleryHandlerAsync(string[] segments, ImgurUrl result)
+        private async Task<ImgurUrl> GalleryHandlerAsync(string[] segments, ImgurUrl result, ImgurUrlType imgurUrlType = ImgurUrlType.Gallery)
         {
             if (segments.Length < 2)
             {
@@ -107,12 +137,98 @@ namespace Imgur.Services
             }
 
             result.IsValid = true;
+            result.Type = imgurUrlType;
+            result.Data = apiResult.Data;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Handler para URLs do tipo /a/
+        /// </summary>
+        private async Task<ImgurUrl> AlbumHandlerAsync(string[] segments, ImgurUrl result)
+        {
+            if (segments.Length < 2)
+            {
+                result.ErrorMessage = "URL de album inválida";
+                return result;
+            }
+
+            string sanitizedId = SanitizeId(segments[1]);
+            result.Id = sanitizedId;
+
+            var apiResult = await _albumService.GetAlbumById(sanitizedId);
+
+            if (!apiResult.IsSuccess)
+            {
+                result.ErrorMessage = "Não foi possível recuperar na API";
+                return result;
+            }
+
+            result.IsValid = true;
             result.Type = ImgurUrlType.Album;
             result.Data = apiResult.Data;
 
             return result;
         }
 
+        /// <summary>
+        /// Handler para URLs do tipo /a/
+        /// </summary>
+        private async Task<ImgurUrl> TagHandlerAsync(string[] segments, ImgurUrl result)
+        {
+            if (segments.Length < 2)
+            {
+                result.ErrorMessage = "URL de album inválida";
+                return result;
+            }
+
+            string sanitizedId = SanitizeId(segments[1]);
+            result.Id = sanitizedId;
+
+            var apiResult = await _tagService.GetTagById(sanitizedId);
+
+            if (!apiResult.IsSuccess)
+            {
+                result.ErrorMessage = "Não foi possível recuperar na API";
+                return result;
+            }
+
+            result.IsValid = true;
+            result.Type = ImgurUrlType.Tag;
+            result.Data = apiResult.Data;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Handler para URLs do tipo /user/
+        /// </summary>
+        private async Task<ImgurUrl> UserHandlerAsync(string[] segments, ImgurUrl result)
+        {
+            if (segments.Length < 2)
+            {
+                result.ErrorMessage = "URL de album inválida";
+                return result;
+            }
+
+            string sanitizedId = SanitizeId(segments[1]);
+            result.Id = sanitizedId;
+
+            var apiResult = await _accountService.GetAccountById(sanitizedId);
+
+            if (!apiResult.IsSuccess)
+            {
+                result.ErrorMessage = "Não foi possível recuperar na API";
+                return result;
+            }
+
+            result.IsValid = true;
+            result.Type = ImgurUrlType.Account;
+            result.Data = apiResult.Data;
+
+            return result;
+        }
         /// <summary>
         /// Sanitiza o ID removendo slugs longos e pegando apenas o identificador real
         /// Ex: "ice-terrorizing-neighborhoods-pepper-spray-children-97CRKak" -> "97CRKak"

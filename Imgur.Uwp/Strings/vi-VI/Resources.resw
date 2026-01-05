@@ -118,101 +118,101 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppBarCopy.Label" xml:space="preserve">
-    <value>Копіювати в буфер обміну</value>
+    <value>Sao chép</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Копіювати URL-адресу в буфер обміну</value>
+    <value>Sao chép URL</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarDownload.Label" xml:space="preserve">
-    <value>Завантажити</value>
+    <value>Tải xuống</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarDownload.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Завантажити вміст</value>
+    <value>Tải nội dung xuống</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarEmbed.Label" xml:space="preserve">
-    <value>Вбудувати</value>
+    <value>Nhúng</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarEmbed.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Вбудувати вміст</value>
+    <value>Nhúng nội dung</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarFavouriteButton.Label" xml:space="preserve">
-    <value>Додати до обраного</value>
+    <value>Thêm vào Ưa thích</value>
   </data>
   <data name="AppBarOpen.Label" xml:space="preserve">
-    <value>Відкрити галерею</value>
+    <value>Mở Trưng bày</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarOpen.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Переглянути вміст галереї</value>
+    <value>Khám phá Trưng bày</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarShare.Label" xml:space="preserve">
-    <value>Поділитися у...</value>
+    <value>Chia sẻ cho...</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Поділитись вмістом</value>
+    <value>Chia sẻ nội dung</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
     <value>In order to apply the new api settings , the application was restarted.</value>
   </data>
   <data name="AppBranch.Text" xml:space="preserve">
-    <value>Гілка</value>
+    <value>Kênh</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppDesc.Text" xml:space="preserve">
-    <value>Нативний клієнт UWP для спільноти Imgur.</value>
+    <value>Một máy khách sử dụng UWP cho cộng đồng Imgur.</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppTitle.Text" xml:space="preserve">
-    <value>Imgur для Windows</value>
+    <value>Imgur cho Windows</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppVersion.Text" xml:space="preserve">
-    <value>Версія</value>
+    <value>Phiên bản</value>
     <comment>AboutControl</comment>
   </data>
   <data name="BestComments.Text" xml:space="preserve">
-    <value>BEST COMMENTS</value>
+    <value>BÌNH LUẬN HAY NHẤT</value>
     <comment>MediaView</comment>
   </data>
   <data name="category_hot" xml:space="preserve">
-    <value>Найпопулярніше</value>
+    <value>Nổi tiếng nhất</value>
     <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="category_top" xml:space="preserve">
-    <value>Найбільш оцінено</value>
+    <value>Đánh giá cao nhất</value>
     <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="category_user" xml:space="preserve">
-    <value>Запропоновано користувачами</value>
+    <value>Được gửi từ người dùng</value>
     <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="Comment.Text" xml:space="preserve">
-    <value>COMMENT</value>
+    <value>BÌNH LUẬN</value>
     <comment>MediaView</comment>
   </data>
   <data name="CommentsHeader.Header" xml:space="preserve">
-    <value>Comments</value>
+    <value>Bình luận</value>
     <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="Connect.Text" xml:space="preserve">
-    <value>Приєднатися</value>
+    <value>Kết nối</value>
     <comment>ShellView -&gt; NavigationViewItem </comment>
   </data>
   <data name="DaysElapsedFormat" xml:space="preserve">
-    <value>{0} днів</value>
+    <value>{0} ngày</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
-    <value>Looks like there aren't any comments yet.</value>
+    <value>Có vẻ như chưa có bình luận nào ở đây.</value>
     <comment>MediaView</comment>
   </data>
   <data name="EmptyCommentsParagraphSecond.Text" xml:space="preserve">
@@ -220,249 +220,249 @@
     <comment>MediaView</comment>
   </data>
   <data name="ExpandMore.Text" xml:space="preserve">
-    <value>SEE ALL</value>
+    <value>XEM HẾT</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="Explorer.Text" xml:space="preserve">
-    <value>Ознайомтеся з новим контентом!</value>
+    <value>Khám phá nội dung mới!</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="FavouritesHeader.Header" xml:space="preserve">
-    <value>Favourites</value>
+    <value>Ưa thích</value>
     <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="Follow.Text" xml:space="preserve">
-    <value>Follow</value>
+    <value>Theo dõi</value>
   </data>
   <data name="GalleriesSection.Text" xml:space="preserve">
-    <value>Galleries</value>
+    <value>Trưng bày</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="Home.Text" xml:space="preserve">
-    <value>Домашня сторінка</value>
+    <value>Trang chủ</value>
   </data>
   <data name="HoursElapsedFormat" xml:space="preserve">
-    <value>{0} годин</value>
+    <value>{0} giờ</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="InterceptorHeader_FollowTag" xml:space="preserve">
-    <value>You're about to Follow a Tag!</value>
+    <value>Bạn sắp theo dõi một Tag!</value>
     <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_FollowUser" xml:space="preserve">
-    <value>You're about to Follow a Imgurian!</value>
+    <value>Bạn sắp theo dõi mội người dùng Imgur!</value>
     <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Like" xml:space="preserve">
-    <value>You're about to like a Imgur Post!</value>
+    <value>Bạn thích một bài Imgur!</value>
     <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Upload" xml:space="preserve">
-    <value>You're about to make an Imgur Post!</value>
+    <value>Bạn sắp tải lên một bài post!</value>
     <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Vote" xml:space="preserve">
-    <value>You're about to vote on an Imgur Post!</value>
+    <value>Bạn chuẩn bị vote một bài post!</value>
     <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="LoadingMedia.Text" xml:space="preserve">
-    <value>Getting the Hot Stuff!</value>
+    <value>Nhận lấy những thứ nóng hổi!</value>
     <comment>MediaView</comment>
   </data>
   <data name="LoadMore.Text" xml:space="preserve">
-    <value>Показати ще </value>
+    <value>Tải thêm</value>
   </data>
   <data name="LoginOrRegister.Text" xml:space="preserve">
-    <value>Sign in or Sign Up!</value>
+    <value>Đăng nhập hoặc Đăng kí</value>
     <comment>LoginInterceptorDialog</comment>
   </data>
   <data name="MinutesElapsedFormat" xml:space="preserve">
-    <value>{0} хвилин</value>
+    <value>{0} phút</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="notification_clipboard_content" xml:space="preserve">
-    <value>Copied to Clipboard</value>
+    <value>Sao chép thành công</value>
   </data>
   <data name="notification_generic" xml:space="preserve">
-    <value>New Notification!</value>
+    <value>Thông báo mới!</value>
   </data>
-  <data name="notification_open_gallery" xml:space="preserve">
-    <value>Open Gallery ? </value>
+  <data name="notification_open_galllery" xml:space="preserve">
+    <value>Mở Trưng bày?</value>
   </data>
   <data name="NotificationTitleRestartMsg" xml:space="preserve">
     <value>Restart Required!</value>
   </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Зображення, хештеги, @користувачі, оце так!</value>
+    <value>Ảnh, #tags, @users ôi trời!</value>
     <comment>ShellView -&gt; AutoSugestBox</comment>
   </data>
   <data name="Points.Text" xml:space="preserve">
-    <value>Points</value>
+    <value>Điểm</value>
   </data>
   <data name="Posts.Text" xml:space="preserve">
-    <value>Posts</value>
+    <value>Bài đăng</value>
   </data>
   <data name="PostsHeader.Header" xml:space="preserve">
-    <value>Posts</value>
+    <value>Post</value>
     <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="QueryTitle.Text" xml:space="preserve">
-    <value>Search Query:</value>
+    <value>Yêu cầu tìm kiếm:</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="RandomSection.Text" xml:space="preserve">
-    <value>Random Content</value>
+    <value>Nội dung ngẫu nhiên</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="SecondsElapsedFormat" xml:space="preserve">
-    <value>{0} секунд</value>
+    <value>{0} giây</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="Settings.Text" xml:space="preserve">
-    <value>Налаштування</value>
+    <value>Cài đặt</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="SettingsAutoPlay.Header" xml:space="preserve">
-    <value>Автовідтворення мініатюр</value>
+    <value>Thumbnail tự chạy</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsAutoPlay.Text" xml:space="preserve">
-    <value>Увімкнути автовідтворення мініатюр.</value>
+    <value>Cho phép các thumbnail tự động chạy</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsData.Header" xml:space="preserve">
-    <value>Контроль даних</value>
+    <value>Quản lí dữ liệu</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsData.Text" xml:space="preserve">
-    <value>Повідомляти про використання мобільного інтернету.</value>
+    <value>Thông báo khi sử dụng dữ liệu di động</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Header" xml:space="preserve">
-    <value>Використовувати Живі Плитки</value>
+    <value>Bật Live tiles</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Text" xml:space="preserve">
-    <value>Відображення Живих Плиток із популярним контентом.</value>
+    <value>Cho phép live tiles hiện những bài mới nổi</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsMobileUsage.Header" xml:space="preserve">
-    <value>Обмежувати використання мобільного інтернету</value>
+    <value>Hạn chế sử dụng dữ liệu di động</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsMobileUsage.Text" xml:space="preserve">
-    <value>Перегляд HD-відео лише через Wi-Fi.</value>
+    <value>Chỉ stream video HD với WiFi.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsNotification.Header" xml:space="preserve">
-    <value>Повідомлення з нагадуваннями</value>
+    <value>Thông báo nhắc nhở</value>
     <comment>Settings </comment>
   </data>
   <data name="SettingsNotification.Text" xml:space="preserve">
-    <value>Іноді надсилати повідомлення про те, що відбувається у спільноті Imgur.</value>
+    <value>Thỉnh thoảng gửi thông báo về thay đổi trong cộng đồng Imgur.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
-    <value>Про додаток</value>
+    <value>Về ứng dụng này</value>
     <comment>AboutControl</comment>
   </data>
   <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
     <value>Advanced Settings</value>
   </data>
   <data name="SettingsPageAppearanceTitle.Text" xml:space="preserve">
-    <value>Оформлення</value>
+    <value>Giao diện</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageGeneralTitle.Text" xml:space="preserve">
-    <value>Загальні налаштування</value>
+    <value>Cài đặt Chung</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>Налаштування програми</value>
+    <value>Cài đặt</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnail.Header" xml:space="preserve">
-    <value>Розмір мініатюр</value>
+    <value>Cỡ thumbnail</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnail.Text" xml:space="preserve">
-    <value>Розмір мініатюр у галереях.</value>
+    <value>Kích cỡ của thumbnail trong Phòng trưng bày.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailLarge.Content" xml:space="preserve">
-    <value>Великі</value>
+    <value>Lớn</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailMedium.Content" xml:space="preserve">
-    <value>Середні</value>
+    <value>Trung bình</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailSmall.Content" xml:space="preserve">
-    <value>Малі</value>
+    <value>Nhỏ</value>
     <comment>Settings</comment>
   </data>
   <data name="ShellSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Зображення, хештеги, @користувачі, оце так!</value>
+    <value>Ảnh, #tags, @users ôi trời!</value>
     <comment>Shellview</comment>
   </data>
   <data name="SortLabel.Text" xml:space="preserve">
-    <value>СОРТУВАТИ ЗА:</value>
+    <value>ORDER BỞI:</value>
     <comment>ExplorerView-&gt;Command Bar</comment>
   </data>
   <data name="sort_all" xml:space="preserve">
-    <value>За весь час</value>
+    <value>Mọi thời</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_day" xml:space="preserve">
-    <value>Сьогодні</value>
+    <value>Hôm nay</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_month" xml:space="preserve">
-    <value>За місяць</value>
+    <value>Tháng</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_rising" xml:space="preserve">
-    <value>Набираюче</value>
+    <value>Đang nổi lên</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_time" xml:space="preserve">
-    <value>Найновіше</value>
+    <value>Mới nhất</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_top" xml:space="preserve">
-    <value>Найкраще</value>
+    <value>Nhất hạng</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_viral" xml:space="preserve">
-    <value>Популярне</value>
+    <value>Phổ biến</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_week" xml:space="preserve">
-    <value>За неділю</value>
+    <value>Tuần</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_year" xml:space="preserve">
-    <value>За рік</value>
+    <value>Năm</value>
     <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="Tags.Text" xml:space="preserve">
-    <value>Переглянути Хештеги</value>
+    <value>Khám phá Tag</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="TagsSection.Text" xml:space="preserve">
-    <value>Tags</value>
+    <value>Tag</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="Upload.Text" xml:space="preserve">
-    <value>Завантажити новий файл</value>
+    <value>Tải lên file mới</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="UsersSection.Text" xml:space="preserve">
-    <value>Users</value>
+    <value>Người dùng</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="Views.Text" xml:space="preserve">
-    <value>Перегляди</value>
+    <value>Lượt xem</value>
   </data>
   <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
     <value>Save</value>

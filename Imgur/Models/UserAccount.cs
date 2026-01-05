@@ -12,7 +12,21 @@ namespace Imgur.Models
 
         public string Cover { get; set; }
 
+        public bool IsHidden { get; set; }
+
         public int Reputation { get; set; }
         public string ReputationName { get; set; }
+
+        //-- Factory
+        public static UserAccount CreateAnonymous()
+        {
+            return new UserAccount
+            {
+                Username = "Hidden",
+                Avatar = "/Assets/default-avatar.png",
+                IsHidden = true
+            };
+        }
+
     }
 }

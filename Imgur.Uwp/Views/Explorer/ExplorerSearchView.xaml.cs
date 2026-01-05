@@ -48,13 +48,13 @@ namespace Imgur.Uwp.Views.Explorer
             if (e?.Parameter is ExplorerSearchViewModel viewModel)
             {
                 // Modo Search - recebeu um ViewModel com query
-                Debug.WriteLine($"Search mode: '{viewModel.SearchQuery}'");
+                //Debug.WriteLine($"Search mode: '{viewModel.SearchQuery}'");
                 this.DataContext = viewModel;
             }
             else
             {
                 // Modo Explore - não recebeu ViewModel, precisa criar um novo
-                Debug.WriteLine("Explore mode: creating new ViewModel");
+                //Debug.WriteLine("Explore mode: creating new ViewModel");
 
                 var vmFactory = App.Services.GetRequiredService<IExplorerSearchVmFactory>();
                 var exploreVm = vmFactory.getExplorerViewModel();

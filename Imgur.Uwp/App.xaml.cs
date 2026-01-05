@@ -28,6 +28,8 @@ using Imgur.Mappers;
 using Windows.Media;
 using Imgur.ViewModels.Account;
 using Imgur.ViewModels.Tags;
+using Imgur.Services;
+using Windows.ApplicationModel.Resources;
 
 namespace Imgur.Uwp
 {
@@ -114,6 +116,14 @@ namespace Imgur.Uwp
                 {
                     rootFrame.Navigate(typeof(ShellView));
                     ShellFrame = rootFrame;
+
+                    if (rootFrame.Content is ShellView shellView)
+                    {
+                        shellView.Loaded += ShellView_Loaded;
+
+
+                    }
+
                 }
 
                 //Evento de BackPressed para Navegação Global da RootFrame
@@ -127,7 +137,7 @@ namespace Imgur.Uwp
 
                 //Live Tiles
                 await UpdateLiveTilesInBackgroundAsync();
-
+            
             }
 
             //Set Visual Kind
@@ -136,6 +146,26 @@ namespace Imgur.Uwp
             //Set Rootframe on Navigation Service
             Services.GetRequiredService<INavigator>().RootFrame = rootFrame;
 
+        }
+
+        /// <summary>
+        /// Chamado quando a ShellView termina de carregar
+        /// </summary>
+        private async void ShellView_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Remover o evento para não ser chamado múltiplas vezes
+            if (sender is ShellView shellView)
+            {
+                shellView.Loaded -= ShellView_Loaded;
+            }
+
+
+            // Verificar API Status
+            await VerifyApiStatusAsync();
+
+            // Pequeno delay adicional para garantir renderização completa
+            await Task.Delay(800);
+
             //Start Monitoring Clipboard for changes
             Services.GetRequiredService<IClipboardService>().StartMonitoring();
         }
@@ -143,11 +173,13 @@ namespace Imgur.Uwp
 
         private IServiceProvider configureServices()
         {
-
+            /*
             string clientId = "b6c4abc4061d423";
             string clientSecret = "1ccc6187d2e64baaefcf49487cc1d948cfa6484e";
+            */
 
             DispatcherHelper.Initialize();
+
             var provider = new ServiceCollection()
 
                 //Serviços Contexto UWP como Singleton (Unica Instancia)
@@ -163,6 +195,8 @@ namespace Imgur.Uwp
                 .AddSingleton<ILiveTilesService, LiveTilesService>()
                 .AddSingleton<IDialogService, DialogService>()
                 .AddSingleton<ITokenService, TokenService>()
+                .AddSingleton<IImgurApiCredentialsProvider, ImgurApiCredentialsProvider>()
+                .AddSingleton<IAppLifeCycleService, AppLifeCycleService>()
 
                 //Contextos como Singleton
                 .AddSingleton<IUserContext, Imgur.Services.UserContext>()
@@ -203,26 +237,30 @@ namespace Imgur.Uwp
 
                 //Imgur Api Services como Transienes
                 .AddTransient<IGalleryService>(sp =>
-                    new Api.Services.Actions.GalleryService(clientId)
+                    
+                    new Api.Services.Actions.GalleryService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
+                    )
                 )
                  .AddTransient<IAlbumService>(sp =>
-                    new Api.Services.Actions.AlbumService(clientId)
+                    new Api.Services.Actions.AlbumService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
+                    )
                 )
                  .AddTransient<IAccountService>(sp =>
-                    new Api.Services.Actions.AccountService(clientId)
+                    new Api.Services.Actions.AccountService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
+                    )
+                )
+                .AddTransient<IApiStatusService>(sp =>
+                    new Api.Services.Actions.ApiStatusService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
+                    )
                 )
                 .BuildServiceProvider(true);
 
-
-            /*
-            //Serviços como Singleton (Unica Instancia)
-            .AddSingleton<IShareService, ShareService>()
-            .AddSingleton<SystemMediaTransportControls>(SystemMediaTransportControls.GetForCurrentView())
-            .AddSingleton<DataTransferManager>(DataTransferManager.GetForCurrentView())
-
-*/
-
             return provider;
+
         }
 
 
@@ -291,6 +329,9 @@ namespace Imgur.Uwp
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+
+            HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
+
             //TODO: Salvar o estado do aplicativo e parar qualquer atividade em segundo plano
             deferral.Complete();
         }
@@ -315,14 +356,23 @@ namespace Imgur.Uwp
             }
             else
             {
-                var msg = new MessageDialog("Confirm Close");
-                var okBtn = new UICommand("OK");
-                var cancelBtn = new UICommand("Cancel");
+                var resourceLoader = ResourceLoader.GetForCurrentView();
+
+
+                var closeTitle = resourceLoader.GetString($"AppCloseTitle") ?? "Leaving Already ?";
+                var closeContent = resourceLoader.GetString($"AppCloseContent") ?? "Are you sure you want to close the app ?";
+
+                var confirmLabel = resourceLoader.GetString($"AppCloseConfirm") ?? "Yes";
+                var cancelLabel = resourceLoader.GetString($"AppCloseCancel") ?? "Cancel";
+
+                var msg = new MessageDialog(closeContent,closeTitle);
+                var okBtn = new UICommand(confirmLabel);
+                var cancelBtn = new UICommand(cancelLabel);
                 msg.Commands.Add(okBtn);
                 msg.Commands.Add(cancelBtn);
                 IUICommand result = await msg.ShowAsync();
 
-                if (result != null && result.Label == "OK")
+                if (result != null && result.Label == confirmLabel)
                 {
                     if (Services.GetRequiredService<ISystemInfoProvider>().IsMobile())
                     {
@@ -334,6 +384,30 @@ namespace Imgur.Uwp
                     }
                         
                 }
+            }
+        }
+
+        /// <summary>
+        /// Verifica o status da API Imgur e notifica o usuário se houver problemas
+        /// </summary>
+        private async Task VerifyApiStatusAsync()
+        {
+            try
+            {
+                var apiStatusService = Services.GetRequiredService<IApiStatusService>();
+                var status = await apiStatusService.GetApiStatusAsync();
+
+                // Verificar se está operacional
+                if (status?.Success == true && status?.Data.status != "operational")
+                {
+                    await Task.Delay(2000);
+                    var appNotificationService = Services.GetRequiredService<IAppNotificationService>();
+                    appNotificationService.AddApiWarningNotification(status?.Data.status);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Erro ao verificar status da API no startup: {ex.Message}");
             }
         }
 

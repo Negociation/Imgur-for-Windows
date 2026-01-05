@@ -37,6 +37,7 @@ namespace Imgur.Models
 
         public string AccountId { get; set; }
         public bool MostViral { get; set; }
+        public bool IsBasicAlbum { get; set; }
 
         public string Embed
         {

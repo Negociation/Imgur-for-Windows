@@ -19,7 +19,8 @@ namespace Imgur.Mappers
                 Avatar = dto.avatar,
                 Cover = dto.cover,
                 Reputation = dto.reputation,
-                ReputationName = dto.reputation_name
+                ReputationName = dto.reputation_name,
+                IsHidden = false
         };
 
             return account;
