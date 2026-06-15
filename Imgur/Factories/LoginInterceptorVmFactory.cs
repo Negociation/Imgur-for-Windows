@@ -20,8 +20,8 @@ namespace Imgur.Factories
         public LoginInterceptorViewModel getLoginInterceptorViewModel(LoginInterceptorEnum messageType)
         {
             var navigator = _serviceProvider.GetRequiredService<INavigator>();
-
-            return new LoginInterceptorViewModel(messageType, navigator);
+            var userContext = _serviceProvider.GetRequiredService<IUserContext>();
+            return new LoginInterceptorViewModel(messageType, navigator, userContext);
         }
     }
 }

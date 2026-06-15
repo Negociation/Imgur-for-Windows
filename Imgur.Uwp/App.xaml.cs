@@ -30,45 +30,34 @@ using Imgur.ViewModels.Account;
 using Imgur.ViewModels.Tags;
 using Imgur.Services;
 using Windows.ApplicationModel.Resources;
+using Imgur.ViewModels.FileUpload;
+using Imgur.Models;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.Storage;
+using Imgur.Constants;
 
 namespace Imgur.Uwp
 {
-    /// <summary>
-    ///Fornece o comportamento específico do aplicativo para complementar a classe Application padrão.
-    /// </summary>
     sealed partial class App : Application
     {
-
-        /// <summary>
-        ///Instancia de Variaveis Globais do Projeto 
-        /// </summary>
         private static Frame ShellFrame;
         private static Rect AppBounds;
         private IServiceProvider _serviceProvider;
 
-        //Get App Width and Height
         public static Rect AppStartBounds => AppBounds;
 
-        //Service Provider
         public static IServiceProvider Services
         {
             get
             {
                 IServiceProvider serviceProvider = ((App)Current)._serviceProvider;
-
                 if (serviceProvider is null)
-                {
                     Debug.WriteLine("Cagada no S.P");
-                }
-
                 return serviceProvider;
             }
         }
 
-        /// <summary>
-        /// Inicializa o objeto singleton do aplicativo.  Esta é a primeira linha de código criado
-        /// executado e, como tal, é o equivalente lógico de main() ou WinMain().
-        /// </summary>
         public App()
         {
             this.InitializeComponent();
@@ -76,113 +65,198 @@ namespace Imgur.Uwp
             this.Resuming += OnResuming;
         }
 
-        /// <summary>
-        /// Chamado quando o aplicativo é iniciado normalmente pelo usuário final.  Outros pontos de entrada
-        /// serão usados, por exemplo, quando o aplicativo for iniciado para abrir um arquivo específico.
-        /// </summary>
-        /// <param name="e">Detalhes sobre a solicitação e o processo de inicialização.</param>
+        // ── Entry Points ───────────────────────────────────────
+
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
             await ActivateAsync(e.PrelaunchActivated);
         }
 
-        private async Task ActivateAsync(bool prelaunched)
+        protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            var shareOperation = e.ShareOperation;
+            shareOperation.ReportStarted();
 
-            // Do not repeat app initialization when the Window already has content
-            if (rootFrame == null)
+            try
             {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-
-                //Inicialização do Container de Dependencia de Serviços
+                // ← configureServices UMA vez só
                 _serviceProvider = configureServices();
 
-            }
+                var localSettings = _serviceProvider.GetRequiredService<ILocalSettings>();
 
-            //Recuperar Width e Height da Janela Atual
+                var hasCredentials =
+                    !string.IsNullOrWhiteSpace(localSettings.Get<string>(LocalSettingsConstants.CustomClientId)) &&
+                    !string.IsNullOrWhiteSpace(localSettings.Get<string>(LocalSettingsConstants.CustomClientSecret));
+
+
+
+                //Auth
+                var userContext = _serviceProvider.GetRequiredService<IUserContext>();
+                await userContext.InitAsync();
+                setTokenDelegates(userContext);
+                var vm = new ShareTargetViewModel(userContext);
+
+                var rootFrame = Window.Current.Content as Frame;
+                if (rootFrame == null)
+                {
+                    rootFrame = new Frame();
+                    Window.Current.Content = rootFrame;
+
+                }
+
+                HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
+
+                rootFrame.Navigate(typeof(ShareTargetView));
+                var shareTargetView = rootFrame.Content as ShareTargetView;
+                shareTargetView.DataContext = vm;
+
+
+                await setAppBarAsync();
+                Window.Current.Activate();
+
+                if (!hasCredentials)
+                {
+                    var toast = _serviceProvider.GetRequiredService<ISystemNotificationService>();
+
+                    toast.ShowShareTargetBlocked();
+                    await Task.Delay(200);
+                    shareOperation.ReportCompleted();
+
+                    return;
+                }
+
+                // Lê arquivos
+                var sharedItems = await shareOperation.Data.GetStorageItemsAsync();
+                var selectedFiles = new List<SelectedFile>();
+                var allowed = new[] { "image/jpeg", "image/png", "image/gif", "video/mp4" };
+
+                foreach (var item in sharedItems)
+                {
+                    if (item is StorageFile file && allowed.Contains(file.ContentType))
+                        selectedFiles.Add(await FilePicker.ReadStorageFileAsync(file));
+                }
+
+                Debug.WriteLine($"[ShareTarget] Arquivos lidos: {selectedFiles.Count}");
+
+
+
+                Debug.WriteLine($"[ShareTarget] Autenticado: {userContext.IsAuthenticated}");
+
+                await Task.Delay(500);
+
+                if (!userContext.IsAuthenticated)
+                {
+                    vm.IsInitialized = true;
+                    // ShareTargetView já mostra mensagem de não logado
+                    shareOperation.ReportCompleted();
+                    return;
+                }
+
+                // Abre dialog
+                var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
+                vm.IsInitialized = true;
+
+                Debug.WriteLine($"[ShareTarget] Abrindo dialog...");
+                var result = await dialogService.ShowUploadDialogAsync(
+                    selectedFiles,
+                    onUploadStarted: () => shareTargetView?.ShowUploading(),
+                    onUploadCompleted: async () =>
+                    {
+                        shareTargetView?.ShowCompleted();
+                        await Task.Delay(1500); // mostra "Done!" por 1.5s
+                        shareOperation.ReportCompleted();
+                    });
+                Debug.WriteLine($"[ShareTarget] Dialog fechou: {result}");
+                shareOperation.ReportCompleted();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ShareTarget] Erro: {ex.Message}");
+                shareOperation.ReportError("Erro ao processar arquivo compartilhado.");
+            }
+        }
+
+        // ── Inicialização ──────────────────────────────────────
+
+        private async Task ActivateAsync(bool prelaunched)
+        {
+            var rootFrame = EnsureRootFrame();
+
             AppBounds = ApplicationView.GetForCurrentView().VisibleBounds;
 
             if (prelaunched == false)
             {
                 CoreApplication.EnablePrelaunch(true);
 
-                if (rootFrame.Content == null)
-                {
-                    rootFrame.Navigate(typeof(ShellView));
-                    ShellFrame = rootFrame;
+                await InitializeShellAsync(rootFrame);
 
-                    if (rootFrame.Content is ShellView shellView)
-                    {
-                        shellView.Loaded += ShellView_Loaded;
-
-
-                    }
-
-                }
-
-                //Evento de BackPressed para Navegação Global da RootFrame
                 HardwareButtons.BackPressed += hardwareButtonsBackPressedAsync;
 
-                //Esconder AppBar no Mobile
-                await setAppBarAsync();
-
-                //Inicializa a Janela
-                Window.Current.Activate();
-
-                //Live Tiles
                 await UpdateLiveTilesInBackgroundAsync();
-            
             }
 
-            //Set Visual Kind
             this.FocusVisualKind = FocusVisualKind.Reveal;
 
-            //Set Rootframe on Navigation Service
             Services.GetRequiredService<INavigator>().RootFrame = rootFrame;
-
         }
 
-        /// <summary>
-        /// Chamado quando a ShellView termina de carregar
-        /// </summary>
-        private async void ShellView_Loaded(object sender, RoutedEventArgs e)
+        // ── Helpers de Inicialização ───────────────────────────
+
+        private Frame EnsureRootFrame(bool isShareTarget = false)
         {
-            // Remover o evento para não ser chamado múltiplas vezes
-            if (sender is ShellView shellView)
+            var rootFrame = Window.Current.Content as Frame;
+            if (rootFrame == null)
             {
-                shellView.Loaded -= ShellView_Loaded;
+                rootFrame = new Frame();
+                rootFrame.NavigationFailed += OnNavigationFailed;
+                Window.Current.Content = rootFrame;
+                _serviceProvider = configureServices(isShareTarget);
+            }
+            return rootFrame;
+        }
+
+        private async Task InitializeShellAsync(Frame rootFrame)
+        {
+            if (rootFrame.Content == null)
+            {
+                rootFrame.Navigate(typeof(ShellView));
+                ShellFrame = rootFrame;
+
+                if (rootFrame.Content is ShellView shellView)
+                    shellView.Loaded += ShellView_Loaded;
             }
 
+            await loginRetrieveAsync();
+            await setAppBarAsync();
 
-            // Verificar API Status
+            Window.Current.Activate();
+
+            if (!Services.GetRequiredService<ISystemInfoProvider>().IsMobile())
+                ForceResourceRefresh();
+        }
+
+        private async void ShellView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is ShellView shellView)
+                shellView.Loaded -= ShellView_Loaded;
+
             await VerifyApiStatusAsync();
-
-            // Pequeno delay adicional para garantir renderização completa
             await Task.Delay(800);
-
-            //Start Monitoring Clipboard for changes
             Services.GetRequiredService<IClipboardService>().StartMonitoring();
         }
 
+        // ── DI ────────────────────────────────────────────────
 
-        private IServiceProvider configureServices()
+        private IServiceProvider configureServices(bool isShareTarget = false)
         {
-            /*
-            string clientId = "b6c4abc4061d423";
-            string clientSecret = "1ccc6187d2e64baaefcf49487cc1d948cfa6484e";
-            */
-
-            DispatcherHelper.Initialize();
+            if (!isShareTarget)
+            {
+                DispatcherHelper.Initialize();
+            }
 
             var provider = new ServiceCollection()
 
-                //Serviços Contexto UWP como Singleton (Unica Instancia)
+                // Serviços UWP Singleton
                 .AddSingleton<INavigator, Navigator>()
                 .AddSingleton<ISystemInfoProvider, SystemInfoProvider>()
                 .AddSingleton<ILocalSettings, LocalSettings>()
@@ -197,19 +271,24 @@ namespace Imgur.Uwp
                 .AddSingleton<ITokenService, TokenService>()
                 .AddSingleton<IImgurApiCredentialsProvider, ImgurApiCredentialsProvider>()
                 .AddSingleton<IAppLifeCycleService, AppLifeCycleService>()
+                .AddSingleton<IAuthBroker, AuthBroker>()
+                .AddSingleton<IFilePicker, FilePicker>()
+                .AddSingleton<ISystemNotificationService, SystemNotificationService>()
 
-                //Contextos como Singleton
+                // Contextos Singleton
                 .AddSingleton<IUserContext, Imgur.Services.UserContext>()
 
-                //Factories como Singleton
+                // Factories Singleton
                 .AddSingleton<IMediaVmFactory, MediaVmFactory>()
                 .AddSingleton<IAccountVmFactory, AccountVmFactory>()
                 .AddSingleton<IEmbedVmFactory, EmbedVmFactory>()
                 .AddSingleton<ILoginInterceptorVmFactory, LoginInterceptorVmFactory>()
                 .AddSingleton<IExplorerSearchVmFactory, ExplorerSearchVmFactory>()
                 .AddSingleton<ITagVmFactory, TagVmFactory>()
+                .AddSingleton<IUploadFileVmFactory, UploadFileVmFactory>()
+                .AddSingleton<IUploadInterceptorVmFactory, UploadInterceptorVmFactory>()
 
-                //ViewModels como transientes para reutilização em multiplas Views
+                // ViewModels Transient
                 .AddTransient<ShellViewModel>()
                 .AddTransient<SettingsViewModel>()
                 .AddTransient<ShutdownViewModel>()
@@ -220,57 +299,65 @@ namespace Imgur.Uwp
                 .AddTransient<LoginInterceptorViewModel>()
                 .AddTransient<ExplorerSearchViewModel>()
                 .AddTransient<TagViewModel>()
+                .AddTransient<UploadFileViewModel>()
+                .AddTransient<ShareTargetViewModel>()
 
-                //Services (Use Cases) como Transientes
+
+                // Services Domain Transient
                 .AddTransient<Imgur.Services.GalleryService>()
                 .AddTransient<Imgur.Services.AlbumService>()
                 .AddTransient<Imgur.Services.AccountService>()
                 .AddTransient<Imgur.Services.TagsService>()
                 .AddTransient<Imgur.Services.UrlHandlerService>()
+                .AddTransient<Imgur.Services.ImageUploadService>()
+                .AddTransient<Imgur.Services.ImageService>()
+                .AddTransient<Imgur.Services.UserMediaActionsService>()
 
-                //Mappers
+                // Mappers Transient
                 .AddTransient<GalleryMapper>()
                 .AddTransient<TagMapper>()
                 .AddTransient<ImageMapper>()
                 .AddTransient<AlbumMapper>()
                 .AddTransient<AccountMapper>()
 
-                //Imgur Api Services como Transienes
-                .AddTransient<IGalleryService>(sp =>
-                    
+                // Imgur API Services Singleton (guardar delegate)
+                .AddSingleton<IGalleryService>(sp =>
                     new Api.Services.Actions.GalleryService(
-                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
-                    )
-                )
-                 .AddTransient<IAlbumService>(sp =>
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
+
+                .AddSingleton<IAlbumService>(sp =>
                     new Api.Services.Actions.AlbumService(
-                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
-                    )
-                )
-                 .AddTransient<IAccountService>(sp =>
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
+
+                .AddSingleton<IAccountService>(sp =>
                     new Api.Services.Actions.AccountService(
-                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
-                    )
-                )
-                .AddTransient<IApiStatusService>(sp =>
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
+
+                .AddSingleton<IApiStatusService>(sp =>
                     new Api.Services.Actions.ApiStatusService(
-                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId
-                    )
-                )
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
+
+                .AddSingleton<IAuthApiService>(sp =>
+                    new Api.Services.Actions.AuthApiService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
+
+                .AddSingleton<IImageService>(sp =>
+                    new Api.Services.Actions.ImageService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
+
+                .AddSingleton<IMediaActionsService>(sp =>
+                    new Api.Services.Actions.MediaActionsService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
+
                 .BuildServiceProvider(true);
 
             return provider;
-
         }
 
+        // ── App Bar ────────────────────────────────────────────
 
-
-        /// <summary>
-        /// Chamado para definir as configs de AppBar no Desktop e Mobile
-        /// </summary>
         private async Task setAppBarAsync()
         {
-            //Set Frist Time on Desktop
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(320, 320));
             var viewTitleBar = ApplicationView.GetForCurrentView().TitleBar;
@@ -278,7 +365,6 @@ namespace Imgur.Uwp
             viewTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             viewTitleBar.ButtonForegroundColor = Colors.White;
 
-            // If we have a phone contract, hide the status bar
             if (Services.GetRequiredService<ISystemInfoProvider>().IsMobile())
             {
                 var statusBar = StatusBar.GetForCurrentView();
@@ -286,110 +372,71 @@ namespace Imgur.Uwp
             }
         }
 
+        // ── Live Tiles ─────────────────────────────────────────
 
-        /// <summary>
-        /// Chamado para definir e atualizar as Live Tiles quando o App é aberto.
-        /// </summary>
         private async Task UpdateLiveTilesInBackgroundAsync()
         {
             try
             {
                 await Task.Run(async () =>
                 {
-                    // Obtém as dependências (ajuste conforme seu DI/Service Locator)
                     var liveTileService = this._serviceProvider.GetRequiredService<ILiveTilesService>();
-
                     await liveTileService.UpdateLiveTilesAsync();
                 });
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erro ao atualizar Live Tiles no startup: {ex.Message}");
+                Debug.WriteLine($"Erro ao atualizar Live Tiles no startup: {ex.Message}");
             }
         }
 
+        // ── Auth ───────────────────────────────────────────────
 
-        /// <summary>
-        /// Chamado quando ocorre uma falha na Navegação para uma determinada página
-        /// </summary>
-        /// <param name="sender">O Quadro com navegação com falha</param>
-        /// <param name="e">Detalhes sobre a falha na navegação</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        private async Task loginRetrieveAsync()
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
-
-        /// <summary>
-        /// Chamado quando a execução do aplicativo está sendo suspensa.  O estado do aplicativo é salvo
-        /// sem saber se o aplicativo será encerrado ou retomado com o conteúdo
-        /// da memória ainda intacto.
-        /// </summary>
-        /// <param name="sender">A fonte da solicitação de suspensão.</param>
-        /// <param name="e">Detalhes sobre a solicitação de suspensão.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-
-            HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
-
-            //TODO: Salvar o estado do aplicativo e parar qualquer atividade em segundo plano
-            deferral.Complete();
-        }
-
-        /// <summary>
-        /// Chamado quando a execução do aplicativo está sendo retomado.  O estado do aplicativo é restaurado
-        /// </summary>
-        private void OnResuming(object sender, object e)
-        {
-            HardwareButtons.BackPressed += hardwareButtonsBackPressedAsync;
-        }
-
-        /// <summary>
-        /// Ação quando o botão de voltar é acionado pelo Hardware no Mobile
-        /// </summary>
-        private async void hardwareButtonsBackPressedAsync(object sender, BackPressedEventArgs e)
-        {
-            e.Handled = true;
-            if (Services.GetRequiredService<INavigator>().CanGoBack())
+            try
             {
-                Services.GetRequiredService<INavigator>().GoBack();
+                var authService = this._serviceProvider.GetRequiredService<IUserContext>();
+                await authService.InitAsync();
+                this.setTokenDelegates(authService);
             }
-            else
+            catch (Exception ex)
             {
-                var resourceLoader = ResourceLoader.GetForCurrentView();
-
-
-                var closeTitle = resourceLoader.GetString($"AppCloseTitle") ?? "Leaving Already ?";
-                var closeContent = resourceLoader.GetString($"AppCloseContent") ?? "Are you sure you want to close the app ?";
-
-                var confirmLabel = resourceLoader.GetString($"AppCloseConfirm") ?? "Yes";
-                var cancelLabel = resourceLoader.GetString($"AppCloseCancel") ?? "Cancel";
-
-                var msg = new MessageDialog(closeContent,closeTitle);
-                var okBtn = new UICommand(confirmLabel);
-                var cancelBtn = new UICommand(cancelLabel);
-                msg.Commands.Add(okBtn);
-                msg.Commands.Add(cancelBtn);
-                IUICommand result = await msg.ShowAsync();
-
-                if (result != null && result.Label == confirmLabel)
-                {
-                    if (Services.GetRequiredService<ISystemInfoProvider>().IsMobile())
-                    {
-                        Services.GetRequiredService<INavigator>().RootNavigate("shutdown");
-                    }
-                    else
-                    {
-                        Current.Exit();
-                    }
-                        
-                }
+                Debug.WriteLine($"Erro ao recuperar sessão: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Verifica o status da API Imgur e notifica o usuário se houver problemas
-        /// </summary>
+        private void setTokenDelegates(IUserContext userContext)
+        {
+            Debug.WriteLine($"[setTokenDelegates] IsAuthenticated: {userContext.IsAuthenticated}");
+            Debug.WriteLine($"[setTokenDelegates] CurrentUser: {userContext.CurrentUser?.Username}");
+            Debug.WriteLine($"[setTokenDelegates] AccessToken: {userContext.CurrentUser?.AccessToken}");
+
+            (this._serviceProvider.GetRequiredService<IGalleryService>())
+                .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
+            (this._serviceProvider.GetRequiredService<IAlbumService>())
+                .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
+            (this._serviceProvider.GetRequiredService<IAccountService>())
+                .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
+            (this._serviceProvider.GetRequiredService<IImageService>())
+                .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
+            (this._serviceProvider.GetRequiredService<IMediaActionsService>())
+                .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
+        }
+
+        private async void ForceResourceRefresh()
+        {
+            try
+            {
+                var view = ApplicationView.GetForCurrentView();
+                var size = view.VisibleBounds;
+                view.TryResizeView(new Size(size.Width + 1, size.Height + 1));
+                await Task.Delay(50);
+                view.TryResizeView(new Size(size.Width, size.Height));
+            }
+            catch { }
+        }
+
         private async Task VerifyApiStatusAsync()
         {
             try
@@ -397,7 +444,6 @@ namespace Imgur.Uwp
                 var apiStatusService = Services.GetRequiredService<IApiStatusService>();
                 var status = await apiStatusService.GetApiStatusAsync();
 
-                // Verificar se está operacional
                 if (status?.Success == true && status?.Data.status != "operational")
                 {
                     await Task.Delay(2000);
@@ -411,5 +457,55 @@ namespace Imgur.Uwp
             }
         }
 
+        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+        }
+
+        private void OnSuspending(object sender, SuspendingEventArgs e)
+        {
+            var deferral = e.SuspendingOperation.GetDeferral();
+            HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
+            deferral.Complete();
+        }
+
+        private void OnResuming(object sender, object e)
+        {
+            HardwareButtons.BackPressed += hardwareButtonsBackPressedAsync;
+        }
+
+        private async void hardwareButtonsBackPressedAsync(object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            if (Services.GetRequiredService<INavigator>().CanGoBack())
+            {
+                Services.GetRequiredService<INavigator>().GoBack();
+            }
+            else
+            {
+                var resourceLoader = ResourceLoader.GetForCurrentView();
+
+                var closeTitle = resourceLoader.GetString("AppCloseTitle") ?? "Leaving Already ?";
+                var closeContent = resourceLoader.GetString("AppCloseContent") ?? "Are you sure you want to close the app ?";
+                var confirmLabel = resourceLoader.GetString("AppCloseConfirm") ?? "Yes";
+                var cancelLabel = resourceLoader.GetString("AppCloseCancel") ?? "Cancel";
+
+                var msg = new MessageDialog(closeContent, closeTitle);
+                var okBtn = new UICommand(confirmLabel);
+                var cancelBtn = new UICommand(cancelLabel);
+                msg.Commands.Add(okBtn);
+                msg.Commands.Add(cancelBtn);
+
+                IUICommand result = await msg.ShowAsync();
+
+                if (result != null && result.Label == confirmLabel)
+                {
+                    if (Services.GetRequiredService<ISystemInfoProvider>().IsMobile())
+                        Services.GetRequiredService<INavigator>().RootNavigate("shutdown");
+                    else
+                        Current.Exit();
+                }
+            }
+        }
     }
 }

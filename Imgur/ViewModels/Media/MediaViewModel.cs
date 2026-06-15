@@ -27,6 +27,11 @@ namespace Imgur.ViewModels.Media
         //-- Remaning Itens if Partial Loading
         public int RemainingItemsCount => CurrentMedia.ImagesCount - 3 ?? 0;
 
+        //-- View States
+        public bool IsUpvoted => CurrentMedia.Vote == "up";
+        public bool IsDownvoted => CurrentMedia.Vote == "down";
+        public bool IsFavorited => CurrentMedia.Favorite;
+
         //-- Current Media to Show
         private Models.Media _currentMedia;
 
@@ -158,6 +163,9 @@ namespace Imgur.ViewModels.Media
         //-- UserContext
         private readonly IUserContext _userContext;
 
+        //Ações de Midia
+        private readonly UserMediaActionsService _mediaActionsService;
+
         //***************************************************************
         // Constructors e Initializers
         //***************************************************************
@@ -174,7 +182,8 @@ namespace Imgur.ViewModels.Media
             IAccountVmFactory accountVmFactory,
             IUserContext userContext,
             GalleryService galleryService,
-            AccountService accountService
+            AccountService accountService,
+            UserMediaActionsService mediaActionsService
             )
         {
             _currentMedia = m;
@@ -188,6 +197,7 @@ namespace Imgur.ViewModels.Media
             _shareService = shareService;
             _dialogService = dialogService;
             _userContext = userContext;
+            _mediaActionsService = mediaActionsService;
         }
 
 
@@ -237,15 +247,25 @@ namespace Imgur.ViewModels.Media
                             this.LoadedSuccessfully = true;
                             if (!this.CurrentMedia.IsBasicAlbum)
                             {
-                                var account = await this._accountService.GetAccountById(this.CurrentMedia.AccountId);
-                                if (account.IsSuccess)
+                                if (!string.IsNullOrEmpty(this.CurrentMedia.AccountId))
                                 {
-                                this.UserAccount = this._accountVmFactory.GetAccountViewModel(account.Data);
+                                    var account = await this._accountService.GetAccountById(this.CurrentMedia.AccountId);
+                                    if (account.IsSuccess)
+                                    {
+                                        this.UserAccount = this._accountVmFactory.GetAccountViewModel(account.Data);
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("User Account couldn't be reached");
+                                    }
                                 }
                                 else
                                 {
-                                    throw new Exception("User Account couldn't be reached");
+                                    var account = Imgur.Models.UserAccount.CreateAnonymous();
+                                    this.UserAccount = this._accountVmFactory.GetAccountViewModel(account);
+
                                 }
+                               
                             }
                             else
                             {
@@ -294,6 +314,8 @@ namespace Imgur.ViewModels.Media
                                     throw new Exception("Erro durante a busca dos metadados de album: " + AlbumInfo.Error);
                                 }
 
+                                CurrentMedia.Vote = AlbumInfo.Data.Vote;
+                                CurrentMedia.Favorite = AlbumInfo.Data.Favorite;
                                 CurrentMedia.Likes = AlbumInfo.Data.Likes;
                                 CurrentMedia.Ups = AlbumInfo.Data.Ups;
                                 CurrentMedia.Downs = AlbumInfo.Data.Downs;
@@ -465,9 +487,7 @@ namespace Imgur.ViewModels.Media
         }
 
 
-        //-- Command para Favoritar Midia
         private ICommand _favourite;
-
         public ICommand Favourite
         {
             get
@@ -480,16 +500,27 @@ namespace Imgur.ViewModels.Media
                         {
                             await _dialogService.ShowLoginInterceptorDialog(LoginInterceptorEnum.Like);
                             return;
-                        };
+                        }
+
+                        // Atualiza localmente imediato
+                        var previous = CurrentMedia.Favorite;
+                        CurrentMedia.Favorite = !CurrentMedia.Favorite;
+                        OnPropertyChanged(nameof(IsFavorited));
+
+                        var result = await _mediaActionsService.FavoriteAsync(CurrentMedia.Id, CurrentMedia.IsAlbum);
+                        if (!result.IsSuccess)
+                        {
+                            CurrentMedia.Favorite = previous;
+                            OnPropertyChanged(nameof(IsFavorited));
+                        }
                     });
                 }
                 return _favourite;
             }
         }
 
-        //-- Command para Voe ( Upvote (true) | Downvote (false) )
+        //-- Command para Vote ( Upvote ("up") | Downvote ("down") )
         private ICommand _vote;
-
         public ICommand Vote
         {
             get
@@ -502,16 +533,63 @@ namespace Imgur.ViewModels.Media
                         {
                             await _dialogService.ShowLoginInterceptorDialog(LoginInterceptorEnum.Vote);
                             return;
-                        };
+                        }
 
-                        bool isUpVote = vote == "1";
+                        // Se clicar no mesmo voto → remove (toggle)
+                        var previous = CurrentMedia.Vote;
+                        CurrentMedia.Vote = CurrentMedia.Vote == vote ? null : vote;
 
+                        OnPropertyChanged(nameof(IsUpvoted));
+                        OnPropertyChanged(nameof(IsDownvoted));
+
+                        // Atualiza contadores localmente
+                        if (vote == "up")
+                        {
+                            if (previous == "up")
+                                CurrentMedia.Ups--;          
+                            else if (previous == "down")
+                            {
+                                CurrentMedia.Downs--;        
+                                CurrentMedia.Ups++;          
+                            }
+                            else
+                                CurrentMedia.Ups++;
+                        }
+                        else if (vote == "down")
+                        {
+                            if (previous == "down")
+                                CurrentMedia.Downs--;
+
+                            else if (previous == "up")
+                            {
+                                CurrentMedia.Ups--;
+                                CurrentMedia.Downs++;
+                            }
+                            else
+                                CurrentMedia.Downs++;
+                        }
+
+                        OnPropertyChanged(nameof(CurrentMedia));
+
+                        var voteValue = CurrentMedia.Vote ?? "veto";
+                        var result = await _mediaActionsService.VoteAsync(CurrentMedia.Id, voteValue);
+                        if (!result.IsSuccess)
+                        {
+                            CurrentMedia.Vote = previous;
+                            OnPropertyChanged(nameof(IsUpvoted));
+                            OnPropertyChanged(nameof(IsDownvoted));
+                        }
+                        else
+                        {
+                            CurrentMedia.Votes = CurrentMedia.Ups - CurrentMedia.Downs;
+                        }
                     });
                 }
                 return _vote;
             }
         }
 
+        //-- Command para Inicialização 
         //-- Command para Inicialização 
         private ICommand _initializeCommand;
 

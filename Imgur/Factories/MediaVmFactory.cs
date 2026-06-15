@@ -32,6 +32,7 @@ namespace Imgur.Factories
             var shareService = _serviceProvider.GetRequiredService<IShareService>();
             var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
             var userContext = _serviceProvider.GetRequiredService<IUserContext>();
+            var mediaActionsService = _serviceProvider.GetRequiredService<UserMediaActionsService>();
 
             var vm = new MediaViewModel(
                 media,
@@ -44,7 +45,8 @@ namespace Imgur.Factories
                 accountVmFactory,
                 userContext,
                 galleryService,
-                accountService
+                accountService,
+                mediaActionsService
                 );
 
             vm.Initialize();

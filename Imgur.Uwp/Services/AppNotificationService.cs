@@ -18,14 +18,14 @@ namespace Imgur.Uwp.Services
 
         public event EventHandler<NotificationViewModel> NotificationAdded;
 
-        public void AddMediaClipboardNotification(MediaViewModel media, ImgurUrlType imgurUrlType = ImgurUrlType.Image)
+        public void AddMediaClipboardNotification(MediaViewModel media, ImgurUrlType imgurUrlType = ImgurUrlType.Image, bool isUploaded = false)
         {
 
             var resourceLoader = ResourceLoader.GetForCurrentView();
 
 
             var notificationVm = new NotificationViewModel();
-            notificationVm.Title = notificationVm.Title = resourceLoader.GetString($"notification_open_{imgurUrlType.ToString().ToLowerInvariant()}");
+            notificationVm.Title = notificationVm.Title = isUploaded ? resourceLoader.GetString($"notification_open_upload") : resourceLoader.GetString($"notification_open_{imgurUrlType.ToString().ToLowerInvariant()}");
             notificationVm.Message =
                 string.IsNullOrWhiteSpace(media.CurrentMedia.Title)
                     ? media.CurrentMedia.Link

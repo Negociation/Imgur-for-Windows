@@ -42,6 +42,8 @@ namespace Imgur.Mappers
                 Link = dto.link ?? "",
                 AccountId = dto.account_url,
                 IsBasicAlbum = true,
+                Vote = null,
+                Favorite = dto.favorite
             };
 
             if(dto.cover == "")

@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
     mc:Ignorable="d"
-    MaxWidth="300"
+    MaxWidth="500"
+
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="600">
 
     <UserControl.Resources>
         <Style x:Key="TabsStylePivotStyle" TargetType="Pivot">
@@ -344,7 +345,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid HorizontalAlignment="Stretch">
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -355,7 +356,6 @@
                     <VisualState.Setters>
                         <Setter Target="DescriptionBox.Height" Value="350" />
 
-                        <Setter Target="dragArea.Height" Value="300" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -369,45 +369,131 @@
 
         <Pivot Margin="0,-8,0,0" Style="{StaticResource TabsStylePivotStyle}">
             <Pivot.LeftHeader>
-                <StackPanel Width="300" Opacity="0.9" Height="30"  Orientation="Horizontal" >
-                    <FontIcon Margin="0,1,0,0"  VerticalAlignment="Center"  Foreground="White" FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"  FontSize="16" Glyph="&#xEE71;" />
-                    <TextBlock Padding="5,5,0,0" FontWeight="Medium" VerticalAlignment="Center"  Foreground="White" FontSize="14">Upload new File</TextBlock>
+                <StackPanel Width="5000" Opacity="0.9" Height="30"  Orientation="Horizontal" >
+                    <FontIcon Margin="0,2,0,0"  VerticalAlignment="Center"  FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"  Foreground="#2fbe7c"  FontSize="16" Glyph="&#xEE71;" />
+                    <TextBlock Padding="10,2,0,0" x:Uid="Upload" FontWeight="Medium" VerticalAlignment="Center"  Foreground="#2fbe7c"  FontSize="16">Upload new File</TextBlock>
                 </StackPanel>
             </Pivot.LeftHeader>
 
-            <PivotItem Margin="-1">
+            <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock FontFamily="ms-appx:///Assets/fonts/segmdl3.ttf#Segoe MDL2 Assets" ToolTipService.ToolTip="Select a File" Text="&#xE898;" />
                 </PivotItem.Header>
                 <PivotItem.Content>
-                    <StackPanel Margin="0,5,0,0"  Background="{ThemeResource SystemControlAcrylicElementBrush}"  RequestedTheme="Dark" CornerRadius="3"  Padding="5" MinHeight="150" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid Margin="0,15,0,15"
+                          Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                          RequestedTheme="Dark"
+                          CornerRadius="6"
+                          Padding="5"
+                          MinHeight="225"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch">
 
-                    <Button Opacity="0.6"  Visibility="Visible" Command="{Binding OpenUploadPicker}" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,0,0" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="White" FontSize="13">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Margin="9" VerticalAlignment="Center" FontFamily="ms-appx:///Assets/fonts/segmdl3.ttf#Segoe MDL2 Assets" Glyph="&#xE8B9;" />
-                            <TextBlock Margin="0,0,9,0" VerticalAlignment="Center">Choose Photo/Video</TextBlock>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Button Grid.Row="0"
+                            Opacity="0.6"
+                            Visibility="Visible"
+                            Command="{Binding OpenUploadPicker}"
+                            Style="{StaticResource GlowSelectedButtonStyle}"
+                            Background="Transparent"
+                            Margin="10,10,10,0"
+                            HorizontalAlignment="Stretch"
+                            FontWeight="SemiBold"
+                            Foreground="White"
+                            FontSize="13">
+                            
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Margin="9" VerticalAlignment="Center" FontFamily="ms-appx:///Assets/fonts/segmdl3.ttf#Segoe MDL2 Assets" Glyph="&#xE8B9;" />
+                                <TextBlock Margin="0,0,9,0" x:Uid="FileSelection" VerticalAlignment="Center">Choose Photo/Video</TextBlock>
+                            </StackPanel>
+                        </Button>
+
+                        <StackPanel Grid.Row="1" Margin="0,0,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Line Stroke="#1bb76e" X2="200" VerticalAlignment="Center"/>
+                            <TextBlock x:Uid="Or"  Margin="10" FontWeight="SemiBold" Foreground="White" FontSize="13">or</TextBlock>
+                            <Line Stroke="#1bb76e" X2="200" VerticalAlignment="Center"/>
                         </StackPanel>
-                    </Button>
-                    <Button Opacity="0.6"  Visibility="Collapsed" Command="{Binding OpenUploadPicker}" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,0,0" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="White" FontSize="13">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Margin="9" VerticalAlignment="Center" Foreground="Red" FontWeight="Bold" FontFamily="ms-appx:///Assets/fonts/segmdl3.ttf#Segoe MDL2 Assets" Glyph="&#xE711;" />
-                            <TextBlock Margin="0,0,9,0" VerticalAlignment="Center" Foreground="Red" FontWeight="Bold" Text="{Binding FileName}" TextWrapping="WrapWholeWords" />
-                        </StackPanel>
-                    </Button>
 
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" >
-                        <Line Stroke="#1bb76e" X2="100" VerticalAlignment="Center"/>
-                        <TextBlock Margin="10" FontWeight="SemiBold" Foreground="White" FontSize="13">or</TextBlock>
-                        <Line Stroke="#1bb76e" VerticalAlignment="Center" X2="100"/>
-                    </StackPanel>
 
-                    <TextBox Margin="10,0,10,0" Opacity="0.7" IsEnabled="True" MinWidth="270" TextAlignment="Center" Background="#272a33" Windows10FallCreatorsUpdate:PlaceholderForeground="White" FontSize="13" FontWeight="SemiBold" SelectionHighlightColorWhenNotFocused="AliceBlue" BorderThickness="2" PlaceholderText="Paste Image or URL"></TextBox>
 
-                    <Grid Margin="10">
-                        <Rectangle x:Name="dragArea" MaxWidth="280"  Height="80" Stroke="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" StrokeThickness="2.5" StrokeDashArray="2 2"/>
-                        <TextBlock Foreground="#1bb76e" Opacity="0.7" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">Drop Images Here</TextBlock>
+                        <Grid Grid.Row="2" Visibility="Collapsed" Margin="10" CornerRadius="5" Background="#202124">
+                            <TextBox BorderBrush="Transparent" SelectionHighlightColorWhenNotFocused="AliceBlue" IsEnabled="False" Background="Transparent" BorderThickness="0" Height="35" TextAlignment="Center" Padding="8" Grid.Column="0" PlaceholderText="Paste Image or URL" Foreground="White"/>
+                        </Grid>
+
+                        <Grid Grid.Row="3" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="80">
+
+                            <!-- Sem arquivos — mostra drop area -->
+                            <Grid Visibility="{Binding HasFiles, Converter={StaticResource InverseBoolVisibilityConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Rectangle VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Stroke="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}" StrokeThickness="2.5" StrokeDashArray="2 2"/>
+                                <TextBlock x:Uid="FileDrag" Foreground="#1bb76e" Opacity="0.7" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">Drop Images Here</TextBlock>
+                            </Grid>
+
+                            <!-- Com arquivos — lista -->
+                            <ListView x:Name="FilesList"
+              Visibility="{Binding HasFiles, Converter={StaticResource BoolVisibilityConverter}}"
+              ItemsSource="{Binding SelectedFiles}"
+              SelectionMode="None"
+              HorizontalAlignment="Stretch">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,4" HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Ícone tipo arquivo -->
+                                            <FontIcon Grid.Column="0"
+                              FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"
+                              Glyph="&#xE8B9;"
+                              FontSize="14"
+                              Foreground="#1bb76e"
+                              Margin="0,0,8,0"
+                              VerticalAlignment="Center"/>
+
+                                            <!-- Nome do arquivo -->
+                                            <TextBlock Grid.Column="1"
+                               Text="{Binding Name}"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontSize="13"
+                               TextTrimming="CharacterEllipsis"/>
+
+                                            <!-- Botão remover -->
+                                            <Button Grid.Column="2"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="8,4"
+                            VerticalAlignment="Center"
+                            Command="{Binding DataContext.RemoveFileCommand, ElementName=FilesList}"
+                            CommandParameter="{Binding}">
+                                                <FontIcon FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"
+                                  Glyph="&#xE711;"
+                                  FontSize="12"
+                                  Foreground="#ff4444"/>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                        
+                        
+
                     </Grid>
-                </StackPanel>
                 </PivotItem.Content>
             </PivotItem>
             <PivotItem Margin="-1">
@@ -415,13 +501,31 @@
                     <TextBlock FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets" ToolTipService.ToolTip="About the File" Text="&#xE8BA;" />
                 </PivotItem.Header>
                 <PivotItem.Content>
-                    <StackPanel  Margin="0,5,0,0"  Background="{ThemeResource SystemControlAcrylicElementBrush}"  RequestedTheme="Dark" CornerRadius="3"  Padding="5" MinHeight="225" Width="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                      RequestedTheme="Dark"
+                      CornerRadius="5"
+                      Padding="5"
+                      MinHeight="225"
+                      Margin="0,15,0,15"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
 
-                        <TextBox  Background="#272a33" FontWeight="SemiLight" SelectionHighlightColorWhenNotFocused="AliceBlue" FontSize="13" BorderThickness="2" Header="Title:" Margin="10" PlaceholderText="Name" />
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
 
-                        <TextBox  Background="#272a33" FontWeight="SemiLight" SelectionHighlightColorWhenNotFocused="AliceBlue" FontSize="13" BorderThickness="2" x:Name="DescriptionBox" Header="Description:" MinHeight="90" Margin="10" PlaceholderText="Description of the file..." />
-                        
-                    </StackPanel>
+                        </Grid.RowDefinitions>
+
+
+                        <Grid Grid.Row="0"  CornerRadius="5" Background="#202124" Margin="5" >
+                            <TextBox Padding="12,10" x:Uid="NameBox"  BorderBrush="Transparent" SelectionHighlightColorWhenNotFocused="AliceBlue" Background="Transparent" BorderThickness="0"  FontWeight="SemiLight" Text="{Binding Title,  Mode=TwoWay}" FontSize="13" PlaceholderText="Name" />
+                        </Grid>
+                        <Grid Grid.Row="1"  CornerRadius="5" Background="#202124" Margin="5"  VerticalAlignment="Stretch" MinHeight="250">
+                            <TextBox  x:Uid="DescBox" TextWrapping="Wrap" AcceptsReturn="True" Padding="12,10" VerticalAlignment="Top"   MinHeight="250" BorderBrush="Transparent" Background="Transparent" BorderThickness="0" FontWeight="SemiLight" SelectionHighlightColorWhenNotFocused="AliceBlue" FontSize="13"  x:Name="DescriptionBox" Text="{Binding Description,  Mode=TwoWay}" PlaceholderText="Description of the file..." />
+                        </Grid>
+                        <CheckBox Grid.Row="3" Margin="10" Content="Private" x:Uid="PrivateUpload" IsChecked="{Binding IsPrivate, Mode=TwoWay}" />
+                    </Grid>
                 </PivotItem.Content>
             </PivotItem>
         </Pivot>

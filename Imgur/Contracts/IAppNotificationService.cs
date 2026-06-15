@@ -15,7 +15,7 @@ namespace Imgur.Contracts
         void AddNotification(NotificationViewModel notification);
         void RemoveNotification(NotificationViewModel notification);
 
-        void AddMediaClipboardNotification(MediaViewModel media, ImgurUrlType imgurUrlType = ImgurUrlType.Image);
+        void AddMediaClipboardNotification(MediaViewModel media, ImgurUrlType imgurUrlType = ImgurUrlType.Image, bool isUploaded= false);
 
         void AddTagClipboardNotification(TagViewModel tag);
 

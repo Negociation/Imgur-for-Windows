@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Imgur.Api.Services.Contracts
 {
-    public interface IGalleryService
+    public interface IGalleryService : IApiService
     {
         Task<ApiResponse<List<GalleryItemResponse>>> GetGalleryAsync(
            GallerySection section = GallerySection.Hot,

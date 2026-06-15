@@ -39,5 +39,15 @@ namespace Imgur.Services
 
             return Result<Media>.Success(this._albumMapper.ToMedia(item.Data));
         }
+
+        public async Task<Result<bool>> CreateAlbumAsync(string title = null, string description = null)
+        {
+            var response = await _apiService.CreateAlbumAsync(title, description);
+
+            if (!response.Success)
+                return Result<bool>.Failure("Erro ao criar album.");
+
+            return Result<bool>.Success(true);
+        }
     }
 }

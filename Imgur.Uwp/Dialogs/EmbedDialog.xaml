@@ -52,7 +52,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBox BorderBrush="Transparent" Background="Transparent" BorderThickness="0" Height="35" TextAlignment="Center" Padding="8" Grid.Column="0" IsReadOnly="True" Text="{Binding CurrentMedia.Embed}" Foreground="White"/>
                     <Grid Grid.Column="1" CornerRadius="0,5,5,0" Background="#2fbe7c">
-                        <Button  Grid.Column="1" Background="Transparent" BorderThickness="0" Height="35"  Margin="0"  Content="Copy to Clipboard" Foreground="White"  FontWeight="SemiBold" Command="{Binding Path=Copy}" CommandParameter="{Binding CurrentMedia.Embed}" />
+                        <Button  Grid.Column="1" x:Uid="ClipboardButton" Background="Transparent" BorderThickness="0" Height="35"  Margin="0"  Content="Copy to Clipboard" Foreground="White"  FontWeight="SemiBold" Command="{Binding Path=Copy}" CommandParameter="{Binding CurrentMedia.Embed}" />
                     </Grid>
                 </Grid>
                 <Grid Background="White"  Grid.Row="1" CornerRadius="3" Padding="1">

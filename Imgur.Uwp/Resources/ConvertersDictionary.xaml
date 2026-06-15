@@ -5,6 +5,7 @@
 
     <local1:BoolNegationConverter x:Key="BoolNegationConverter"/>
     <local1:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+    <local1:InverseBoolVisibilityConverter x:Key="InverseBoolVisibilityConverter"/>
     <local1:BoolValueConverter x:Key="BoolValueConverter"/>
     <local1:KiloConverter x:Key="KiloConverter"/>
     <local1:CoverTypeConverter x:Key="CoverTypeConverter"/>
@@ -19,7 +20,7 @@
     <local1:LoginInterceptorEnumToStringConverter x:Key="LoginInterceptorEnumToStringConverter"/>
     <local1:EmptyStringVisibilityConverter x:Key="EmptyStringVisibilityConverter" />
     <local1:BoolToGridLengthConverter x:Key="BoolToGridLengthConverter" />
-    
+    <local1:BoolToBrushConverter x:Key="BoolToBrushConverter" />
 
     <local1:ValueConverterGroup x:Key="EqualtoVisibilityConverter">
         <local1:EqualBoolConverter/>

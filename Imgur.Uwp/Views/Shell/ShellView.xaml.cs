@@ -374,9 +374,18 @@ namespace Imgur.Uwp.Views.Shell
         {
             FocusCatcher.Focus(FocusState.Keyboard);
             InputPane.GetForCurrentView().TryHide();
+            Debug.WriteLine("Abriu");
+            PaneSearchBox.IsEnabled = true;
+        }
+
+        private void NavigationView_PaneOpened(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
+        {
+            Debug.WriteLine("Abriu");
+            PaneSearchBox.IsEnabled = true;
         }
     }
 }
+
 
 // 🖼️ Imagem
 /*

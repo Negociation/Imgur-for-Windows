@@ -157,9 +157,11 @@
       <DependentUpon>VideoViewElementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\Base64BitmapConverter.cs" />
+    <Compile Include="Converters\BoolToBrushConverter.cs" />
     <Compile Include="Converters\BoolToGridLengthConverter.cs" />
     <Compile Include="Converters\BoolNegationConverter.cs" />
     <Compile Include="Converters\BoolValueConverter.cs" />
+    <Compile Include="Converters\InverseBoolVisibilityConverter.cs" />
     <Compile Include="Converters\EmptyStringVisibilityConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\CoverTypeConverter.cs" />
@@ -186,11 +188,16 @@
     <Compile Include="Dialogs\UploadDialog.xaml.cs">
       <DependentUpon>UploadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\UploadInterceptorDialog.xaml.cs">
+      <DependentUpon>UploadInterceptorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppLifeCycleService.cs" />
+    <Compile Include="Services\AuthBroker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\DispatcherService.cs" />
+    <Compile Include="Services\FilePicker.cs" />
     <Compile Include="Services\LiveTilesService.cs" />
     <Compile Include="Services\LocalSettings.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />
@@ -198,6 +205,7 @@
     <Compile Include="Services\AppNotificationService.cs" />
     <Compile Include="Services\ShareService.cs" />
     <Compile Include="Services\SystemInfoProvider.cs" />
+    <Compile Include="Services\SystemNotificationService.cs" />
     <Compile Include="Services\TokenService.cs" />
     <Compile Include="TemplateSelectors\MediaContainerTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\MediaElementTemplateSelector.cs" />
@@ -216,6 +224,9 @@
     <Compile Include="Views\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Shell\ShareTargetView.xaml.cs">
+      <DependentUpon>ShareTargetView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -233,6 +244,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\App\observatory.png" />
     <Content Include="Assets\App\purr.png" />
     <Content Include="Assets\Fonts\fluentui.ttf" />
     <Content Include="Assets\Fonts\Imgur.ttf" />
@@ -254,6 +266,7 @@
     <Content Include="Assets\App\sign_transparent.png" />
     <Content Include="Assets\App\Upvote.svg" />
     <Content Include="Assets\App\white_logo_transparent.png" />
+    <Content Include="Assets\App\observatory.svg" />
     <Content Include="Assets\Square150x150Logo.scale-100.png" />
     <Content Include="Assets\Square150x150Logo.scale-2002.png" />
     <Content Include="Assets\Square150x150Logo.scale-2003.png" />
@@ -329,6 +342,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\UploadInterceptorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\ControlStylesDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -358,6 +375,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Shell\ShareTargetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

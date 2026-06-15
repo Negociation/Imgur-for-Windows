@@ -8,16 +8,13 @@ namespace Imgur.Contracts
 {
     public interface IUserContext
     {
-        // Estado
-        bool IsAuthenticated { get; }
         User CurrentUser { get; }
+        bool IsAuthenticated { get; }
 
-        // Eventos
         event EventHandler OnAuthenticationChanged;
 
-        // Actions
-        Task<Result<bool>> LoginAsync(string username, string password);
-
-        Task<Result<bool>> LogoutAsync(string username, string password);
+        Task InitAsync();
+        Task<bool> LoginAsync();
+        Task LogoutAsync();
     }
 }

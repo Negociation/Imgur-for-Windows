@@ -15,6 +15,7 @@ namespace Imgur.Services
 
         private readonly GalleryService _galleryService;
         private readonly AlbumService _albumService;
+        private readonly ImageService _imageService;
         private readonly TagsService _tagService;
         private readonly AccountService _accountService;
 
@@ -22,13 +23,15 @@ namespace Imgur.Services
             GalleryService galleryService,
             AlbumService albumService,
             TagsService tagService,
-            AccountService accountService
+            AccountService accountService,
+            ImageService imageService
             )
         {
             _galleryService = galleryService;
             _albumService = albumService;
             _tagService = tagService;
             _accountService = accountService;
+            _imageService = imageService;
         }
 
         /// <summary>
@@ -82,6 +85,10 @@ namespace Imgur.Services
                         return await TagHandlerAsync(segments, result);
                     case "user":
                         return await UserHandlerAsync(segments, result);
+                    default:
+                        if (segments.Length == 1)
+                            return await ImageHandlerAsync(segments, result);
+                        break;
 
                 }
 
@@ -251,6 +258,31 @@ namespace Imgur.Services
             }
 
             return rawId;
+        }
+
+        /// <summary>
+        /// Handler para URLs do tipo imgur.com/{id} — imagem direta
+        /// </summary>
+        private async Task<ImgurUrl> ImageHandlerAsync(string[] segments, ImgurUrl result)
+        {
+            string sanitizedId = SanitizeId(segments[0]);
+            result.Id = sanitizedId;
+
+            Debug.WriteLine($"[UrlHandler] Verificar Imagem: {sanitizedId}");
+
+            var apiResult = await _imageService.GetImageById(sanitizedId);
+
+            if (!apiResult.IsSuccess)
+            {
+                result.ErrorMessage = "Não foi possível recuperar imagem na API";
+                return result;
+            }
+
+            result.IsValid = true;
+            result.Type = ImgurUrlType.Image; // ← novo enum se não existir
+            result.Data = apiResult.Data;
+
+            return result;
         }
     }
 }

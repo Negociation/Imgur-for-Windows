@@ -132,6 +132,10 @@ namespace Imgur.Uwp.Services
         {
             switch (result.Type)
             {
+                case ImgurUrlType.Image:
+                    var imageViewModel = this._mediaVmFactory.GetMediaViewModel(result.Data as Media);
+                    _notification.AddMediaClipboardNotification(imageViewModel, ImgurUrlType.Image);
+                    break;
                 case ImgurUrlType.Gallery:
                     var galleryViewModel = this._mediaVmFactory.GetMediaViewModel(result.Data as Media);
                     _notification.AddMediaClipboardNotification(galleryViewModel, ImgurUrlType.Gallery);

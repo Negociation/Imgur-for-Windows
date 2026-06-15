@@ -72,7 +72,9 @@ namespace Imgur.Mappers
                 IsAlbum = dto.is_album,
                 Link = dto.Link ?? "",
                 AccountId = dto.account_url,
-                MostViral = dto.in_most_viral
+                MostViral = dto.in_most_viral,
+                Vote = dto.Vote,
+                Favorite = dto.Favorite
             };
 
             // Define CoverType

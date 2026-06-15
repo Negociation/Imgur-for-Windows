@@ -1,4 +1,5 @@
-﻿using Imgur.Contracts;
+﻿using Imgur.Constants;
+using Imgur.Contracts;
 using Imgur.Enums;
 using Imgur.Factories;
 using Imgur.Helpers;
@@ -14,6 +15,7 @@ namespace Imgur.ViewModels.Shell
 
         public int CurrentPageIndex { get; set; }
         public bool IsAuthenticated => _userContext.IsAuthenticated;
+        public bool IsNotAuthenticated => !_userContext.IsAuthenticated;
 
         private bool _isFullScreenMode;
 
@@ -30,12 +32,17 @@ namespace Imgur.ViewModels.Shell
             }
         }
 
+        public bool HasCustomApiCredentials =>
+        !string.IsNullOrWhiteSpace(_localSettings.Get<string>(LocalSettingsConstants.CustomClientId)) &&
+        !string.IsNullOrWhiteSpace(_localSettings.Get<string>(LocalSettingsConstants.CustomClientSecret));
+
         public User CurrentUser => _userContext.CurrentUser;
 
         private readonly INavigator _navigator;
         private readonly IAppNotificationService _notification;
         private readonly IUserContext _userContext;
         private readonly IDialogService _dialogService;
+        private ILocalSettings _localSettings;
 
         private readonly IExplorerSearchVmFactory _explorerSearchVmFactory;
 
@@ -45,7 +52,8 @@ namespace Imgur.ViewModels.Shell
             IAppNotificationService notification,
             IDialogService dialogService,
             IExplorerSearchVmFactory explorerSearchVmFactory,
-            IUserContext userContext
+            IUserContext userContext,
+            ILocalSettings localSettings
             )
         {
             _navigator = Navigator;
@@ -53,12 +61,15 @@ namespace Imgur.ViewModels.Shell
             _dialogService = dialogService;
             _userContext = userContext;
             _explorerSearchVmFactory = explorerSearchVmFactory;
-
+            _localSettings = localSettings;
+            _userContext.OnAuthenticationChanged += (s, e) =>
+            {
+                OnPropertyChanged(nameof(IsAuthenticated));
+                OnPropertyChanged(nameof(IsNotAuthenticated));
+                OnPropertyChanged(nameof(CurrentUser));
+            };
 
         }
-
-
-
 
         private ICommand _navigateToCommand;
 
@@ -89,9 +100,24 @@ namespace Imgur.ViewModels.Shell
                     {
                         if (!IsAuthenticated)
                         {
-                            await _dialogService.ShowLoginInterceptorDialog(LoginInterceptorEnum.Upload);
+                            var loginResult = await _dialogService.ShowLoginInterceptorDialog(LoginInterceptorEnum.Upload);
+                            if (loginResult == true)
+                            {
+                                if (!this.HasCustomApiCredentials)
+                                {
+                                    await _dialogService.ShowUploadInterceptorDialog();
+                                    return;
+                                }
+                                await _dialogService.ShowUploadDialogAsync();
+                            }
                             return;
                         }
+                        if (!this.HasCustomApiCredentials)
+                        {
+                            await _dialogService.ShowUploadInterceptorDialog();
+                            return;
+                        }
+                        await _dialogService.ShowUploadDialogAsync();
                     });
                 }
                 return _invokeUploadCommand;
@@ -121,6 +147,48 @@ namespace Imgur.ViewModels.Shell
                     });
                 }
                 return _invokeSearchCommand;
+            }
+        }
+
+
+        private ICommand _invokeLoginCommand;
+
+        public ICommand InvokeLoginCommand
+        {
+            get
+            {
+                if (_invokeLoginCommand == null)
+                {
+                    _invokeLoginCommand = new RelayCommand(async () =>
+                    {
+                        if (!IsAuthenticated)
+                        {
+                            await _userContext.LoginAsync();
+                        }
+                    });
+                }
+                return _invokeLoginCommand;
+            }
+        }
+
+
+        private ICommand _invokeLogoutCommand;
+
+        public ICommand InvokeLogoutCommand
+        {
+            get
+            {
+                if (_invokeLogoutCommand == null)
+                {
+                    _invokeLogoutCommand = new RelayCommand(async () =>
+                    {
+                        if (IsAuthenticated)
+                        {
+                            await _userContext.LogoutAsync();
+                        }
+                    });
+                }
+                return _invokeLogoutCommand;
             }
         }
 

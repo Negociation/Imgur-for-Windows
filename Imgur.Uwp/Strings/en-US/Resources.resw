@@ -535,4 +535,97 @@
   <data name="notification_open_tag" xml:space="preserve">
     <value>Open Tag ?</value>
   </data>
+  <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>Copy to Clipboard</value>
+  </data>
+  <data name="notification_open_upload" xml:space="preserve">
+    <value>Would you like to open your upload?</value>
+  </data>
+  <data name="OpenSettingsMsg.Content" xml:space="preserve">
+    <value>Open Settings</value>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoAfter" xml:space="preserve">
+    <value>, and set the redirect URL with the value above. Then set the custom Api keys on Settings.</value>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoBefore" xml:space="preserve">
+    <value>Create your custom API Key in </value>
+  </data>
+  <data name="ClipboardButton.Content" xml:space="preserve">
+    <value>Copy to Clipboard</value>
+  </data>
+  <data name="DescBox.PlaceholderText" xml:space="preserve">
+    <value>Add a description</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileDrag.Text" xml:space="preserve">
+    <value>Drag and Drop the Files</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileSelection.Text" xml:space="preserve">
+    <value>Choose Photo(s)/Video(s)</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="NameBox.PlaceholderText" xml:space="preserve">
+    <value>Give your post a unique title...</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="Or.Text" xml:space="preserve">
+    <value>or</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="PrivateUpload.Content" xml:space="preserve">
+    <value>Private</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadInterceptorSettings.Text" xml:space="preserve">
+    <value>Open Settings</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Title" xml:space="preserve">
+    <value>Sign in required</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Subtitle" xml:space="preserve">
+    <value>Open Imgur for Windows and sign in first.</value>
+  </data>
+  <data name="ShareTarget.Uploading.Text" xml:space="preserve">
+    <value>Uploading to Imgur...</value>
+  </data>
+  <data name="ShareTarget.UploadCompleted.Text" xml:space="preserve">
+    <value>Upload completed!</value>
+  </data>
+  <data name="ShareTarget.Initializing.Text" xml:space="preserve">
+    <value>Initializing upload...</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Title" xml:space="preserve">
+    <value>Service blocked</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Subtitle" xml:space="preserve">
+    <value>Cannot continue due to missing credentials.</value>
+  </data>
+  <data name="UploadCancelledApiKeysMissingDesc" xml:space="preserve">
+    <value>Share cancelled, due to the lack of Custom Api Keys!</value>
+  </data>
+  <data name="UploadCancelledNotificationTitle" xml:space="preserve">
+    <value>Upload Cancelled</value>
+  </data>
+  <data name="UploadCompletedDesc" xml:space="preserve">
+    <value>Upload of the finished content successful, shall we take a look?</value>
+  </data>
+  <data name="UploadCompletedNotificationTitle" xml:space="preserve">
+    <value>Upload Completed</value>
+  </data>
+  <data name="UploadNotificationSpinnerTitle" xml:space="preserve">
+    <value>Uploading New Content...</value>
+  </data>
+  <data name="UploadOngoingDesc" xml:space="preserve">
+    <value>Content upload in progress...</value>
+  </data>
+  <data name="UploadStartedNotificationTitle" xml:space="preserve">
+    <value>Content Upload</value>
+  </data>
+  <data name="ApiRedirectInAppNotificationDesc" xml:space="preserve">
+    <value>Redirect Key copied to your clipboard.</value>
+  </data>
+  <data name="EmbedInAppNotificationDesc" xml:space="preserve">
+    <value>Embed Content Copied to Clipboard.</value>
+  </data>
 </root>

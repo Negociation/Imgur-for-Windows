@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Imgur.Api.Services.Contracts
 {
-    public interface IAccountService
+    public interface IAccountService: IApiService
     {
         Task<ApiResponse<AccountResponse>> GetAccountAsync(string id);
 

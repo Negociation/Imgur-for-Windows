@@ -16,6 +16,19 @@ namespace Imgur.Models
         public string CoverLink { get; set; }
         public string CoverUri { get; set; }
 
+        private string _vote;
+        public string Vote
+        {
+            get => _vote;
+            set { _vote = value; OnPropertyChanged(nameof(Vote)); }
+        }
+
+        private bool _favorite;
+        public bool Favorite
+        {
+            get => _favorite;
+            set { _favorite = value; OnPropertyChanged(nameof(Favorite)); }
+        }
 
         public string CoverVideo { get; set; }
         public string CoverImage { get; set; }
@@ -29,9 +42,26 @@ namespace Imgur.Models
 
         public long DateTime { get; set; }   // timestamp em segundos
         public long Views { get; set; }
-        public int? Ups { get; set; }
-        public int? Downs { get; set; }
-        public int? Votes { get; set; }
+        private int? _ups;
+        public int? Ups
+        {
+            get => _ups;
+            set { _ups = value; OnPropertyChanged(nameof(Ups)); }
+        }
+
+        private int? _downs;
+        public int? Downs
+        {
+            get => _downs;
+            set { _downs = value; OnPropertyChanged(nameof(Downs)); }
+        }
+
+        private int? _votes;
+        public int? Votes
+        {
+            get => _votes;
+            set { _votes = value; OnPropertyChanged(nameof(Votes)); }
+        }
         public long Likes { get; set; }
         public long? CommentCount { get; set; }
 

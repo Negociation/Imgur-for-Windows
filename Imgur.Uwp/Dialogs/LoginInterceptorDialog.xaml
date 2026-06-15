@@ -36,7 +36,7 @@
         </Grid>
         <TextBlock HorizontalAlignment="Center" Grid.Row="1" Margin="0,20,0,0" Text="{Binding MessageType, Converter={StaticResource LoginInterceptorEnumToStringConverter}}"></TextBlock>
         <TextBlock HorizontalAlignment="Center" x:Uid="SignInIntercetorMsg" Grid.Row="2">Sign in to save it!</TextBlock>
-        <Button HorizontalAlignment="Center" Style="{StaticResource DefaultButtonStyle}" Grid.Row="3">
+        <Button HorizontalAlignment="Center" Style="{StaticResource DefaultButtonStyle}" Command="{Binding LoginCommand}" Grid.Row="3">
             <TextBlock  x:Uid="LoginOrRegister" />
         </Button>
     </Grid>

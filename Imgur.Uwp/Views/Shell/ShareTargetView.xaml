@@ -1,0 +1,212 @@
+﻿<Page
+    x:Class="Imgur.Uwp.Views.Shell.ShareTargetView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imgur.Uwp.Views.Shell"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
+    mc:Ignorable="d"
+    Background="#292c30"
+    RequestedTheme="Dark">
+
+    <Grid x:Name="RootGrid"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+
+                <VisualState x:Name="Small">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BackgroundImage.Width"  Value="300"/>
+                        <Setter Target="BackgroundImage.Height" Value="300"/>
+                        <Setter Target="StatusIcon.FontSize"    Value="36"/>
+                        <Setter Target="StatusTitle.FontSize"   Value="14"/>
+                        <Setter Target="StatusSubtitle.FontSize" Value="11"/>
+                        <Setter Target="UploadingRing.Width"    Value="36"/>
+                        <Setter Target="UploadingRing.Height"   Value="36"/>
+                        <Setter Target="UploadingText.FontSize" Value="13"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Medium">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BackgroundImage.Width"  Value="600"/>
+                        <Setter Target="BackgroundImage.Height" Value="600"/>
+                        <Setter Target="StatusIcon.FontSize"    Value="56"/>
+                        <Setter Target="StatusTitle.FontSize"   Value="18"/>
+                        <Setter Target="StatusSubtitle.FontSize" Value="13"/>
+                        <Setter Target="UploadingRing.Width"    Value="56"/>
+                        <Setter Target="UploadingRing.Height"   Value="56"/>
+                        <Setter Target="UploadingText.FontSize" Value="16"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Large">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BackgroundImage.Width"  Value="1000"/>
+                        <Setter Target="BackgroundImage.Height" Value="1000"/>
+                        <Setter Target="StatusIcon.FontSize"    Value="72"/>
+                        <Setter Target="StatusTitle.FontSize"   Value="22"/>
+                        <Setter Target="StatusSubtitle.FontSize" Value="15"/>
+                        <Setter Target="UploadingRing.Width"    Value="72"/>
+                        <Setter Target="UploadingRing.Height"   Value="72"/>
+                        <Setter Target="UploadingText.FontSize" Value="18"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="ExtraLarge">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1400" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BackgroundImage.Width"  Value="1200"/>
+                        <Setter Target="BackgroundImage.Height" Value="1200"/>
+                        <Setter Target="StatusIcon.FontSize"    Value="96"/>
+                        <Setter Target="StatusTitle.FontSize"   Value="28"/>
+                        <Setter Target="StatusSubtitle.FontSize" Value="18"/>
+                        <Setter Target="UploadingRing.Width"    Value="96"/>
+                        <Setter Target="UploadingRing.Height"   Value="96"/>
+                        <Setter Target="UploadingText.FontSize" Value="22"/>
+                    </VisualState.Setters>
+                </VisualState>
+
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- Background gradiente -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.4">
+                <GradientStop Color="#073169" Offset="1" />
+                <GradientStop Color="#292c30" Offset="0.6" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Logo no topo -->
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Top"
+                    Margin="10">
+            <Image Height="24"
+                   Source="ms-appx:///Assets/App/logo_transparent.png"
+                   VerticalAlignment="Center"/>
+            <Image Height="20"
+                   Margin="4,0,0,0"
+                   Source="ms-appx:///Assets/App/sign_transparent.png"
+                   VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Background image -->
+        <Image x:Name="BackgroundImage"
+               Width="500"
+               Height="500"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Opacity="0.15"
+               Source="/Assets/App/observatory.png"/>
+
+        <!-- Centro — estados -->
+        <Grid HorizontalAlignment="Center" Visibility="{Binding IsInitialized, Converter={StaticResource BoolVisibilityConverter}}"
+              VerticalAlignment="Center">
+
+            <!-- Estado: Não logado -->
+            <StackPanel Windows10FallCreatorsUpdate:Spacing="12"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding IsNotAuthenticated, 
+                                     Converter={StaticResource BoolVisibilityConverter}}">
+                <FontIcon x:Name="StatusIcon"
+                          FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"
+                          Glyph="&#xE72E;"
+                          FontSize="48"
+                          Foreground="#ff4444"
+                          HorizontalAlignment="Center"/>
+                <TextBlock x:Name="StatusTitle"
+                           Text="Sign in required"
+                           Foreground="White"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="20,0"/>
+                <TextBlock x:Name="StatusSubtitle"
+                           Text="Open Imgur for Windows and sign in first."
+                           Foreground="#aaaaaa"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="20,0"/>
+            </StackPanel>
+
+            <!-- Estado: Uploading -->
+            <StackPanel Windows10FallCreatorsUpdate:Spacing="16"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding IsUploading, 
+                                     Converter={StaticResource BoolVisibilityConverter}}">
+                <ProgressRing x:Name="LoadingRing"
+                              IsActive="{Binding IsUploading}"
+                              Width="48"
+                              Height="48"
+                              Foreground="#1bb76e"
+                              HorizontalAlignment="Center"/>
+                <TextBlock x:Name="LoadingText"
+                           Text="Uploading to Imgur..."
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Opacity="0.8"/>
+            </StackPanel>
+
+            <!-- Estado: Concluído -->
+            <StackPanel Windows10FallCreatorsUpdate:Spacing="12"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding IsCompleted, 
+                                     Converter={StaticResource BoolVisibilityConverter}}">
+                <FontIcon FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"
+                          Glyph="&#xE73E;"
+                          FontSize="48"
+                          Foreground="#1bb76e"
+                          HorizontalAlignment="Center"/>
+                <TextBlock Text="Upload completed!"
+                           Foreground="White"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"/>
+            </StackPanel>
+
+        </Grid>
+
+        <Grid HorizontalAlignment="Stretch" Visibility="{Binding IsInitialized, Converter={StaticResource InverseBoolVisibilityConverter}}"
+              VerticalAlignment="Stretch">
+            <StackPanel Windows10FallCreatorsUpdate:Spacing="16"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsInitialized, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                <ProgressRing x:Name="UploadingRing"
+                              IsActive="True"
+                              Width="80"
+                              Foreground="#1bb76e"
+                              HorizontalAlignment="Center"/>
+                <TextBlock x:Name="UploadingText"
+                           Text="Initializing Upload..."
+                           Foreground="White"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Opacity="0.8"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

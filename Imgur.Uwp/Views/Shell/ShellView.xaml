@@ -11,6 +11,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
     RequestedTheme="Dark"
     Background="#292c30">
     <Page.Resources>
@@ -381,7 +382,7 @@
 
         <Grid x:Name="NavigationViewContent" Margin="0" Background="Transparent" Grid.RowSpan="2" Grid.ColumnSpan="2">
             <!-- Animation Tranformers for Desktop (If width < 500px) -->
-            <winui:NavigationView x:Name="NavigationView" Style="{StaticResource NavigationViewStyle}" Grid.RowSpan="2" Margin="0,0,0 0" IsSettingsVisible="False" PaneOpening="NavigationView_PaneOpening" CompactPaneLength="58"  OpenPaneLength="280" IsTitleBarAutoPaddingEnabled="False"  IsBackButtonVisible="Collapsed">
+            <winui:NavigationView x:Name="NavigationView" Style="{StaticResource NavigationViewStyle}" Grid.RowSpan="2" Margin="0,0,0 0" IsSettingsVisible="False" PaneOpening="NavigationView_PaneOpening" PaneOpened="NavigationView_PaneOpened" CompactPaneLength="58"  OpenPaneLength="280" IsTitleBarAutoPaddingEnabled="False"  IsBackButtonVisible="Collapsed">
                 <winui:NavigationView.RenderTransform>
                     <TranslateTransform x:Name="NavTranslate"/>
                 </winui:NavigationView.RenderTransform>
@@ -399,7 +400,7 @@
                     </StackPanel>
                 </winui:NavigationView.Header>
                 <winui:NavigationView.AutoSuggestBox>
-                    <AutoSuggestBox x:Uid="PaneSearchBox"  QueryIcon="Find" IsTabStop="False" IsFocusEngaged="False" Margin="0,-20,0,0" BorderBrush="#1e2022" MinWidth="260" BorderThickness="1.2" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"   x:Name="PaneSearchBox" Visibility="{Binding IsPaneOpen,ElementName=SplitView}" Grid.Column="2" Opacity="0.9"  HorizontalAlignment="Stretch" QuerySubmitted="SearchBox_QuerySubmitted" />
+                    <AutoSuggestBox x:Uid="PaneSearchBox" QueryIcon="Find" IsTabStop="False" IsFocusEngaged="False" Margin="0,-20,0,0" BorderBrush="#1e2022" MinWidth="260" BorderThickness="1.2" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"   x:Name="PaneSearchBox" Visibility="{Binding IsPaneOpen,ElementName=SplitView}" Grid.Column="2" Opacity="0.9"  HorizontalAlignment="Stretch" QuerySubmitted="SearchBox_QuerySubmitted" />
                 </winui:NavigationView.AutoSuggestBox>
 
                 <winui:NavigationView.MenuItems>
@@ -419,14 +420,42 @@
                         </winui:NavigationViewItem.Content>
                     </winui:NavigationViewItem>
 
-                    <winui:NavigationViewItem  x:Name="ConnectItem" IsSelected="False" SelectsOnInvoked="False" IsEnabled="True" Style="{StaticResource CustomNavigationViewItemStyle}">
+                    <winui:NavigationViewItem  x:Name="ConnectItem" IsSelected="False" SelectsOnInvoked="False" IsEnabled="True" Style="{StaticResource CustomNavigationViewItemStyle}"  Visibility="{Binding IsNotAuthenticated, Converter={StaticResource BoolVisibilityConverter}}">
                         <winui:NavigationViewItem.Content>
-                            <controls:NavigationViewItem x:Uid="Connect" Icon="&#xE748;" IsSelected="{x:Bind ConnectItem.IsSelected,Mode=OneWay}" IsEnabled="{x:Bind ConnectItem.IsEnabled,Mode=OneWay}" FontIcon="{StaticResource FluentUIGlyphs}" />
+                            <controls:NavigationViewItem x:Uid="Connect" Icon="&#xE748;" IsSelected="{x:Bind ConnectItem.IsSelected,Mode=OneWay}"  Command="{Binding InvokeLoginCommand}" IsEnabled="{x:Bind ConnectItem.IsEnabled,Mode=OneWay}" FontIcon="{StaticResource FluentUIGlyphs}" />
                         </winui:NavigationViewItem.Content>
                     </winui:NavigationViewItem>
                 </winui:NavigationView.MenuItems>
                 <winui:NavigationView.FooterMenuItems>
+                    <winui:NavigationViewItem SelectsOnInvoked="False" Visibility="{Binding IsAuthenticated, Converter={StaticResource BoolVisibilityConverter}}" Style="{StaticResource CustomNavigationViewItemStyle}">
+                        <winui:NavigationViewItem.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <toolkit:DropShadowPanel Grid.Column="0" BlurRadius="10" OffsetX="0" ShadowOpacity="0.2" Color="#01b96b" Margin="15,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" OffsetY="1" >
 
+                                    <Grid>
+                                        <Grid Background="{StaticResource SystemControlAcrylicElementBrush}" BorderBrush="#01b96b" BorderThickness="2" Width="28" Height="28" x:Name="UserPictureGrid" CornerRadius="14" Padding="0">
+                                            <FontIcon Grid.RowSpan="2" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="14" Foreground="#01b96b" Margin="0,0,0,0" Glyph="&#xE77B;"/>
+                                        </Grid>
+                                    <Ellipse Width="28" Height="28" x:Name="UserPicture" >
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding CurrentUser.Avatar}" Stretch="UniformToFill"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                </Grid>
+                                </toolkit:DropShadowPanel>
+
+                                <TextBlock Grid.Column="1" Foreground="{StaticResource BackButtonDisabledForegroundThemeBrush}"  FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="15,0,0,0" Text="{Binding CurrentUser.Username}"/>
+                                <Button Grid.Column="2"  Style="{x:Null}" Height="40" Padding="0" Width="40" Background="Transparent"  Command="{Binding InvokeLogoutCommand}" BorderBrush="Transparent" Margin="10,0,5,0">
+                                    <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="20" Foreground="#01b96b" Margin="0,0,0,0" Glyph="&#xF3B1;"/>
+                                </Button>
+                            </Grid>
+                        </winui:NavigationViewItem.Content>
+                    </winui:NavigationViewItem>
                     <winui:NavigationViewItem x:Name="UploadItem" IsSelected="False" IsEnabled="True" SelectsOnInvoked="False"  Style="{StaticResource CustomNavigationViewItemStyle}">
                         <winui:NavigationViewItem.Content>
                             <controls:NavigationViewItem x:Uid="Upload" Icon="&#xEE71;" Command="{Binding InvokeUploadCommand}" IsEnabled="{x:Bind UploadItem.IsEnabled,Mode=OneWay}" FontIcon="{StaticResource FluentUIGlyphs}" />
@@ -440,6 +469,8 @@
                     </winui:NavigationViewItem>
                 </winui:NavigationView.FooterMenuItems>
                 <winui:NavigationView.PaneFooter>
+
+                    
                     <StackPanel Height="40" Orientation="Horizontal" Padding="0,2,10,0">
                         <Button Style="{StaticResource CircleButtonStyle}" Background="Transparent" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Padding="10" ToolTipService.ToolTip="Upload New File"  Command="{Binding InvokeUploadCommand}">
                             <FontIcon  FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" FontWeight="Light" FontSize="16" Glyph="&#xEE71;"/>

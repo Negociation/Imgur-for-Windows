@@ -26,6 +26,8 @@ namespace Imgur.Constants
 
         public const string CustomClientSecret = "CustomClientSecret";
 
+        public const string AppRedirectCallback = "AppRedirectCallback";
+
         public static IReadOnlyDictionary<string, object> Defaults { get; } = new Dictionary<string, object>()
         {
             { LiveTiles, true },
@@ -37,7 +39,8 @@ namespace Imgur.Constants
             { ClientId, "b6c4abc4061d423" },
             { ClientSecret, "1ccc6187d2e64baaefcf49487cc1d948cfa6484e"},
             { CustomClientId, "" },
-            { CustomClientSecret, ""}
+            { CustomClientSecret, ""},
+            { AppRedirectCallback, "ms-app://s-1-15-2-4040184719-3607775429-1870810930-2871125074-1332764820-1012269719-118339466/" }
         };
     }
 }

@@ -14,12 +14,15 @@ namespace Imgur.ViewModels.Settings
         private ILiveTilesService _liveTilesService;
         private IDialogService _dialogService;
         private IAppLifeCycleService _appLifecycle;
+        private readonly IUserContext _userContext;
+
         public SettingsViewModel(
             ILocalSettings localSettings,
             INavigator navigator,
             ILiveTilesService liveTilesService,
             IDialogService dialogService,
-            IAppLifeCycleService appLifecycle
+            IAppLifeCycleService appLifecycle,
+            IUserContext userContext
             )
         {
             _localSettings = localSettings;
@@ -27,6 +30,7 @@ namespace Imgur.ViewModels.Settings
             _liveTilesService = liveTilesService;
             _dialogService = dialogService;
             _appLifecycle = appLifecycle;
+            _userContext = userContext;
         }
 
 
@@ -126,6 +130,7 @@ namespace Imgur.ViewModels.Settings
 
         public ICommand RestartAppCommand => new RelayCommand(async () =>
         {
+            await _userContext.LogoutAsync();
             await _appLifecycle.RestartToApplyCustomApiSettings();
         });
 

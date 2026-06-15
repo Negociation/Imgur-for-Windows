@@ -522,4 +522,91 @@
   <data name="HiddenAuthor" xml:space="preserve">
     <value>Oculto</value>
   </data>
+  <data name="ClipboardButton.Content" xml:space="preserve">
+    <value>Copiar para Area de Transferência</value>
+  </data>
+  <data name="DescBox.PlaceholderText" xml:space="preserve">
+    <value>Adicione uma descrição</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileDrag.Text" xml:space="preserve">
+    <value>Arraste e Solte os Arquivos </value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileSelection.Text" xml:space="preserve">
+    <value>Selecione Fotos ou Arquivos</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="NameBox.PlaceholderText" xml:space="preserve">
+    <value>Escolha título maneiro à sua publicação...</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="notification_open_upload" xml:space="preserve">
+    <value>Deseja Abrir seu Upload ?</value>
+  </data>
+  <data name="Or.Text" xml:space="preserve">
+    <value>ou</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="PrivateUpload.Content" xml:space="preserve">
+    <value>Privado</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoAfter" xml:space="preserve">
+    <value>, e defina a url de redirecionamento com o valor acima. em seguida informe os dados nas Configurações.</value>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoBefore" xml:space="preserve">
+    <value>Crie sua propria Api Key em </value>
+  </data>
+  <data name="UploadInterceptorSettings.Text" xml:space="preserve">
+    <value>Abrir Configurações</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Title" xml:space="preserve">
+    <value>Login necessário</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Subtitle" xml:space="preserve">
+    <value>Abra o Imgur para Windows e faça login primeiro.</value>
+  </data>
+  <data name="ShareTarget.Uploading.Text" xml:space="preserve">
+    <value>Enviando para o Imgur...</value>
+  </data>
+  <data name="ShareTarget.UploadCompleted.Text" xml:space="preserve">
+    <value>Upload concluído!</value>
+  </data>
+  <data name="ShareTarget.Initializing.Text" xml:space="preserve">
+    <value>Inicializando upload...</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Title" xml:space="preserve">
+    <value>Serviço bloqueado</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Subtitle" xml:space="preserve">
+    <value>Não foi possível continuar por falta de credenciais.</value>
+  </data>
+  <data name="UploadCancelledApiKeysMissingDesc" xml:space="preserve">
+    <value>Compartilhamento cancelado, devido a ausência de Api Keys!</value>
+  </data>
+  <data name="UploadCancelledNotificationTitle" xml:space="preserve">
+    <value>Upload Cancelado</value>
+  </data>
+  <data name="UploadCompletedDesc" xml:space="preserve">
+    <value>Upload do conteúdo finalizado com sucesso, vamos espiar ? </value>
+  </data>
+  <data name="UploadCompletedNotificationTitle" xml:space="preserve">
+    <value>Upload Finalizado</value>
+  </data>
+  <data name="UploadNotificationSpinnerTitle" xml:space="preserve">
+    <value>Fazendo Upload do conteúdo...</value>
+  </data>
+  <data name="UploadOngoingDesc" xml:space="preserve">
+    <value>Upload do conteúdo em andamento...</value>
+  </data>
+  <data name="UploadStartedNotificationTitle" xml:space="preserve">
+    <value>Upload de Arquivos</value>
+  </data>
+  <data name="ApiRedirectInAppNotificationDesc" xml:space="preserve">
+    <value>Chave de redirecionamento do Aplicativo copiada com sucesso.</value>
+  </data>
+  <data name="EmbedInAppNotificationDesc" xml:space="preserve">
+    <value>Codigo de conteúdo incorporado copiado com sucesso.</value>
+  </data>
 </root>

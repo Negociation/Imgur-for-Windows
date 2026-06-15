@@ -1,4 +1,5 @@
-﻿using Imgur.Api.Services.Models.Common;
+﻿using Imgur.Api.Services.Contracts;
+using Imgur.Api.Services.Models.Common;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 namespace Imgur.Api.Services
 {
 
-    public abstract class ApiService
+    public abstract class ApiService: IApiService
     {
         protected readonly HttpClient _httpClient;
         protected readonly string _baseUrl = "https://api.imgur.com/3/";
         protected string _clientId;
-        protected string _accessToken;
+        protected Func<string> _accessTokenProvider;
 
         protected ApiService(string clientId)
         {
@@ -24,26 +25,30 @@ namespace Imgur.Api.Services
             _clientId = clientId;
         }
 
-        public void SetAccessToken(string accessToken)
+        public void SetAccessTokenProvider(Func<string> provider)
         {
-            _accessToken = accessToken;
+            _accessTokenProvider = provider;
         }
 
-        protected void SetAuthHeader(HttpRequestMessage request)
+        protected void SetAuthHeader(HttpRequestMessage request, string accessToken = null)
         {
-            if (!string.IsNullOrEmpty(_accessToken))
+            var token = accessToken ?? _accessTokenProvider?.Invoke();
+            if (!string.IsNullOrEmpty(token))
             {
+                Debug.WriteLine("Fazendo Request via AccessToken" + token);
                 request.Headers.Authorization =
-                    new AuthenticationHeaderValue("Bearer", _accessToken);
+                    new AuthenticationHeaderValue("Bearer", token);
             }
             else if (!string.IsNullOrEmpty(_clientId))
             {
+                Debug.WriteLine("Fazendo Request via ClientId" + _clientId);
+
                 request.Headers.Authorization =
                     new AuthenticationHeaderValue("Client-ID", _clientId);
             }
         }
 
-        protected async Task<ApiResponse<T>> GetAsync<T>(string endpoint)
+        protected async Task<ApiResponse<T>> GetAsync<T>(string endpoint, string accessToken = null)
         {
             string json = null;
             HttpResponseMessage response = null;
@@ -52,7 +57,7 @@ namespace Imgur.Api.Services
             {
                 using (var request = new HttpRequestMessage(HttpMethod.Get, endpoint))
                 {
-                    SetAuthHeader(request);
+                    SetAuthHeader(request, accessToken);
                     response = await _httpClient.SendAsync(request);
                     json = await response.Content.ReadAsStringAsync();
 
@@ -120,86 +125,55 @@ namespace Imgur.Api.Services
                 };
             }
         }
-
-        /*
-        protected async Task<T> PostAsync<T>(string endpoint, object data = null)
+        protected async Task<ApiResponse<T>> PostAsync<T>(string endpoint, HttpContent body = null)
         {
-            SetAuthHeader();
-            HttpContent content = null;
+            string json = null;
+            HttpResponseMessage response = null;
 
-            if (data != null)
+            try
             {
-                if (data is MultipartFormDataContent)
+                using (var request = new HttpRequestMessage(HttpMethod.Post, endpoint))
                 {
-                    content = data as MultipartFormDataContent;
-                }
-                else if (data is FormUrlEncodedContent)
-                {
-                    content = data as FormUrlEncodedContent;
-                }
-                else
-                {
-                    var json = JsonConvert.SerializeObject(data);
-                    content = new StringContent(json, Encoding.UTF8, "application/json");
+                    SetAuthHeader(request);
+                    request.Content = body;
+
+                    response = await _httpClient.SendAsync(request);
+                    json = await response.Content.ReadAsStringAsync();
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Debug.WriteLine($"HTTP Error {response.StatusCode} endpoint: {endpoint}");
+                        return new ApiResponse<T>
+                        {
+                            Success = false,
+                            Status = (int)response.StatusCode,
+                            Data = default(T)
+                        };
+                    }
+
+                    return JsonConvert.DeserializeObject<ApiResponse<T>>(json);
                 }
             }
-
-            var response = await _httpClient.PostAsync(endpoint, content);
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ApiResponse<T>>(responseJson);
-            return result.Data;
-        }
-
-        protected async Task<T> PutAsync<T>(string endpoint, object data)
-        {
-            SetAuthHeader();
-            var json = JsonConvert.SerializeObject(data);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PutAsync(endpoint, content);
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ApiResponse<T>>(responseJson);
-            return result.Data;
-        }
-
-        protected async Task<bool> DeleteAsync(string endpoint)
-        {
-            SetAuthHeader();
-            var response = await _httpClient.DeleteAsync(endpoint);
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<BasicResponse>(json);
-            return result.Data;
-        }
-
-        protected FormUrlEncodedContent CreateFormContent(Dictionary<string, string> data)
-        {
-            return new FormUrlEncodedContent(data);
-        }
-
-        protected async Task<MultipartFormDataContent> CreateMultipartContent(
-            Dictionary<string, string> fields,
-            StorageFile file = null)
-        {
-            var content = new MultipartFormDataContent();
-
-            foreach (var field in fields)
+            catch (JsonSerializationException ex)
             {
-                if (!string.IsNullOrEmpty(field.Value))
-                {
-                    content.Add(new StringContent(field.Value), field.Key);
-                }
+                Debug.WriteLine($"Erro na desserialização JSON: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = response != null ? (int)response.StatusCode : 0, Data = default(T) };
             }
-
-            if (file != null)
+            catch (HttpRequestException ex)
             {
-                var stream = await file.OpenReadAsync();
-                var streamContent = new StreamContent(stream.AsStreamForRead());
-                streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                content.Add(streamContent, "image", file.Name);
+                Debug.WriteLine($"Erro de rede: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
-
-            return content;
+            catch (TaskCanceledException ex)
+            {
+                Debug.WriteLine($"Timeout: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = 408, Data = default(T) };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Erro genérico: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
+            }
         }
-        */
     }
 }

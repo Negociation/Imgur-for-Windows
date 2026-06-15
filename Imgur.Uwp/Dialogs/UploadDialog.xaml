@@ -10,16 +10,17 @@
     mc:Ignorable="d"
     PrimaryButtonText="Upload"
     CloseButtonText="Cancel"
+    CloseButtonClick="ContentDialog_SecondaryButtonClick"
     FullSizeDesired="False"
     IsPrimaryButtonEnabled="{Binding IsReadyForUpload, Mode=OneWay}"
-    PrimaryButtonCommand="{Binding UploadContentAsync}"
     RequestedTheme="Dark"
+    MinHeight="400"
     Background="#3c424b"
     
-    Opacity="0.98"
+    Opacity="1"
     Windows10version1809:CornerRadius="3"
     DefaultButton="Primary">
 
-    <controls:UploadDialogControl></controls:UploadDialogControl>
+    <controls:UploadDialogControl HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,-1"  VerticalAlignment="Stretch"></controls:UploadDialogControl>
     
 </ContentDialog>

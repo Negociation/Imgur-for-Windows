@@ -52,7 +52,7 @@
                 <StackPanel Margin="0,10,0,0" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2">
                     <TextBlock FontWeight="Bold">Special Thanks to:</TextBlock>
                     <TextBlock>Alex (@alexwifi42)</TextBlock>
-                    <TextBlock>@killallspringboard</TextBlock>
+                    <TextBlock>@lebao3105</TextBlock>
                     <TextBlock>@Lord_janex</TextBlock>
                 </StackPanel>
             </Grid>

@@ -1026,7 +1026,7 @@
                                                 </ScrollViewer>
                                             </winui:ItemsRepeaterScrollHost>
                                             <winui:NavigationViewItemSeparator x:Name="VisualItemsSeparator"  HorizontalAlignment="Stretch" Margin="0,0,0,2" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed"/>
-                                            <winui:ItemsRepeaterScrollHost Grid.Row="3">
+                                            <winui:ItemsRepeaterScrollHost Grid.Row="3" MinHeight="120">
                                                 <ScrollViewer x:Name="FooterItemsScrollViewer" VerticalScrollBarVisibility="Auto">
                                                     <winui:ItemsRepeater x:Name="FooterMenuItemsHost" AutomationProperties.AccessibilityView="Content">
                                                         <winui:ItemsRepeater.Layout>

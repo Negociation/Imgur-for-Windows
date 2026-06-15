@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imgur.ViewModels.FileUpload;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,10 +20,12 @@ namespace Imgur.Uwp.Controls
 {
     public sealed partial class UploadDialogControl : UserControl
     {
+
+
         public UploadDialogControl()
         {
             this.InitializeComponent();
-
+        
         }
     }
 }

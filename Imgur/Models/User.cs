@@ -6,5 +6,6 @@ namespace Imgur.Models
 {
     public class User: UserAccount
     {
+        public string AccessToken { get; set; }
     }
 }
