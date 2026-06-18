@@ -34,11 +34,6 @@ namespace Imgur.Uwp.Dialogs
                 this.FullSizeDesired = true;
             }
 
-            this.PrimaryButtonClick += async (sender, args) =>
-            {
-                args.Cancel = true;
-                ViewModel.UploadCommand.Execute(null);
-            };
         }
 
         public void SubscribeViewModel()
@@ -57,9 +52,14 @@ namespace Imgur.Uwp.Dialogs
             }
         }
 
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.OnCancel?.Invoke();
+        }
+
+        private void UploadButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UploadCommand.Execute(null);
         }
     }
 }

@@ -21,7 +21,7 @@
     <local1:EmptyStringVisibilityConverter x:Key="EmptyStringVisibilityConverter" />
     <local1:BoolToGridLengthConverter x:Key="BoolToGridLengthConverter" />
     <local1:BoolToBrushConverter x:Key="BoolToBrushConverter" />
-
+    <local1:ReplyingStringConverter x:Key="ReplyingStringConverter" />
     <local1:ValueConverterGroup x:Key="EqualtoVisibilityConverter">
         <local1:EqualBoolConverter/>
         <local1:BoolVisibilityConverter/>

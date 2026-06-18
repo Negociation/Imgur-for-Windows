@@ -1,5 +1,7 @@
 ﻿using Imgur.Enums;
 using Imgur.Models;
+using Imgur.ViewModels.Account;
+using Imgur.ViewModels.Media;
 using Imgur.ViewModels.Settings;
 using System;
 using System.Collections.Generic;
@@ -18,5 +20,9 @@ namespace Imgur.Contracts
         Task ShowUploadInterceptorDialog();
 
         Task<bool?> ShowCustomApiKeyDialog(SettingsViewModel settingsVm);
+
+        Task ShowCommentDialog(MediaViewModel vm);
+
+        Task ShowReplyDialog(CommentViewModel commentVm);
     }
 }

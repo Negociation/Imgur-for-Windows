@@ -287,6 +287,7 @@ namespace Imgur.Uwp
                 .AddSingleton<ITagVmFactory, TagVmFactory>()
                 .AddSingleton<IUploadFileVmFactory, UploadFileVmFactory>()
                 .AddSingleton<IUploadInterceptorVmFactory, UploadInterceptorVmFactory>()
+                .AddSingleton<ICommentVmFactory, CommentVmFactory>()
 
                 // ViewModels Transient
                 .AddTransient<ShellViewModel>()
@@ -301,7 +302,7 @@ namespace Imgur.Uwp
                 .AddTransient<TagViewModel>()
                 .AddTransient<UploadFileViewModel>()
                 .AddTransient<ShareTargetViewModel>()
-
+                .AddTransient<CommentViewModel>()
 
                 // Services Domain Transient
                 .AddTransient<Imgur.Services.GalleryService>()
@@ -312,6 +313,7 @@ namespace Imgur.Uwp
                 .AddTransient<Imgur.Services.ImageUploadService>()
                 .AddTransient<Imgur.Services.ImageService>()
                 .AddTransient<Imgur.Services.UserMediaActionsService>()
+                .AddTransient<Imgur.Services.CommentsService>()
 
                 // Mappers Transient
                 .AddTransient<GalleryMapper>()
@@ -319,6 +321,7 @@ namespace Imgur.Uwp
                 .AddTransient<ImageMapper>()
                 .AddTransient<AlbumMapper>()
                 .AddTransient<AccountMapper>()
+                .AddTransient<CommentMapper>()
 
                 // Imgur API Services Singleton (guardar delegate)
                 .AddSingleton<IGalleryService>(sp =>
@@ -344,7 +347,9 @@ namespace Imgur.Uwp
                 .AddSingleton<IImageService>(sp =>
                     new Api.Services.Actions.ImageService(
                         sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
-
+                .AddSingleton<ICommentService>(sp =>
+                    new Api.Services.Actions.CommentService(
+                        sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
                 .AddSingleton<IMediaActionsService>(sp =>
                     new Api.Services.Actions.MediaActionsService(
                         sp.GetRequiredService<IImgurApiCredentialsProvider>().ClientId))
@@ -421,6 +426,8 @@ namespace Imgur.Uwp
             (this._serviceProvider.GetRequiredService<IImageService>())
                 .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
             (this._serviceProvider.GetRequiredService<IMediaActionsService>())
+                .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
+            (this._serviceProvider.GetRequiredService<ICommentService>())
                 .SetAccessTokenProvider(() => userContext.CurrentUser?.AccessToken);
         }
 

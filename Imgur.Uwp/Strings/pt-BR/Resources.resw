@@ -384,7 +384,7 @@
     <comment>ExploreSearchView</comment>
   </data>
   <data name="BestComments.Text" xml:space="preserve">
-    <value>OS MELHORES</value>
+    <value>MELHORES COMENTÁRIOS</value>
     <comment>MediaView</comment>
   </data>
   <data name="Comment.Text" xml:space="preserve">
@@ -608,5 +608,36 @@
   </data>
   <data name="EmbedInAppNotificationDesc" xml:space="preserve">
     <value>Codigo de conteúdo incorporado copiado com sucesso.</value>
+  </data>
+  <data name="InterceptorHeader_Comment" xml:space="preserve">
+    <value>Você esta tentando comentar nesta postagem no Imgur!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="notification_comment_error_content" xml:space="preserve">
+    <value>Seu comentário não pôde ser enviado. Tente novamente.</value>
+  </data>
+  <data name="notification_comment_success_content" xml:space="preserve">
+    <value>Comentário adicionado com sucesso.</value>
+  </data>
+  <data name="NewComments.Text" xml:space="preserve">
+    <value>COMENTÁRIOS RECENTES</value>
+  </data>
+  <data name="Reply.Content" xml:space="preserve">
+    <value>Responder</value>
+  </data>
+  <data name="ShowComments.Content" xml:space="preserve">
+    <value>VER TODOS OS COMENTÁRIOS</value>
+  </data>
+  <data name="CommentingPlaceholder" xml:space="preserve">
+    <value>Comentando como {0}</value>
+    <comment>CommentControl</comment>
+  </data>
+  <data name="UploadCancellation.Text" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadConfirmation.Text" xml:space="preserve">
+    <value>Postar</value>
+    <comment>UploadDialog</comment>
   </data>
 </root>

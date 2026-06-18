@@ -628,4 +628,35 @@
   <data name="EmbedInAppNotificationDesc" xml:space="preserve">
     <value>Embed Content Copied to Clipboard.</value>
   </data>
+  <data name="InterceptorHeader_Comment" xml:space="preserve">
+    <value>You're about to comment on a Imgur Post!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="notification_comment_error_content" xml:space="preserve">
+    <value>Something went wrong while posting your comment.</value>
+  </data>
+  <data name="notification_comment_success_content" xml:space="preserve">
+    <value>Comment posted successfully.</value>
+  </data>
+  <data name="NewComments.Text" xml:space="preserve">
+    <value>NEW COMMENTS</value>
+  </data>
+  <data name="Reply.Content" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="ShowComments.Content" xml:space="preserve">
+    <value>SEE ALL COMMENTS</value>
+  </data>
+  <data name="UploadCancellation.Text" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadConfirmation.Text" xml:space="preserve">
+    <value>Post</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="CommentingPlaceholder" xml:space="preserve">
+    <value>Commenting as {0}</value>
+    <comment>CommentControl</comment>
+  </data>
 </root>

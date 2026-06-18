@@ -3,6 +3,8 @@ using Imgur.Enums;
 using Imgur.Factories;
 using Imgur.Models;
 using Imgur.Uwp.Dialogs;
+using Imgur.ViewModels.Account;
+using Imgur.ViewModels.Media;
 using Imgur.ViewModels.Settings;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace Imgur.Uwp.Services
         private ILoginInterceptorVmFactory _loginInterceptorVmFactory;
         private IUploadFileVmFactory _uploadFileVmFactory;
         private IUploadInterceptorVmFactory _uploadInterceptorVmFactory;
+
         public DialogService(
             IEmbedVmFactory embedFactory,
             ILoginInterceptorVmFactory loginInterceptorVmFactory,
@@ -87,34 +90,6 @@ namespace Imgur.Uwp.Services
         }
 
         public Task<bool?> ShowUploadDialogAsync() => ShowUploadDialogAsync(null);
-        /*
-        public async Task<bool?> ShowUploadDialogAsync(IList<SelectedFile> preSelectedFiles = null)
-        {
-            var uploadVm = _uploadFileVmFactory.GetUploadFileViewModel();
-            var dialog = new UploadDialog { DataContext = uploadVm };
-
-            // Popula arquivos antes de subscrever
-            if (preSelectedFiles != null && preSelectedFiles.Count > 0)
-            {
-                foreach (var file in preSelectedFiles)
-                    uploadVm.SelectedFiles.Add(file);
-                uploadVm.NotifyFilesChanged();
-            }
-
-            // Subscreve APÓS popular — lê o estado atual correto
-            dialog.SubscribeViewModel();
-
-            var uploadSucceeded = false;
-            uploadVm.OnUploadSuccess = () =>
-            {
-                uploadSucceeded = true;
-                dialog.Hide();
-            };
-
-            await dialog.ShowAsync();
-            return uploadSucceeded;
-        }
-        */
 
         public async Task<bool?> ShowUploadDialogAsync(IList<SelectedFile> preSelectedFiles = null, Action onUploadStarted = null, Action onUploadCompleted = null)
         {
@@ -157,6 +132,31 @@ namespace Imgur.Uwp.Services
                 uploadCompletion.TrySetResult(false);
             }
             return await uploadCompletion.Task;
+        }
+
+        public async Task ShowCommentDialog(MediaViewModel vm)
+        {
+
+            var dialog = new CommentDialog
+            {
+                DataContext = vm
+            };
+
+            vm.OnCommentPosted = () => dialog.Hide();
+
+            await dialog.ShowAsync();
+        }
+
+        public async Task ShowReplyDialog(CommentViewModel commentVm)
+        {
+            var dialog = new ReplyDialog
+            {
+                DataContext = commentVm
+            };
+
+            commentVm.OnCommentPosted = () => dialog.Hide();
+
+            await dialog.ShowAsync();
         }
     }
 }

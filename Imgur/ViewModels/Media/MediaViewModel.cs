@@ -9,12 +9,14 @@ using Imgur.ViewModels.Account;
 using Imgur.Factories;
 using System.Diagnostics;
 using Imgur.Enums;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
+using Imgur.ViewModels.Base;
 
 namespace Imgur.ViewModels.Media
 {
-
-
-    public class MediaViewModel : Observable
+    public class MediaViewModel : CommentableViewModel
     {
 
         //***************************************************************
@@ -22,7 +24,7 @@ namespace Imgur.ViewModels.Media
         //***************************************************************
 
         //-- Partial loading avaliable
-        public bool IsPartialLoading => CurrentMedia.IsAlbum &&( CurrentMedia.ImagesCount != CurrentMedia.Elements.Count);
+        public bool IsPartialLoading => CurrentMedia.IsAlbum && (CurrentMedia.ImagesCount != CurrentMedia.Elements.Count);
 
         //-- Remaning Itens if Partial Loading
         public int RemainingItemsCount => CurrentMedia.ImagesCount - 3 ?? 0;
@@ -34,7 +36,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Current Media to Show
         private Models.Media _currentMedia;
-
         public Models.Media CurrentMedia
         {
             get { return _currentMedia; }
@@ -45,9 +46,51 @@ namespace Imgur.ViewModels.Media
             }
         }
 
+        //-- Comentários carregados via API
+        private List<Comment> _allComments = new List<Comment>();
+
+        //-- Comentários exibidos em tela (Parcial ou Total)
+        private ObservableCollection<CommentViewModel> _comments = new ObservableCollection<CommentViewModel>();
+        public ObservableCollection<CommentViewModel> Comments
+        {
+            get { return _comments; }
+            set { _comments = value; OnPropertyChanged("Comments"); }
+        }
+
+        //-- Status for loadingComments
+        private bool _loadingComments;
+        public bool LoadingComments
+        {
+            get { return _loadingComments; }
+            set { _loadingComments = value; OnPropertyChanged("LoadingComments"); }
+        }
+
+        //-- Status se ha comentários
+        private bool _hasComments;
+        public bool HasComments
+        {
+            get { return _hasComments; }
+            set { _hasComments = value; OnPropertyChanged("HasComments"); }
+        }
+
+        //-- Se há mais comentários adicionais a serem lidos
+        private bool _hasMoreComments;
+        public bool HasMoreComments
+        {
+            get { return _hasMoreComments; }
+            set { _hasMoreComments = value; OnPropertyChanged("HasMoreComments"); }
+        }
+
+        //-- Se esta fazendo carregamento de comentários adicionais
+        private bool _loadingMoreComments;
+        public bool LoadingMoreComments
+        {
+            get { return _loadingMoreComments; }
+            set { _loadingMoreComments = value; OnPropertyChanged("LoadingMoreComments"); }
+        }
+
         //-- Status for loadingElements
         private bool _loadingElementsStatus;
-
         public bool LoadingElementsStatus
         {
             get { return _loadingElementsStatus; }
@@ -58,10 +101,8 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-
         //-- Status for Reloading Current Media Info (Metadata only)
         private bool _reloadingCurrentMediaInfo;
-
         public bool ReloadingCurrentMediaInfo
         {
             get { return _reloadingCurrentMediaInfo; }
@@ -74,7 +115,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Status for Appending Current Media Info (Metadata only)
         private bool _isAppendingMediaData;
-
         public bool IsAppendingMediaData
         {
             get { return _isAppendingMediaData; }
@@ -87,7 +127,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Scroll to Top Button Flag
         private bool _canScrollToTop;
-
         public bool CanScrollToTop
         {
             get { return _canScrollToTop; }
@@ -100,7 +139,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Page Loaded Successfully
         private bool _loadedSuccessfully;
-
         public bool LoadedSuccessfully
         {
             get { return _loadedSuccessfully; }
@@ -113,7 +151,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Loaded Account Info
         private AccountViewModel _userAccount;
-
         public AccountViewModel UserAccount
         {
             get { return _userAccount; }
@@ -124,8 +161,20 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-        //-- Usuario Autenticado
-        public bool IsAuthenticated => _userContext.IsAuthenticated;
+        //-- Modo de Filtragem de Comentarios
+        private bool _filterCommentsByNew;
+        public bool FilterCommentsByNew
+        {
+            get => _filterCommentsByNew;
+            set
+            {
+                if (_filterCommentsByNew == value)
+                    return;
+
+                _filterCommentsByNew = value;
+                OnPropertyChanged(nameof(FilterCommentsByNew));
+            }
+        }
 
         //***************************************************************
         // Services 
@@ -133,7 +182,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Dispatcher para UI
         private readonly IDispatcher _dispatcher;
-
 
         //-- Serviço de Navegação
         private readonly INavigator _navigator;
@@ -150,21 +198,19 @@ namespace Imgur.ViewModels.Media
         //-- Service de Compartilhamento
         private readonly IShareService _shareService;
 
-
-        //-- Service para Envio de Notificações
-        private readonly IAppNotificationService _appNotification;
-
         //-- Factory para ViewModel contendo dados dos usuarios
         private readonly IAccountVmFactory _accountVmFactory;
 
-        //-- Service para Dialogos 
-        private readonly IDialogService _dialogService;
+        //-- Factory para ViewModel de Comentários
+        private readonly ICommentVmFactory _commentVmFactory;
 
-        //-- UserContext
-        private readonly IUserContext _userContext;
 
-        //Ações de Midia
+
+        //-- Service para execução de Ações de Midia
         private readonly UserMediaActionsService _mediaActionsService;
+
+        //-- Service para Comentários
+        private readonly CommentsService _commentService;
 
         //***************************************************************
         // Constructors e Initializers
@@ -180,26 +226,26 @@ namespace Imgur.ViewModels.Media
             IDialogService dialogService,
             IAppNotificationService appNotification,
             IAccountVmFactory accountVmFactory,
+            ICommentVmFactory commentVmFactory,
             IUserContext userContext,
             GalleryService galleryService,
             AccountService accountService,
-            UserMediaActionsService mediaActionsService
-            )
+            UserMediaActionsService mediaActionsService,
+            CommentsService commentService
+            ): base(dialogService, appNotification, userContext)
         {
             _currentMedia = m;
             _navigator = navigator;
             _dispatcher = dispatcher;
-            _appNotification = appNotification;
             _clipboard = clipboard;
             _accountVmFactory = accountVmFactory;
+            _commentVmFactory = commentVmFactory;
             _galleryService = galleryService;
             _accountService = accountService;
             _shareService = shareService;
-            _dialogService = dialogService;
-            _userContext = userContext;
             _mediaActionsService = mediaActionsService;
+            _commentService = commentService;
         }
-
 
         //-- Initialize
         public void Initialize()
@@ -215,8 +261,16 @@ namespace Imgur.ViewModels.Media
             {
                 this.LoadedSuccessfully = true;
                 this.LoadingElementsStatus = true;
+
                 await Task.Delay(1000);
-                if (RetrieveUserCommand.CanExecute(null)) { RetrieveUserCommand.Execute(null); }
+
+                // Carrega comentários junto com o resto
+                if (LoadCommentsCommand.CanExecute(null))
+                    LoadCommentsCommand.Execute(null);
+
+                if (RetrieveUserCommand.CanExecute(null))
+                    RetrieveUserCommand.Execute(null);
+
                 this.LoadingElementsStatus = false;
             }
             catch
@@ -227,13 +281,13 @@ namespace Imgur.ViewModels.Media
         }
 
 
+
         //***************************************************************
         // View Commands 
         //***************************************************************
 
         //-- Command para Busca dos dados do Autor da Postagem
         private ICommand _retrieveUserCommand;
-
         public ICommand RetrieveUserCommand
         {
             get
@@ -251,28 +305,21 @@ namespace Imgur.ViewModels.Media
                                 {
                                     var account = await this._accountService.GetAccountById(this.CurrentMedia.AccountId);
                                     if (account.IsSuccess)
-                                    {
                                         this.UserAccount = this._accountVmFactory.GetAccountViewModel(account.Data);
-                                    }
                                     else
-                                    {
                                         throw new Exception("User Account couldn't be reached");
-                                    }
                                 }
                                 else
                                 {
                                     var account = Imgur.Models.UserAccount.CreateAnonymous();
                                     this.UserAccount = this._accountVmFactory.GetAccountViewModel(account);
-
                                 }
-                               
                             }
                             else
                             {
                                 var account = Imgur.Models.UserAccount.CreateAnonymous();
                                 this.UserAccount = this._accountVmFactory.GetAccountViewModel(account);
                             }
-
                         }
                         catch (Exception ex)
                         {
@@ -281,14 +328,12 @@ namespace Imgur.ViewModels.Media
                         }
                     });
                 }
-
                 return _retrieveUserCommand;
             }
         }
 
         //-- Comando para refresh somente do Metadata da Postagem
         private ICommand _reloadCurrentMediaInfo;
-
         public ICommand ReloadCurrentMediaInfo
         {
             get
@@ -308,11 +353,8 @@ namespace Imgur.ViewModels.Media
                             {
                                 var AlbumInfo = await _galleryService.GetGalleryAlbumById(hashId);
 
-
                                 if (!AlbumInfo.IsSuccess)
-                                {
                                     throw new Exception("Erro durante a busca dos metadados de album: " + AlbumInfo.Error);
-                                }
 
                                 CurrentMedia.Vote = AlbumInfo.Data.Vote;
                                 CurrentMedia.Favorite = AlbumInfo.Data.Favorite;
@@ -339,9 +381,8 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-        //-- Command para carregar demais itens
+        //-- Command para carregar demais itens de mídia
         private ICommand _loadRemaningItensCommand;
-
         public ICommand LoadRemaningItensCommand
         {
             get
@@ -350,38 +391,27 @@ namespace Imgur.ViewModels.Media
                 {
                     _loadRemaningItensCommand = new RelayCommand(async () =>
                     {
-                        //Start Loading Indicator
                         IsAppendingMediaData = true;
 
-                        //Visual Delay
                         await Task.Delay(1000);
 
-                        //Get Current Media Id
                         var hashId = this.CurrentMedia.Id;
-
-                        //Get Gallery Album Fully
                         var albumInfo = await _galleryService.GetGalleryAlbumById(hashId);
 
-                        //If not Success Show error
                         if (!albumInfo.IsSuccess)
                         {
                             IsAppendingMediaData = false;
                             throw new Exception("Erro durante o carregamento dos elementos extras do album: " + albumInfo.Error);
                         }
 
-                        //If Scucess Stop Loading Indicator
                         IsAppendingMediaData = false;
 
                         if (albumInfo?.Data.Elements == null || albumInfo.Data.Elements.Count <= 3)
                             return;
 
-                        // Começa a partir do índice 3
                         for (int i = 3; i < albumInfo.Data.Elements.Count; i++)
-                        {
                             CurrentMedia.Elements.Add(albumInfo.Data.Elements[i]);
-                        }
 
-                       
                         OnPropertyChanged(nameof(IsPartialLoading));
                     });
                 }
@@ -391,7 +421,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Command para abrir a midia
         private ICommand _navigateMediaCommand;
-
         public ICommand NavigateMediaCommand
         {
             get
@@ -410,21 +439,21 @@ namespace Imgur.ViewModels.Media
 
         //-- Command para Copiar para o Clipboard
         private ICommand _copy;
-
         public ICommand Copy
         {
             get
             {
                 if (_copy == null)
                 {
-                    _copy = new RelayCommand(async () => {
+                    _copy = new RelayCommand(async () =>
+                    {
                         if (await this._clipboard.GetTextAsync() != this.CurrentMedia.Link)
                         {
                             this._clipboard.SetText(this.CurrentMedia.Link);
                             NotificationViewModel notification = new NotificationViewModel();
                             notification.Message = "notification_clipboard_content";
                             this._appNotification.AddNotification(notification);
-                        }      
+                        }
                     });
                 }
                 return _copy;
@@ -433,7 +462,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Command de Back Button
         private ICommand _leaveCurrentPage;
-
         public ICommand LeaveCurrentPage
         {
             get
@@ -451,7 +479,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Command para Invocar Embed Dialog
         private ICommand _invokeEmbedDialog;
-
         public ICommand InvokeEmbedDialog
         {
             get
@@ -461,7 +488,6 @@ namespace Imgur.ViewModels.Media
                     _invokeEmbedDialog = new RelayCommand(async () =>
                     {
                         await _dialogService.ShowEmbedDialogAsync(CurrentMedia);
-                        ;
                     });
                 }
                 return _invokeEmbedDialog;
@@ -470,7 +496,6 @@ namespace Imgur.ViewModels.Media
 
         //-- Command para Invocar Share Dialog
         private ICommand _invokeShareDialog;
-
         public ICommand InvokeShareDialog
         {
             get
@@ -486,7 +511,7 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-
+        //-- Command para Favoritar Midia
         private ICommand _favourite;
         public ICommand Favourite
         {
@@ -502,7 +527,6 @@ namespace Imgur.ViewModels.Media
                             return;
                         }
 
-                        // Atualiza localmente imediato
                         var previous = CurrentMedia.Favorite;
                         CurrentMedia.Favorite = !CurrentMedia.Favorite;
                         OnPropertyChanged(nameof(IsFavorited));
@@ -535,38 +559,23 @@ namespace Imgur.ViewModels.Media
                             return;
                         }
 
-                        // Se clicar no mesmo voto → remove (toggle)
                         var previous = CurrentMedia.Vote;
                         CurrentMedia.Vote = CurrentMedia.Vote == vote ? null : vote;
 
                         OnPropertyChanged(nameof(IsUpvoted));
                         OnPropertyChanged(nameof(IsDownvoted));
 
-                        // Atualiza contadores localmente
                         if (vote == "up")
                         {
-                            if (previous == "up")
-                                CurrentMedia.Ups--;          
-                            else if (previous == "down")
-                            {
-                                CurrentMedia.Downs--;        
-                                CurrentMedia.Ups++;          
-                            }
-                            else
-                                CurrentMedia.Ups++;
+                            if (previous == "up") CurrentMedia.Ups--;
+                            else if (previous == "down") { CurrentMedia.Downs--; CurrentMedia.Ups++; }
+                            else CurrentMedia.Ups++;
                         }
                         else if (vote == "down")
                         {
-                            if (previous == "down")
-                                CurrentMedia.Downs--;
-
-                            else if (previous == "up")
-                            {
-                                CurrentMedia.Ups--;
-                                CurrentMedia.Downs++;
-                            }
-                            else
-                                CurrentMedia.Downs++;
+                            if (previous == "down") CurrentMedia.Downs--;
+                            else if (previous == "up") { CurrentMedia.Ups--; CurrentMedia.Downs++; }
+                            else CurrentMedia.Downs++;
                         }
 
                         OnPropertyChanged(nameof(CurrentMedia));
@@ -589,10 +598,8 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-        //-- Command para Inicialização 
-        //-- Command para Inicialização 
+        //-- Command para Inicialização
         private ICommand _initializeCommand;
-
         public ICommand InitializeCommand
         {
             get
@@ -602,13 +609,161 @@ namespace Imgur.ViewModels.Media
                     _initializeCommand = new RelayCommand(async () =>
                     {
                         await this.InitializeAsync();
-
                     });
                 }
                 return _initializeCommand;
             }
         }
 
+        //-- Command para buscar e carregar comentários (parcial — primeiros 5)
+        private ICommand _loadCommentsCommand;
+        public ICommand LoadCommentsCommand
+        {
+            get
+            {
+                if (_loadCommentsCommand == null)
+                {
+                    _loadCommentsCommand = new RelayCommand(async () =>
+                    {
+                        try
+                        {
+                            LoadingComments = true;
 
+                            var filter = _filterCommentsByNew ? "new" : "best";
+                            var result = await _commentService.GetCommentsAsync(CurrentMedia.Id, filter);
+
+                            if (result.IsSuccess)
+                            {
+                                _allComments = result.Data;
+
+                                Comments.Clear();
+
+                                foreach (var comment in _allComments.Take(5))
+
+                                    Comments.Add(_commentVmFactory.GetCommentViewModel(CurrentMedia.Id ,comment));
+
+                                HasComments = Comments.Count > 0;
+                                HasMoreComments = _allComments.Count > 5;
+
+                                Debug.WriteLine($"[MediaVM] {Comments.Count} comentários carregados.");
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"[MediaVM] Erro ao carregar comentários: {result.ErrorType}");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[MediaVM] Exceção ao carregar comentários: {ex.Message}");
+                        }
+                        finally
+                        {
+                            LoadingComments = false;
+                        }
+                    });
+                }
+                return _loadCommentsCommand;
+            }
+        }
+
+        //-- Command para carregar em tela os comentários em Memória restantes
+        private ICommand _loadAllCommentsCommand;
+        public ICommand LoadAllCommentsCommand
+        {
+            get
+            {
+                if (_loadAllCommentsCommand == null)
+                {
+                    _loadAllCommentsCommand = new RelayCommand(async () =>
+                    {
+                        try
+                        {
+                            LoadingMoreComments = true;
+
+                            await Task.Delay(300);
+
+                            foreach (var comment in _allComments.Skip(5))
+                                Comments.Add(_commentVmFactory.GetCommentViewModel(CurrentMedia.Id, comment));
+
+                            HasMoreComments = false;
+
+                            Debug.WriteLine($"[MediaVM] Todos os {_allComments.Count} comentários carregados.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[MediaVM] Exceção LoadAll: {ex.Message}");
+                        }
+                        finally
+                        {
+                            LoadingMoreComments = false;
+                        }
+                    });
+                }
+                return _loadAllCommentsCommand;
+            }
+        }
+
+        //-- Command para reply em comentário
+        private ICommand _replyCommentCommand;
+        public ICommand ReplyCommentCommand
+        {
+            get
+            {
+                if (_replyCommentCommand == null)
+                {
+                    _replyCommentCommand = new RelayCommand<Comment>(async (comment) =>
+                    {
+                        if (!IsAuthenticated)
+                        {
+                            await _dialogService.ShowLoginInterceptorDialog(LoginInterceptorEnum.Comment);
+                            return;
+                        }
+                        // TODO: abrir dialog de reply
+                    });
+                }
+                return _replyCommentCommand;
+            }
+        }
+
+        //-- Command para atualizar o filtro de comentários
+        private ICommand _toggleCommentFilter;
+        public ICommand ToggleCommentFilter
+        {
+            get
+            {
+                if (_toggleCommentFilter == null)
+                {
+                    _toggleCommentFilter = new RelayCommand(() =>
+                    {
+                        FilterCommentsByNew = !FilterCommentsByNew;
+
+                        LoadCommentsCommand.Execute(null);
+                    });
+                }
+
+                return _toggleCommentFilter;
+            }
+        }
+
+        protected override async Task OnStartCommentAsync()
+        {
+            await _dialogService.ShowCommentDialog(this);
+        }
+
+        protected override async Task<bool> OnSubmitCommentAsync(string text)
+        {
+            var result = await _commentService.PostCommentAsync(CurrentMedia.Id, CommentText);
+
+            await Task.Delay(1000);
+
+            if (result.IsSuccess)
+            {
+                // Recarrega os comentários
+                if (LoadCommentsCommand.CanExecute(null))
+                    LoadCommentsCommand.Execute(null);
+            }
+
+            return result.IsSuccess;
+        }
     }
 }

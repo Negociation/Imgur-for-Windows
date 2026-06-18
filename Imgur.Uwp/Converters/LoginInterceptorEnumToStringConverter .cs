@@ -23,7 +23,6 @@ namespace Imgur.Uwp.Converters
                 Debug.WriteLine(resourceLoader.GetString($"InterceptorHeader_{value}"));
                 return resourceLoader.GetString($"InterceptorHeader_{value}");
             }
-            Debug.WriteLine("rUIM");
             return value.ToString();
         }
 

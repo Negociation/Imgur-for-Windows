@@ -175,5 +175,54 @@ namespace Imgur.Api.Services
                 return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
         }
+
+        protected async Task<ApiResponse<T>> DeleteAsync<T>(string endpoint)
+        {
+            string json = null;
+            HttpResponseMessage response = null;
+
+            try
+            {
+                using (var request = new HttpRequestMessage(HttpMethod.Delete, endpoint))
+                {
+                    SetAuthHeader(request);
+                    response = await _httpClient.SendAsync(request);
+                    json = await response.Content.ReadAsStringAsync();
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Debug.WriteLine($"HTTP Error {response.StatusCode} endpoint: {endpoint}");
+                        return new ApiResponse<T>
+                        {
+                            Success = false,
+                            Status = (int)response.StatusCode,
+                            Data = default(T)
+                        };
+                    }
+
+                    return JsonConvert.DeserializeObject<ApiResponse<T>>(json);
+                }
+            }
+            catch (JsonSerializationException ex)
+            {
+                Debug.WriteLine($"Erro na desserialização JSON: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = response != null ? (int)response.StatusCode : 0, Data = default(T) };
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine($"Erro de rede: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
+            }
+            catch (TaskCanceledException ex)
+            {
+                Debug.WriteLine($"Timeout: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = 408, Data = default(T) };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Erro genérico: {ex.Message}");
+                return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
+            }
+        }
     }
 }

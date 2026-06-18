@@ -132,6 +132,12 @@
     <Compile Include="Controls\AccountTileControl.xaml.cs">
       <DependentUpon>AccountTileControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CommentControl.xaml.cs">
+      <DependentUpon>CommentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CommentDialogControl.xaml.cs">
+      <DependentUpon>CommentDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ImageViewElementControl.xaml.cs">
       <DependentUpon>ImageViewElementControl.xaml</DependentUpon>
     </Compile>
@@ -157,6 +163,7 @@
       <DependentUpon>VideoViewElementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\Base64BitmapConverter.cs" />
+    <Compile Include="Converters\ReplyingStringConverter.cs" />
     <Compile Include="Converters\BoolToBrushConverter.cs" />
     <Compile Include="Converters\BoolToGridLengthConverter.cs" />
     <Compile Include="Converters\BoolNegationConverter.cs" />
@@ -176,6 +183,9 @@
     <Compile Include="Converters\StringToURIConverter.cs" />
     <Compile Include="Converters\TimestampToElapsedTimeConverter .cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="Dialogs\CommentDialog.xaml.cs">
+      <DependentUpon>CommentDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\CustomApiKeySettingsDialog.xaml.cs">
       <DependentUpon>CustomApiKeySettingsDialog.xaml</DependentUpon>
     </Compile>
@@ -184,6 +194,9 @@
     </Compile>
     <Compile Include="Dialogs\LoginInterceptorDialog.xaml.cs">
       <DependentUpon>LoginInterceptorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ReplyDialog.xaml.cs">
+      <DependentUpon>ReplyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\UploadDialog.xaml.cs">
       <DependentUpon>UploadDialog.xaml</DependentUpon>
@@ -294,6 +307,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CommentDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ImageViewElementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -326,6 +347,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\CommentDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\CustomApiKeySettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -335,6 +360,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\LoginInterceptorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ReplyDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

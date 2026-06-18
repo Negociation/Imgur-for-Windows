@@ -243,8 +243,8 @@
                                     VerticalScrollMode="Disabled"
                                     VerticalSnapPointsType="None"
                                     ZoomMode="Disabled">
-                                    <PivotPanel x:Name="Panel" VerticalAlignment="Stretch">
-                                        <Grid x:Name="PivotLayoutElement">
+                                    <PivotPanel x:Name="Panel" VerticalAlignment="Stretch" >
+                                        <Grid x:Name="PivotLayoutElement" >
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="28" />
                                                 <RowDefinition Height="10" />
@@ -269,6 +269,7 @@
                                                 BorderThickness="0,0,0,1" />
 
                                             <ContentPresenter x:Name="LeftHeaderPresenter"
+                                                Padding="10,0,0,0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 Content="{TemplateBinding LeftHeader}"
@@ -316,17 +317,19 @@
                                                 IsEnabled="False"
                                                 IsTabStop="False"
                                                 Opacity="0"
+                                                    
                                                 Template="{StaticResource NextTemplate}"
                                                 UseSystemFocusVisuals="False" />
                                             <ContentPresenter x:Name="RightHeaderPresenter"
+                                                              
                                                 Grid.Column="2"
+                                                Padding="0,0,10,0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Stretch"
                                                 Content="{TemplateBinding RightHeader}"
                                                 ContentTemplate="{TemplateBinding RightHeaderTemplate}" />
-                                            <Line Stroke="#272a33" Grid.Row="1" Grid.ColumnSpan="2"  Opacity="0.7" VerticalAlignment="Center" X2="310"/>
 
-                                            <ItemsPresenter x:Name="PivotItemPresenter" Grid.Row="2" Grid.ColumnSpan="3">
+                                            <ItemsPresenter x:Name="PivotItemPresenter"  Grid.Row="2" Grid.ColumnSpan="3">
                                                 <ItemsPresenter.RenderTransform>
                                                     <TransformGroup>
                                                         <TranslateTransform x:Name="ItemsPresenterTranslateTransform" />
@@ -367,7 +370,7 @@
         </Grid.RowDefinitions>
 
 
-        <Pivot Margin="0,-8,0,0" Style="{StaticResource TabsStylePivotStyle}">
+        <Pivot Margin="0,5,0,-20" Style="{StaticResource TabsStylePivotStyle}">
             <Pivot.LeftHeader>
                 <StackPanel Width="5000" Opacity="0.9" Height="30"  Orientation="Horizontal" >
                     <FontIcon Margin="0,2,0,0"  VerticalAlignment="Center"  FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"  Foreground="#2fbe7c"  FontSize="16" Glyph="&#xEE71;" />

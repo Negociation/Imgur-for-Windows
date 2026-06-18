@@ -52,6 +52,9 @@
             </StackPanel>
 
         </DataTemplate>
+        <DataTemplate x:Key="CommentTemplate" x:DataType="models:Comment">
+            <controls:CommentControl Margin="-12,0" DataContext="{Binding}"/>
+        </DataTemplate>
         <local1:MediaElementTemplateSelector x:Key="MediaDataTemplateSelector" ImageTemplate="{StaticResource ImageTemplate}" VideoTemplate="{StaticResource VideoTemplate}" />
     </Page.Resources>
     <Page.Background>
@@ -63,103 +66,10 @@
     </Page.Background>
     <Grid x:Name="RootGrid" Margin="0,0,0,0" Padding="10,0,0,0" SizeChanged="RootGrid_SizeChanged"  MaxWidth="1100">
 
-        
+
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup  x:Uid="PageTriggers">
-                <VisualState x:Name="Minimal">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="300" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="RootGrid.Margin" Value="0,-13,0,0" />
-                        <Setter Target="MediaViewPage.Margin" Value="0,0,0,0" />
-                        <Setter Target="MediaPlacement.Margin" Value="0" />
-                        <Setter Target="MediaPlacement.Padding" Value="0,0,0,5" />
-                        <Setter Target="RootGrid.Padding" Value="0,0,0,0" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,0,0,90" />
-                        <Setter Target="CommentsPlacement.CornerRadius" Value="0" />
-                        <Setter Target="MediaPlacement.CornerRadius" Value="0" />
-                        <Setter Target="MediaPlacement.Background" Value="Transparent" />
-                        <Setter Target="DockCommandBar.Margin" Value="30,0,0,0" />
-                        <Setter Target="CompactBottomBar.Visibility" Value="Visible" />
-                        <Setter Target="LeaveFloatButton.Margin" Value="5,18,0,0" />
-                        <Setter Target="DockTitle.FontSize" Value="14" />
-                        <Setter Target="DockDyanmicData.FontSize" Value="10" />
-                        <Setter Target="DockCommands.MaxWidth" Value="40" />
-                        <Setter Target="AppBarFavouriteButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="AppBarFavouriteButton.Margin" Value="0" />
-                        <Setter Target="ToggleThemeTeachingTip1.IsOpen" Value="False" />
-                    </VisualState.Setters>
-                    <VisualState.Storyboard>
-                        <Storyboard>
-                        </Storyboard>
-                    </VisualState.Storyboard>
-                </VisualState>
-                <VisualState x:Name="Compact">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="500" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="CommentsPlacement.CornerRadius" Value="5" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="5,0,10,70" />
-                        <Setter Target="DockTitle.FontSize" Value="14" />
-                        <Setter Target="DockDyanmicData.FontSize" Value="10" />
-                        <Setter Target="LeaveFloatButton.Margin" Value="11,25,0,0" />
-                        <Setter Target="BottomNavigationBar.Visibility" Value="Visible"/>
-                        <Setter Target="FloatCommandBar.Visibility" Value="Visible"/>
-                        <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
-                        <Setter Target="RootGrid.Padding" Value="10,0,0,0" />
-                    </VisualState.Setters>
-                    <VisualState.Storyboard>
-                        <Storyboard>
+            <VisualStateGroup x:Uid="PageTriggers">
 
-                        </Storyboard>
-                    </VisualState.Storyboard>
-                </VisualState>
-
-                
-                <VisualState x:Name="Extended">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1000" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="CompactVerticalBar.Visibility" Value="Visible" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,15,10,10" />
-                        <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="1" />
-                        <Setter Target="CommentsPlacementBorder.(Grid.Column)" Value="1" />
-                        <Setter Target="CommentsPlacementBorder.ShadowOpacity" Value="0.4" />
-                        <Setter Target="CommentsPlacementBorder.OffsetY" Value="0" />
-                        <Setter Target="CommentsPlacementBorder.OffsetX" Value="-2" />
-                        <Setter Target="CommentsPlacementBorder.VerticalAlignment" Value="Stretch" />
-                        <Setter Target="CommentsPlacement.VerticalAlignment" Value="Stretch" />
-                        <Setter Target="MediaPlacement.(Grid.Row)" Value="1" />
-                        <Setter Target="MediaPlacement.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="MediaPlacement.Margin" Value="5,15,0,10" />
-                        <Setter Target="MediaPlacement.CornerRadius" Value="5,0,0,5" />
-                        <Setter Target="DockDyanmicData.Margin" Value="0,2,0,0" />
-                        <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
-                        <Setter Target="RootScrollView.(Grid.Column)" Value="1" />
-                        <Setter Target="RootScrollView.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="LeaveFloatButton.(Grid.Column)" Value="1" />
-                        <Setter Target="LeaveFloatButton.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="AppendMoreButton.Margin" Value="10" />
-                        <Setter Target="RootGrid.MaxHeight" Value="800" />
-                        <Setter Target="CommentsPlacement.CornerRadius" Value="0,5,5,0" />
-                        <Setter Target="LeaveFloatButton.Margin" Value="11,33,0,0" />
-                        <Setter Target="RootScrollView.VerticalScrollMode" Value="Auto" />
-                        <Setter Target="RootScrollView.MaxHeight" Value="900" />
-                        <Setter Target="CommentsPlacement.MaxHeight" Value="800" />
-                        <Setter Target="MediaPlacement.MaxHeight" Value="800" />
-                        <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
-                        <Setter Target="RootGrid.Padding" Value="10,0,0,0" />
-                        <Setter Target="AppBarFavouriteButton.Margin" Value="0,0,0,0" />
-                    </VisualState.Setters>
-                    <VisualState.Storyboard>
-                        <Storyboard>
-
-                        </Storyboard>
-                    </VisualState.Storyboard>
-                </VisualState>
                 <VisualState x:Name="Extended2">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1200" />
@@ -169,6 +79,7 @@
                         <Setter Target="CommentsPlacementBorder.Margin" Value="0,30,10,10" />
                         <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="1" />
                         <Setter Target="CommentsPlacementBorder.(Grid.Column)" Value="1" />
+                        <Setter Target="CommentsPlacement.Background" Value="#464b57" />
                         <Setter Target="CommentsPlacementBorder.ShadowOpacity" Value="0.4" />
                         <Setter Target="CommentsPlacementBorder.OffsetY" Value="0" />
                         <Setter Target="CommentsPlacementBorder.OffsetX" Value="-2" />
@@ -194,17 +105,106 @@
                         <Setter Target="MediaPlacement.MaxHeight" Value="800" />
                         <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
                         <Setter Target="RootGrid.Padding" Value="10,0,0,0" />
-                        <Setter Target="AppBarFavouriteButton.Margin" Value="0,0,0,0" />
                     </VisualState.Setters>
                     <VisualState.Storyboard>
-                        <Storyboard>
+                        <Storyboard />
+                    </VisualState.Storyboard>
+                </VisualState>
 
-                        </Storyboard>
+                <VisualState x:Name="Extended">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CompactVerticalBar.Visibility" Value="Visible" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,15,10,10" />
+                        <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="1" />
+                        <Setter Target="CommentsPlacementBorder.(Grid.Column)" Value="1" />
+                        <Setter Target="CommentsPlacementBorder.ShadowOpacity" Value="0.4" />
+                        <Setter Target="CommentsPlacementBorder.OffsetY" Value="0" />
+                        <Setter Target="CommentsPlacement.Background" Value="#464b57" />
+                        <Setter Target="CommentsPlacementBorder.OffsetX" Value="-2" />
+                        <Setter Target="CommentsPlacementBorder.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="CommentsPlacement.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="MediaPlacement.(Grid.Row)" Value="1" />
+                        <Setter Target="MediaPlacement.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="MediaPlacement.Margin" Value="5,15,0,10" />
+                        <Setter Target="MediaPlacement.CornerRadius" Value="5,0,0,5" />
+                        <Setter Target="DockDyanmicData.Margin" Value="0,2,0,0" />
+                        <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
+                        <Setter Target="RootScrollView.(Grid.Column)" Value="1" />
+                        <Setter Target="RootScrollView.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="LeaveFloatButton.(Grid.Column)" Value="1" />
+                        <Setter Target="LeaveFloatButton.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="AppendMoreButton.Margin" Value="10" />
+                        <Setter Target="RootGrid.MaxHeight" Value="800" />
+                        <Setter Target="CommentsPlacement.CornerRadius" Value="0,5,5,0" />
+                        <Setter Target="LeaveFloatButton.Margin" Value="11,33,0,0" />
+                        <Setter Target="RootScrollView.VerticalScrollMode" Value="Auto" />
+                        <Setter Target="RootScrollView.MaxHeight" Value="900" />
+                        <Setter Target="CommentsPlacement.MaxHeight" Value="800" />
+                        <Setter Target="MediaPlacement.MaxHeight" Value="800" />
+                        <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
+                        <Setter Target="RootGrid.Padding" Value="10,0,0,0" />
+                    </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard />
+                    </VisualState.Storyboard>
+                </VisualState>
+
+                <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="500" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CommentsPlacement.CornerRadius" Value="5" />
+                        <Setter Target="CommentsPlacement.Background" Value="#464b57" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="5,0,10,70" />
+                        <Setter Target="DockTitle.FontSize" Value="14" />
+                        <Setter Target="DockDyanmicData.FontSize" Value="10" />
+                        <Setter Target="LeaveFloatButton.Margin" Value="11,25,0,0" />
+                        <Setter Target="BottomNavigationBar.Visibility" Value="Visible"/>
+                        <Setter Target="FloatCommandBar.Visibility" Value="Visible"/>
+                        <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
+                        <Setter Target="RootGrid.Padding" Value="10,0,0,0" />
+                    </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard />
+                    </VisualState.Storyboard>
+                </VisualState>
+
+                <VisualState x:Name="Minimal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="300" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootGrid.Margin" Value="0,-13,0,0" />
+                        <Setter Target="MediaViewPage.Margin" Value="0,0,0,0" />
+                        <Setter Target="MediaPlacement.Margin" Value="0" />
+                        <Setter Target="MediaPlacement.Padding" Value="0,0,0,5" />
+                        <Setter Target="RootGrid.Padding" Value="0,0,0,0" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,0,0,90" />
+                        <Setter Target="CommentsPlacement.CornerRadius" Value="0" />
+                        <Setter Target="MediaPlacement.CornerRadius" Value="0" />
+                        <Setter Target="MediaPlacement.Background" Value="Transparent" />
+                        <Setter Target="DockCommandBar.Margin" Value="30,0,0,0" />
+                        <Setter Target="CompactBottomBar.Visibility" Value="Visible" />
+                        <Setter Target="LeaveFloatButton.Margin" Value="5,18,0,0" />
+                        <Setter Target="DockTitle.FontSize" Value="14" />
+                        <Setter Target="DockDyanmicData.FontSize" Value="10" />
+                        <Setter Target="DockCommands.MaxWidth" Value="40" />
+                        <Setter Target="AppBarFavouriteButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="AppBarFavouriteButton.Margin" Value="0" />
+                        <Setter Target="ToggleThemeTeachingTip1.IsOpen" Value="False" />
+                    </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard />
                     </VisualState.Storyboard>
                 </VisualState>
 
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*" />
@@ -349,33 +349,33 @@
                 </Grid>
 
                 <!-- Comments Area -->
-                <toolkit:DropShadowPanel Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" x:Name="CommentsPlacementBorder" Grid.Row="1" Grid.Column="0" Margin="0,10,10,10" Grid.ColumnSpan="2" BlurRadius="10" OffsetX="0" OffsetY="2" ShadowOpacity="0.5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalAlignment="Top">
+                <toolkit:DropShadowPanel Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" x:Name="CommentsPlacementBorder" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" Grid.ColumnSpan="2" BlurRadius="10" OffsetX="0" OffsetY="2" ShadowOpacity="0.5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalAlignment="Top">
                     <Grid x:Name="CommentsPlacement" Background="#3d4140" CornerRadius="0,0,0,0"  VerticalAlignment="Top" MinHeight="150" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="34"/>
+                            <RowDefinition Height="40"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Button Grid.Column="0" HorizontalAlignment="Left" Background="Transparent" BorderBrush="Transparent">
-                            <StackPanel Orientation="Horizontal" Opacity="0.7">
+                        <Button Grid.Column="0" HorizontalAlignment="Left" Height="50" Background="Transparent" BorderBrush="Transparent" Command="{Binding ToggleCommentFilter}">
+                            <StackPanel Orientation="Horizontal" Opacity="0.7" HorizontalAlignment="Stretch">
                                 <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="14" Glyph="&#xE8CB;" Margin="0,0,0,0" HorizontalAlignment="Center" />
-                                <TextBlock x:Uid="BestComments" FontSize="16" Margin="5,0" >BEST COMMENTS</TextBlock>
+                                <TextBlock x:Uid="BestComments" FontSize="12" FontWeight="SemiBold" Visibility="{Binding FilterCommentsByNew, Converter={StaticResource BoolNegationConverter}}" Margin="10,0" >BEST COMMENTS</TextBlock>
+                                <TextBlock x:Uid="NewComments" FontSize="12" FontWeight="SemiBold" Visibility="{Binding FilterCommentsByNew}" Margin="10,0" >NEW COMMENTS</TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button Grid.Column="1" HorizontalAlignment="Right" Background="Transparent" BorderBrush="Transparent">
-                            <StackPanel Orientation="Horizontal" Opacity="0.7">
-                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontWeight="ExtraBold" FontSize="14" Glyph="&#xF716;" Margin="0,0,0,0" HorizontalAlignment="Center" />
-                                <TextBlock x:Uid="Comment" FontSize="16" Margin="5,0" >COMMENT</TextBlock>
+                        <Button Grid.Column="1" HorizontalAlignment="Right" Command="{Binding StartCommentCommand}" Background="Transparent" Height="50" BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal" Opacity="1">
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="Bold" FontSize="14" Glyph="&#xe8bd;" Margin="0,0,0,0" HorizontalAlignment="Center" />
+                                <TextBlock x:Uid="Comment"  Margin="5,0" FontSize="12" FontWeight="SemiBold" >COMMENT</TextBlock>
                             </StackPanel>
                         </Button>
-                        <Grid Grid.Row="1" Grid.ColumnSpan="2" Visibility="Collapsed">
 
-                        </Grid>
 
-                        <Grid Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,20,0" Visibility="Visible">
+                        <Grid Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,20,0" Visibility="{Binding HasComments, Converter={StaticResource BoolNegationConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.5*" />
                                 <ColumnDefinition Width="0.5*" />
@@ -392,7 +392,36 @@
                             </RichTextBlock>
                             <Image  MaxWidth="50" Opacity="0.7" Grid.Column="1"   HorizontalAlignment="Right" VerticalAlignment="Bottom"  Source="ms-appx:///Assets/App/giraffe_faded.png"  />
                         </Grid>
+
+
+
+                        <ListView   x:Name="commentList" Visibility="{Binding HasComments}" Margin="0,5,0,0" ItemsSource="{Binding Comments}" Grid.ColumnSpan="2" Grid.Row="1"  SelectionMode="None" HorizontalContentAlignment="Stretch" ItemTemplate="{StaticResource CommentTemplate}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition/>
+                                    <RepositionThemeTransition/>
+                                </TransitionCollection>
+                            </ListView.ItemContainerTransitions>
+                        </ListView>
+
+                        <Grid Grid.ColumnSpan="2" Grid.Row="2" Margin="0" Visibility="{Binding HasMoreComments, Converter={StaticResource BoolVisibilityConverter}}">
+                            <Button x:Uid="ShowComments" Visibility="{Binding LoadingMoreComments, Converter={StaticResource InverseBoolVisibilityConverter}}" HorizontalAlignment="Stretch" Height="50" Command="{Binding LoadAllCommentsCommand}" Content="SEE ALL COMMENTS" Style="{StaticResource CommentButtonStyle}">
+
+                            </Button>
+
+                            <ProgressBar HorizontalAlignment="Stretch" 
+                         IsIndeterminate="True" 
+                         Margin="50,5"
+                         Visibility="{Binding LoadingMoreComments, Converter={StaticResource BoolVisibilityConverter}}"/>
+                        </Grid>
                     </Grid>
+
+                    
                 </toolkit:DropShadowPanel>
             </Grid>
         </ScrollViewer>

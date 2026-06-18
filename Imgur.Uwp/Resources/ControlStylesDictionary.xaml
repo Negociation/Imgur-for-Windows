@@ -1883,6 +1883,137 @@
     </Style>
 
 
+    <!-- SQUARE BUTTON COM VISUAL STATES -->
+    <Style x:Key="CommentButtonStyle" TargetType="Button">
+
+        <!-- Layout -->
+        <Setter Property="MinWidth" Value="180"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+
+        <!-- Visual -->
+        <Setter Property="Background" Value="#4A57FB"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="Transparent">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="BorderElement"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="BorderElement"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="1"
+                                                     To="0.9"
+                                                     Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="BorderElement"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="0.9"
+                                                     To="0.8"
+                                                     Duration="0:0:0.1"/>
+
+                                        <DoubleAnimation Storyboard.TargetName="PressScale"
+                                                     Storyboard.TargetProperty="ScaleX"
+                                                     From="1"
+                                                     To="0.98"
+                                                     Duration="0:0:0.1"/>
+
+                                        <DoubleAnimation Storyboard.TargetName="PressScale"
+                                                     Storyboard.TargetProperty="ScaleY"
+                                                     From="1"
+                                                     To="0.98"
+                                                     Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames
+                                        Storyboard.TargetName="BorderElement"
+                                        Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{StaticResource SystemControlDisabledBaseLowBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+
+                                        <ObjectAnimationUsingKeyFrames
+                                        Storyboard.TargetName="ContentPresenter"
+                                        Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{StaticResource SystemControlForegroundBaseMediumBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="FocusBorder"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="1"
+                                                     Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Unfocused">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="FocusBorder"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0"
+                                                     Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <!-- Border Principal -->
+                        <Border x:Name="BorderElement"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="0"
+                            RenderTransformOrigin="0.5,0.5">
+
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="PressScale"
+                                            ScaleX="1"
+                                            ScaleY="1"/>
+                            </Border.RenderTransform>
+
+                            <ContentPresenter x:Name="ContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+
+                        <!-- Border de Foco -->
+                        <Border x:Name="FocusBorder"
+                            CornerRadius="0"
+                            BorderBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                            BorderThickness="2"
+                            Opacity="0"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+    
     <!-- FOLLOW BUTTON STYLE -->
     <Style x:Key="MoreButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="#1f2023"/>
@@ -2080,5 +2211,78 @@
             </Setter>
 
         </Style>
+
+    <!-- DIALOG CANCEL BUTTON STYLE -->
+    <Style x:Key="CancelButtonStyle" TargetType="Button">
+        <!-- Configurações que você pediu -->
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Padding" Value="20,8,20,8"/>
+        <Setter Property="Background" Value="#28292D"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="0,20,0,0"/>
+
+        <!-- Fallback para Creators Update -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="Normal"/>
+
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                        Storyboard.TargetName="RootBorder"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0.9"
+                                        Duration="0"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                        Storyboard.TargetName="RootBorder"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0.8"
+                                        Duration="0"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                        Storyboard.TargetName="RootBorder"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0.4"
+                                        Duration="0"/>
+                                    </Storyboard>
+                                </VisualState>
+
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="RootBorder"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="6">
+
+                            <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Padding="{TemplateBinding Padding}"/>
+
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
 
 </ResourceDictionary>

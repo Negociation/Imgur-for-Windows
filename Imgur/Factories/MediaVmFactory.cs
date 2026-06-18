@@ -29,10 +29,12 @@ namespace Imgur.Factories
             var galleryService = _serviceProvider.GetRequiredService<GalleryService>();
             var accountService = _serviceProvider.GetRequiredService<AccountService>();
             var accountVmFactory = _serviceProvider.GetRequiredService<IAccountVmFactory>();
+            var commentVmFactory = _serviceProvider.GetRequiredService<ICommentVmFactory>();
             var shareService = _serviceProvider.GetRequiredService<IShareService>();
             var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
             var userContext = _serviceProvider.GetRequiredService<IUserContext>();
             var mediaActionsService = _serviceProvider.GetRequiredService<UserMediaActionsService>();
+            var commentsService = _serviceProvider.GetRequiredService<CommentsService>();
 
             var vm = new MediaViewModel(
                 media,
@@ -43,10 +45,12 @@ namespace Imgur.Factories
                 dialogService,
                 notification,
                 accountVmFactory,
+                commentVmFactory,
                 userContext,
                 galleryService,
                 accountService,
-                mediaActionsService
+                mediaActionsService,
+                commentsService
                 );
 
             vm.Initialize();

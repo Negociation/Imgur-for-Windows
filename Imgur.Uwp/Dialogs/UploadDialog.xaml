@@ -8,19 +8,39 @@
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     xmlns:controls="using:Imgur.Uwp.Controls"
     mc:Ignorable="d"
-    PrimaryButtonText="Upload"
-    CloseButtonText="Cancel"
-    CloseButtonClick="ContentDialog_SecondaryButtonClick"
     FullSizeDesired="False"
-    IsPrimaryButtonEnabled="{Binding IsReadyForUpload, Mode=OneWay}"
     RequestedTheme="Dark"
     MinHeight="400"
     Background="#3c424b"
-    
     Opacity="1"
     Windows10version1809:CornerRadius="3"
     DefaultButton="Primary">
+    <ContentDialog.Resources>
+        <Thickness x:Key="ContentDialogPadding">10</Thickness>
+    </ContentDialog.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <controls:UploadDialogControl HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,-1"  VerticalAlignment="Stretch"></controls:UploadDialogControl>
+        <Grid Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="10"></ColumnDefinition>
 
-    <controls:UploadDialogControl HorizontalAlignment="Stretch" Padding="0" Margin="0,0,0,-1"  VerticalAlignment="Stretch"></controls:UploadDialogControl>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+
+            </Grid.ColumnDefinitions>
+            <Button HorizontalAlignment="Stretch" Grid.Column="0" IsEnabled="{Binding IsReadyForUpload, Mode=OneWay}" Style="{StaticResource DefaultButtonStyle}" Click="UploadButton_Click" >
+                <TextBlock x:Uid="UploadConfirmation" Text="Upload" />
+            </Button>
+
+            <Button HorizontalAlignment="Stretch" Grid.Column="3" Style="{StaticResource CancelButtonStyle}" Click="CancelButton_Click" >
+                <TextBlock x:Uid="UploadCancellation" Text="Cancel" />
+            </Button>
+        </Grid>
+
+    </Grid>
     
 </ContentDialog>
