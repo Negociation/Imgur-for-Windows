@@ -469,16 +469,30 @@ namespace Imgur.Uwp
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
-            deferral.Complete();
+            try
+            {
+                HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
+                // Para monitoramento do clipboard (evita trabalho em background)
+                Services.GetRequiredService<IClipboardService>().StopMonitoring();
+                // Libera player atual (source/surface)
+               // Services.GetRequiredService<IMediaPlayerService>().StopMedia(null);
+                // opcional: pequeno yield para completar teardown visual
+                await Task.Yield();
+            }
+            finally
+            {
+                deferral.Complete();
+            }
         }
 
         private void OnResuming(object sender, object e)
         {
             HardwareButtons.BackPressed += hardwareButtonsBackPressedAsync;
+            // Retoma monitoramento
+            Services.GetRequiredService<IClipboardService>().StartMonitoring();
         }
 
         private async void hardwareButtonsBackPressedAsync(object sender, BackPressedEventArgs e)

@@ -34,10 +34,15 @@
 
                 <!-- Data Container -->
                 <Grid x:Name="mediaContainer" Grid.RowSpan="2" >
-                    <Border CornerRadius="5" Visibility="Visible" Loaded="ImageBorder_Loaded">
-                        <Border.Background>
-                            <ImageBrush ImageOpened="MediaThumb_ImageOpened" x:Name="mediaThumb" Stretch="UniformToFill"  ImageSource="{Binding CoverImage,Mode=OneWay}"/>
-                        </Border.Background>
+                    <Border CornerRadius="5" Visibility="Visible">
+                        <Grid>
+                            <!-- Image no lugar do ImageBrush -->
+                            <Image
+                        x:Name="mediaThumb"
+                        Stretch="UniformToFill"
+                        Source="{Binding CoverImage,Mode=OneWay}"
+                        ImageOpened="MediaThumb_ImageOpened" />
+                        </Grid>
                     </Border>
                 </Grid>
 
@@ -118,10 +123,15 @@
                     </Grid>
 
                     <Grid x:Name="gifContainer" Grid.RowSpan="2">
-                        <Border CornerRadius="5" Visibility="Visible" Loaded="GifBorder_Loaded">
-                            <Border.Background>
-                                <ImageBrush x:Name="mediaThumb" Stretch="UniformToFill" ImageOpened="MediaThumb_GifOpened"  ImageSource="{Binding CoverImage,Mode=OneWay}"/>
-                            </Border.Background>
+                        <Border CornerRadius="5" Visibility="Visible">
+                            <Grid>
+                                <!-- GIF em Image -->
+                                <Image
+                            x:Name="mediaThumb"
+                            Stretch="UniformToFill"
+                            Source="{Binding CoverImage,Mode=OneWay}"
+                            ImageOpened="MediaThumb_GifOpened" />
+                            </Grid>
                         </Border>
                     </Grid>
                 </Grid>
