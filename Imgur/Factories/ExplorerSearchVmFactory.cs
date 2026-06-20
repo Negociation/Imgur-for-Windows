@@ -1,4 +1,5 @@
-﻿using Imgur.Contracts;
+﻿using Imgur.Collections;
+using Imgur.Contracts;
 using Imgur.Services;
 using Imgur.ViewModels.Explorer;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +49,10 @@ namespace Imgur.Factories
             var localSettings = _serviceProvider.GetRequiredService<ILocalSettings>();
             var accountService = _serviceProvider.GetRequiredService<AccountService>();
             var accountVmFactory = _serviceProvider.GetRequiredService<IAccountVmFactory>();
-
+            var collectionFactory = _serviceProvider.GetRequiredService<IIncrementalCollectionFactory>();
+            var browserTagsVmFactory = _serviceProvider.GetRequiredService<IExplorerBrowserTagsVmFactory>();
+            var browserGalleriesVmFactory = _serviceProvider.GetRequiredService<IExplorerBrowserGalleriesVmFactory>();
+            var browserUsersVmFactory = _serviceProvider.GetRequiredService<IExplorerBrowserUsersVmFactory>();
             var vm = new ExplorerSearchViewModel
             (
                 dispatcher,
@@ -59,7 +63,11 @@ namespace Imgur.Factories
                 mediaVmFactory,
                 localSettings,
                 accountService,
-                accountVmFactory
+                accountVmFactory,
+                collectionFactory,
+                browserTagsVmFactory,
+                browserGalleriesVmFactory,
+                browserUsersVmFactory
             );
 
             return vm;

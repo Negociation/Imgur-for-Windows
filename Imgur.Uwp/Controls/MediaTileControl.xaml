@@ -36,12 +36,7 @@
                 <Grid x:Name="mediaContainer" Grid.RowSpan="2" >
                     <Border CornerRadius="5" Visibility="Visible">
                         <Grid>
-                            <!-- Image no lugar do ImageBrush -->
-                            <Image
-                        x:Name="mediaThumb"
-                        Stretch="UniformToFill"
-                        Source="{Binding CoverImage,Mode=OneWay}"
-                        ImageOpened="MediaThumb_ImageOpened" />
+                            <Image x:Name="mediaThumb" Stretch="UniformToFill" Source="{Binding CoverImage,Mode=OneWay,  Converter={StaticResource DecodeImageConverter}, ConverterParameter=400}" ImageOpened="MediaThumb_ImageOpened" ImageFailed="MediaThumb_ImageFailed" />
                         </Grid>
                     </Border>
                 </Grid>
@@ -113,9 +108,10 @@
                 <!-- Data Container -->
                 <Grid x:Name="mediaContainer" Grid.RowSpan="2">
                     <Grid x:Name="gifPlaceholderContainer">
+                        
                         <Border CornerRadius="5">
                             <Border.Background>
-                                <ImageBrush x:Name="mediaPlaceholderImage" Stretch="UniformToFill"  ImageSource="{Binding CoverPlaceholder,Mode=OneWay}"/>
+                                <ImageBrush x:Name="mediaPlaceholderImage" Stretch="UniformToFill"  ImageSource="{Binding CoverPlaceholder,Mode=OneWay, Converter={StaticResource DecodeImageConverter}, ConverterParameter=200}"/>
                             </Border.Background>
                         </Border>
                         <Grid Background="Black" Opacity="0.8" CornerRadius="5"></Grid>
@@ -126,11 +122,7 @@
                         <Border CornerRadius="5" Visibility="Visible">
                             <Grid>
                                 <!-- GIF em Image -->
-                                <Image
-                            x:Name="mediaThumb"
-                            Stretch="UniformToFill"
-                            Source="{Binding CoverImage,Mode=OneWay}"
-                            ImageOpened="MediaThumb_GifOpened" />
+                                <Image x:Name="mediaThumb" Stretch="UniformToFill" Source="{Binding CoverImage,Mode=OneWay}" ImageOpened="MediaThumb_GifOpened" ImageFailed="MediaThumb_GifFailed"  />
                             </Grid>
                         </Border>
                     </Grid>

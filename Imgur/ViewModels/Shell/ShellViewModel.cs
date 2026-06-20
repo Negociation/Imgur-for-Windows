@@ -150,6 +150,27 @@ namespace Imgur.ViewModels.Shell
             }
         }
 
+        private ICommand _openOwnAccountCommand;
+
+        public ICommand OpenOwnAccountCommand
+        {
+            get
+            {
+                if (_openOwnAccountCommand == null)
+                {
+                    _openOwnAccountCommand = new RelayCommand<string>((query) =>
+                    {
+                        CurrentPageIndex = -1;
+                        OnPropertyChanged(nameof(CurrentPageIndex));
+
+                        
+                    });
+                }
+                return _openOwnAccountCommand;
+            }
+        }
+
+
 
         private ICommand _invokeLoginCommand;
 

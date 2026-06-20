@@ -1,6 +1,8 @@
 ﻿using Imgur.Api.Services.Contracts;
 using Imgur.Api.Services.Models.Common;
+using Imgur.Api.Services.Models.Response;
 using Imgur.Api.Services.Models.Response.Account;
+using Imgur.Api.Services.Models.Response.Comment;
 using Imgur.Api.Services.Models.Response.Suggest;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -19,6 +21,26 @@ namespace Imgur.Api.Services.Actions
         {
             return await GetAsync<AccountResponse>(
                $"account/{id}");
+        }
+
+        public async Task<ApiResponse<List<GalleryItemResponse>>> GetAccountFavoritesAsync(string username, int page = 0)
+        {
+            Debug.WriteLine($"[AccountService] GetFavorites: {username} page:{page}");
+            return await GetAsync<List<GalleryItemResponse>>($"account/{username}/favorites/{page}");
+        }
+
+        public async Task<ApiResponse<List<CommentResponse>>> GetAccountCommentsAsync(
+            string username, string sort = "newest", int page = 0)
+        {
+            Debug.WriteLine($"[AccountService] GetComments: {username} page:{page}");
+            return await GetAsync<List<CommentResponse>>($"account/{username}/comments/{sort}/{page}");
+        }
+
+        public async Task<ApiResponse<List<GalleryItemResponse>>> GetAccountSubmissionsAsync(
+            string username, int page = 0)
+        {
+            Debug.WriteLine($"[AccountService] GetSubmissions: {username} page:{page}");
+            return await GetAsync<List<GalleryItemResponse>>($"account/{username}/submissions/{page}");
         }
 
         public async Task<ApiResponse<List<AccountResponse>>> AccountSearchAsync(string query, int page = 0)

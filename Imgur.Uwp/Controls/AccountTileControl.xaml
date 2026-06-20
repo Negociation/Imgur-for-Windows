@@ -14,7 +14,85 @@
     d:DesignHeight="300"
     d:DesignWidth="220">
 
-    <Grid>
+    <Grid x:Name="RootGrid" >
+        <VisualStateManager.VisualStateGroups>
+
+            <VisualStateGroup>
+
+                <VisualState x:Name="TileNormal"/>
+
+                <VisualState x:Name="TileCompact">
+
+                    <VisualState.Setters>
+
+                        <!-- layout geral -->
+                        <Setter Target="RootGrid.Padding" Value="0"/>
+                        <Setter Target="AccountElement.Margin" Value="0"/>
+                        <Setter Target="RootGrid.Background" Value="#474a51"/>
+
+                        <!-- FOTO (esquerda) -->
+                        <Setter Target="accountContainer.(Grid.Column)" Value="0"/>
+                        <Setter Target="accountContainer.(Grid.Row)" Value="0"/>
+
+                        <!-- FOLLOW BUTTON (DIREITA) -->
+                        <Setter Target="FollowButton.(Grid.Column)" Value="1"/>
+                        <Setter Target="FollowButton.(Grid.RowSpan)" Value="2"/>
+                        <Setter Target="FollowButton.VerticalAlignment" Value="Center"/>
+                        <Setter Target="FollowButton.Margin" Value="0,0,20,0"/>
+
+                        <!-- FOOTER (direita) -->
+                        <Setter Target="AccountFooter.(Grid.Column)" Value="1"/>
+                        <Setter Target="AccountFooter.(Grid.Row)" Value="0"/>
+                        <Setter Target="AccountFooter.Background" Value="Transparent"/>
+
+                        <Setter Target="AccountFooter.(Grid.RowSpan)" Value="2"/>
+                        <Setter Target="AccountFooter.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="AccountFooter.VerticalAlignment" Value="Center"/>
+                        <Setter Target="AccountFooter.Margin" Value="0,0,50,0"/>
+                        <Setter Target="AccountFooter.Height" Value="Auto"/>
+                        <Setter Target="AccountFooterText.Margin" Value="0"/>
+                        <Setter Target="AccountFooterUsername.Margin" Value="0"/>
+
+                        <Setter Target="AccountFooterUsername.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="AccountFooterReputation.HorizontalAlignment" Value="Left"/>
+
+
+                        <!-- AVATAR continua central ou pode ir para esquerda -->
+                        <Setter Target="avatarThumbPanel.(Grid.Column)" Value="0"/>
+                        <Setter Target="avatarThumbPanel.(Grid.Row)" Value="0"/>
+                        <Setter Target="avatarThumbPanel.(Grid.RowSpan)" Value="2"/>
+                        <Setter Target="avatarThumbPanel.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="avatarThumbPanel.VerticalAlignment" Value="Center"/>
+                        <Setter Target="avatarThumbPanel.Margin" Value="10,0,0,0"/>
+                        <Setter Target="avatarThumbPanelImage.Width" Value="40"/>
+                        <Setter Target="avatarThumbPanelImage.Height" Value="40"/>
+                        <Setter Target="avatarThumb.Width" Value="40"/>
+                        <Setter Target="avatarThumb.Height" Value="40"/>
+                        <Setter Target="mediaThumb.Visibility" Value="Collapsed"/>
+                        <Setter Target="LoadingBar.Visibility" Value="Collapsed"/>
+                        <Setter Target="LoadingAvatarRing.Visibility" Value="Collapsed"/>
+
+
+                        <!-- ajustes visuais -->
+                        <Setter Target="mediaThumb.Visibility" Value="Collapsed"/>
+                        <Setter Target="AccountElement.Margin" Value="0"/>
+                        <Setter Target="AccountElementGrid.CornerRadius" Value="0"/>
+                        <Setter Target="AccountFooter.Background" Value="Transparent"/>
+                        <Setter Target="FirstColumn.Width" Value="60"/>
+                        <Setter Target="SecondColumn.Width" Value="*"/>
+
+
+                        <!-- opcional: reduzir card -->
+                        <Setter Target="AccountElement.Height" Value="80"/>
+
+                    </VisualState.Setters>
+
+                </VisualState>
+
+            </VisualStateGroup>
+
+        </VisualStateManager.VisualStateGroups>
+
         <toolkit:DropShadowPanel 
         x:Name="AccountElement" 
         BlurRadius="10" 
@@ -26,25 +104,31 @@
         HorizontalContentAlignment="Stretch" 
         VerticalContentAlignment="Stretch"   
         Margin="6">
-            <Grid Background="#3F4147" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="5">
+            <Grid x:Name="AccountElementGrid" Background="#3F4147" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="5">
                 <Grid.RowDefinitions>
                     <RowDefinition  />
                     <RowDefinition MaxHeight="90"  />
                 </Grid.RowDefinitions>
 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="FirstColumn" Width="*"></ColumnDefinition>
+                    <ColumnDefinition x:Name="SecondColumn" Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
                 <!-- Loading -->
                 <winui:ProgressBar  x:Name="LoadingBar" VerticalAlignment="Top" MinHeight="4" IsEnabled="True" IsIndeterminate="True"  Margin="2,1,2,0" Foreground="White" />
 
                 <!-- Data Container -->
                 <Grid x:Name="accountContainer" Grid.RowSpan="1">
-                    <Border CornerRadius="5">
+                    <Border x:Name="mediaThumb" Visibility="Visible" CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush x:Name="mediaThumb" Stretch="UniformToFill"  ImageSource="{Binding UserAccountInfo.Cover,Mode=OneWay}"/>
+                            <ImageBrush Stretch="UniformToFill"  ImageSource="{Binding UserAccountInfo.Cover,Mode=OneWay}"/>
                         </Border.Background>
                     </Border>
-                    
                 </Grid>
+                
+                <!-- Follow Button Compact -->
                 <toolkit:DropShadowPanel 
+                    x:Name="FollowButton"
                     BlurRadius="10" 
                     OffsetX="0" 
                     Margin="12"
@@ -57,31 +141,33 @@
                         <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="12" Glyph="&#xE948;" Foreground="Black" Margin="0,1,0,0" HorizontalAlignment="Center" />
                     </Button>
                 </toolkit:DropShadowPanel>
+                <!-- Info -->
                 <StackPanel x:Name="accountInfoContainer" Orientation="Horizontal" VerticalAlignment="Top" Opacity="0.9" HorizontalAlignment="Right" Margin="15" Grid.Row="0"/>
                 <Grid Grid.Row="1" x:Name="AccountFooter" Background="#474a51"  RequestedTheme="Dark" Margin="-1" CornerRadius="0,0,5,5" Opacity="0.9">
-                    <Grid Grid.Row="2" Margin="0,20,0,0" Padding="10">
+                    <Grid Grid.Row="2" x:Name="AccountFooterText" Margin="0,20,0,0" Padding="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"  />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Margin="10,0,10,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding UserAccountInfo.Username,Mode=OneWay}" FontWeight="SemiBold"  Text="{Binding UserAccountInfo.Username,FallbackValue='Username',Mode=OneWay }"/>
+                        <TextBlock Grid.Row="0" Margin="10,0,10,0"  x:Name="AccountFooterUsername" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding UserAccountInfo.Username,Mode=OneWay}" FontWeight="SemiBold"  Text="{Binding UserAccountInfo.Username,FallbackValue='Username',Mode=OneWay }"/>
 
-                        <TextBlock Grid.Row="1" Margin="0,0,0,0" Foreground="#ACB0BA" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding UserAccountInfo.ReputationName,Mode=OneWay}" FontWeight="SemiBold"   Text="{Binding UserAccountInfo.ReputationName,FallbackValue='Username',Mode=OneWay }"/>
+                        <TextBlock Grid.Row="1" Margin="0,0,0,0" x:Name="AccountFooterReputation" Foreground="#ACB0BA" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding UserAccountInfo.ReputationName,Mode=OneWay}" FontWeight="SemiBold"   Text="{Binding UserAccountInfo.ReputationName,FallbackValue='Username',Mode=OneWay }"/>
                     </Grid>
                 </Grid>
-                <toolkit:DropShadowPanel 
+                
+                <!-- Picture -->
+                <toolkit:DropShadowPanel
+                    x:Name="avatarThumbPanel"
                     BlurRadius="50" 
                     OffsetX="0" 
                     ShadowOpacity="0.5" 
                     Grid.Row="1"  Margin="0,-60,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
                     OffsetY="1" >
-                    <Grid Background="{StaticResource SystemControlAcrylicElementBrush}" Width="80" Height="80" CornerRadius="40" Padding="0">
-                       
-
+                    <Grid  Background="{StaticResource SystemControlAcrylicElementBrush}" Width="80" Height="80" CornerRadius="40" Padding="0" x:Name="avatarThumb">
                         <ProgressRing x:Name="LoadingAvatarRing" VerticalAlignment="Center"  Width="60" Height="50" Margin="0,0,0,0" IsActive="True"  />
                         <FontIcon  Grid.RowSpan="2" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="30" Foreground="#01b96b" Margin="0,0,0,0" Glyph="&#xe8d4;"/>
-                        <Ellipse Width="80" Height="80"   >
+                        <Ellipse x:Name="avatarThumbPanelImage" Width="80" Height="80"   >
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding UserAccountInfo.Avatar}" Stretch="UniformToFill"/>
                             </Ellipse.Fill>

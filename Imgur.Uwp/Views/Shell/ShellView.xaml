@@ -449,7 +449,7 @@
                                 </Grid>
                                 </toolkit:DropShadowPanel>
 
-                                <TextBlock Grid.Column="1" Foreground="{StaticResource BackButtonDisabledForegroundThemeBrush}"  FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="15,0,0,0" Text="{Binding CurrentUser.Username}"/>
+                                <HyperlinkButton Grid.Column="1"  FontSize="14" FontWeight="SemiBold" Opacity="0.7" VerticalAlignment="Center" Margin="5,0,0,0" Content="{Binding CurrentUser.Username}" Foreground="White" Command="{Binding OpenOwnAccountCommand}"></HyperlinkButton>
                                 <Button Grid.Column="2"  Style="{x:Null}" Height="40" Padding="0" Width="40" Background="Transparent"  Command="{Binding InvokeLogoutCommand}" BorderBrush="Transparent" Margin="10,0,5,0">
                                     <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="20" Foreground="#01b96b" Margin="0,0,0,0" Glyph="&#xF3B1;"/>
                                 </Button>

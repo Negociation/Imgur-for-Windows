@@ -19,16 +19,22 @@ namespace Imgur.Services
         private ILocalSettings _localSettings;
         private IAccountService _apiService;
         private AccountMapper _accountMapper;
+        private GalleryMapper _galleryMapper;
+        private CommentMapper _commentMapper;
 
         public AccountService(
            ILocalSettings localSettings,
            IAccountService apiService,
-           AccountMapper accountMapper
+           AccountMapper accountMapper,
+           GalleryMapper galleryMapper,
+           CommentMapper commentMapper
            )
         {
             _localSettings = localSettings;
             _apiService = apiService;
             _accountMapper = accountMapper;
+            _galleryMapper = galleryMapper;
+            _commentMapper = commentMapper;
         }
 
         public async Task<Result<UserAccount>> GetAccountById(string id)
@@ -57,5 +63,33 @@ namespace Imgur.Services
             var tagListMapped = _accountMapper.ToUserAccountList(items.Data);
             return Result<IReadOnlyList<UserAccount>>.Success(tagListMapped);
         }
+
+        public async Task<Result<List<Media>>> GetAccountFavoritesAsync(string username, int page = 0)
+        {
+            var response = await _apiService.GetAccountFavoritesAsync(username, page);
+            if (!response.Success)
+                return Result<List<Media>>.Failure(response.Status.ToString(), ErrorType.Server);
+
+            return Result<List<Media>>.Success(_galleryMapper.ToMediaList(response.Data));
+        }
+
+        public async Task<Result<List<Comment>>> GetAccountCommentsAsync(string username, string sort = "newest", int page = 0)
+        {
+            var response = await _apiService.GetAccountCommentsAsync(username, sort, page);
+            if (!response.Success)
+                return Result<List<Comment>>.Failure(response.Status.ToString(), ErrorType.Server);
+
+            return Result<List<Comment>>.Success(_commentMapper.ToCommentList(response.Data));
+        }
+
+        public async Task<Result<List<Media>>> GetAccountSubmissionsAsync(string username, int page = 0)
+        {
+            var response = await _apiService.GetAccountSubmissionsAsync(username, page);
+            if (!response.Success)
+                return Result<List<Media>>.Failure(response.Status.ToString(), ErrorType.Server);
+
+            return Result<List<Media>>.Success(_galleryMapper.ToMediaList(response.Data));
+        }
+
     }
 }

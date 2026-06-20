@@ -19,8 +19,6 @@ namespace Imgur.Api.Services.Actions
 
             var result = await GetAsync<List<CommentResponse>>($"gallery/{galleryId}/comments/{sort}");
 
-            Debug.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
-
             return result;
         }
 

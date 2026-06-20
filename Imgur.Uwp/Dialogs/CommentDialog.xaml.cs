@@ -1,4 +1,6 @@
-﻿using Imgur.ViewModels.Media;
+﻿using Imgur.Contracts;
+using Imgur.ViewModels.Media;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,9 +28,22 @@ namespace Imgur.Uwp.Dialogs
         public CommentDialog()
         {
             this.InitializeComponent();
+            ConfigureFullSize();
+
         }
 
+        private void ConfigureFullSize()
+        {
+            var sysService = App.Services.GetRequiredService<ISystemInfoProvider>();
 
+            var isMobile = sysService.IsMobile();
+            var continuumMode = sysService.IsContinuum();
+            // Só aplica FullSizeDesired se mobile E não for Continuum
+            if (isMobile && !continuumMode)
+            {
+                this.FullSizeDesired = true;
+            }
+        }
         private void Close(object sender, TappedRoutedEventArgs e)
         {
             this.Hide();

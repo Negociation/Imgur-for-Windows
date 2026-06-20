@@ -16,8 +16,8 @@
     xmlns:local1="using:Imgur.Uwp.TemplateSelectors"
     xmlns:controls="using:Imgur.Uwp.Controls"
     Margin="0,0,0,0"
-    
     mc:Ignorable="d">
+
     <Page.Resources>
         <Style TargetType="CommandBar">
             <Setter Property="Background" Value="#333"/>
@@ -35,128 +35,141 @@
 
         <DataTemplate x:Key="ImageTemplate" x:DataType="models:Element">
             <StackPanel Margin="0,10" MinHeight="100">
-
-                <controls:ImageViewElementControl ImageElement="{Binding}"  />
-
-                <TextBlock FontWeight="Bold"  Text="{Binding Title}"  TextWrapping="Wrap" Margin="10,0,10,0" IsTextSelectionEnabled="True" />
-                <TextBlock FontWeight="SemiBold" Text="{Binding Description}" TextWrapping="Wrap" Margin="10,0,10,5" IsTextSelectionEnabled="True" />
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate x:Key="VideoTemplate" x:DataType="models:Element">
-            <StackPanel HorizontalAlignment="Stretch" Margin="0,0,0,10">
-                <Grid>
-                    <controls:VideoViewElementControl MediaElement="{Binding}" HorizontalAlignment="Stretch" />
-                </Grid>
+                <controls:ImageViewElementControl ImageElement="{Binding}" />
                 <TextBlock FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap" Margin="10,0,10,0" IsTextSelectionEnabled="True" />
                 <TextBlock FontWeight="SemiBold" Text="{Binding Description}" TextWrapping="Wrap" Margin="10,0,10,5" IsTextSelectionEnabled="True" />
             </StackPanel>
-
         </DataTemplate>
+
+        <DataTemplate x:Key="VideoTemplate" x:DataType="models:Element">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <controls:VideoViewElementControl MediaElement="{Binding}" HorizontalAlignment="Stretch" />
+                </Grid>
+                <StackPanel Grid.Row="1">
+                    <TextBlock FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap" Margin="10,0,10,0" IsTextSelectionEnabled="True" />
+                    <TextBlock FontWeight="SemiBold" Text="{Binding Description}" TextWrapping="Wrap" Margin="10,0,10,5" IsTextSelectionEnabled="True" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate x:Key="CommentTemplate" x:DataType="models:Comment">
             <controls:CommentControl Margin="-12,0" DataContext="{Binding}"/>
         </DataTemplate>
-        <local1:MediaElementTemplateSelector x:Key="MediaDataTemplateSelector" ImageTemplate="{StaticResource ImageTemplate}" VideoTemplate="{StaticResource VideoTemplate}" />
+
+        <local1:MediaElementTemplateSelector x:Key="MediaDataTemplateSelector"
+            ImageTemplate="{StaticResource ImageTemplate}"
+            VideoTemplate="{StaticResource VideoTemplate}" />
     </Page.Resources>
+
     <Page.Background>
-        <LinearGradientBrush StartPoint="0,0" Opacity="0.4"
-            EndPoint="0,1">
+        <LinearGradientBrush StartPoint="0,0" Opacity="0.4" EndPoint="0,1">
             <GradientStop Color="#073169" Offset="1" />
             <GradientStop Color="#292c30" Offset="0.6" />
         </LinearGradientBrush>
     </Page.Background>
-    <Grid x:Name="RootGrid" Margin="0,0,0,0" Padding="10,0,0,0" SizeChanged="RootGrid_SizeChanged"  MaxWidth="1100">
 
+    <Grid x:Name="RootGrid" Margin="0,0,0,0" Padding="10,0,0,0" HorizontalAlignment="Stretch" SizeChanged="RootGrid_SizeChanged">
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Uid="PageTriggers">
 
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <!--  Extended2 — 1200px+                                   -->
+                <!-- ═══════════════════════════════════════════════════════ -->
                 <VisualState x:Name="Extended2">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1200" />
+                        <AdaptiveTrigger MinWindowWidth="1500" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <!-- Vertical sidebar visível -->
                         <Setter Target="CompactVerticalBar.Visibility" Value="Visible" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,30,10,10" />
-                        <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="1" />
-                        <Setter Target="CommentsPlacementBorder.(Grid.Column)" Value="1" />
-                        <Setter Target="CommentsPlacement.Background" Value="#464b57" />
-                        <Setter Target="CommentsPlacementBorder.ShadowOpacity" Value="0.4" />
-                        <Setter Target="CommentsPlacementBorder.OffsetY" Value="0" />
-                        <Setter Target="CommentsPlacementBorder.OffsetX" Value="-2" />
-                        <Setter Target="CommentsPlacementBorder.VerticalAlignment" Value="Stretch" />
-                        <Setter Target="CommentsPlacement.VerticalAlignment" Value="Stretch" />
-                        <Setter Target="MediaPlacement.(Grid.Row)" Value="1" />
+
+                        <!-- Page / RootGrid -->
+                        <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
+                        <Setter Target="RootGrid.Padding" Value="20,0,0,0" />
+                        <Setter Target="RootGrid.HorizontalAlignment" Value="Stretch" />
+
+
+                        <!-- RootScrollView ocupa toda a altura — sem scroll externo -->
+                        <Setter Target="RootScrollView.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="RootScrollView.VerticalScrollMode" Value="Disabled" />
+                        <Setter Target="RootScrollView.VerticalScrollBarVisibility" Value="Disabled" />
+                        <Setter Target="RootScrollView.MaxHeight" Value="99999" />
+                        <Setter Target="RootScrollView.(Grid.Column)" Value="1" />
+                        <Setter Target="RootScrollView.(Grid.ColumnSpan)" Value="1" />
+
+                        <!-- RootScrollGrid estica -->
+                        <Setter Target="RootScrollGrid.VerticalAlignment" Value="Stretch" />
+
+                        <!-- Row 0 vira * → MediaPlacement cresce com a janela -->
+                        <Setter Target="ScrollRow0.Height" Value="*" />
+
+                        <!-- Colunas do ScrollGrid -->
+                        <Setter Target="ScrollColMedia.Width" Value="*" />
+                        <Setter Target="ScrollColComments.MaxWidth" Value="600" />
+
+                        <!-- MediaPlacement estica e fica na col 0 -->
+                        <Setter Target="MediaPlacement.(Grid.Row)" Value="0" />
+                        <Setter Target="MediaPlacement.(Grid.Column)" Value="0" />
                         <Setter Target="MediaPlacement.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="MediaPlacement.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="MediaPlacement.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="MediaPlacement.MaxHeight" Value="99999" />
                         <Setter Target="MediaPlacement.Margin" Value="5,30,0,10" />
                         <Setter Target="MediaPlacement.CornerRadius" Value="5,0,0,5" />
-                        <Setter Target="DockDyanmicData.Margin" Value="0,2,0,0" />
-                        <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
-                        <Setter Target="RootScrollView.(Grid.Column)" Value="1" />
-                        <Setter Target="RootScrollView.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="LeaveFloatButton.(Grid.Column)" Value="1" />
-                        <Setter Target="LeaveFloatButton.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="AppendMoreButton.Margin" Value="10" />
-                        <Setter Target="RootGrid.MaxHeight" Value="900" />
-                        <Setter Target="CommentsPlacement.CornerRadius" Value="0,5,5,0" />
-                        <Setter Target="LeaveFloatButton.Margin" Value="11,48,0,0" />
-                        <Setter Target="RootScrollView.VerticalScrollMode" Value="Auto" />
-                        <Setter Target="RootScrollView.MaxHeight" Value="900" />
-                        <Setter Target="CommentsPlacement.MaxHeight" Value="800" />
-                        <Setter Target="MediaPlacement.MaxHeight" Value="800" />
-                        <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
-                        <Setter Target="RootGrid.Padding" Value="10,0,0,0" />
-                    </VisualState.Setters>
-                    <VisualState.Storyboard>
-                        <Storyboard />
-                    </VisualState.Storyboard>
-                </VisualState>
 
-                <VisualState x:Name="Extended">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1000" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="CompactVerticalBar.Visibility" Value="Visible" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,15,10,10" />
-                        <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="1" />
+                        <!-- ListView interno rola, sem limite de altura -->
+                        <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
+                        <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollBarVisibility)" Value="Auto" />
+                        <Setter Target="MediaRepeater.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="MediaRepeater.MaxHeight" Value="99999" />
+
+                        <!-- CommentsPlacement estica na col 1 -->
+                        <Setter Target="CommentsPlacementBorder.(Grid.Row)" Value="0" />
                         <Setter Target="CommentsPlacementBorder.(Grid.Column)" Value="1" />
+                        <Setter Target="CommentsPlacementBorder.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,30,10,10" />
+
+                        <Setter Target="CommentsPlacementBorder.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="CommentsPlacementBorder.VerticalContentAlignment" Value="Stretch" />
                         <Setter Target="CommentsPlacementBorder.ShadowOpacity" Value="0.4" />
                         <Setter Target="CommentsPlacementBorder.OffsetY" Value="0" />
-                        <Setter Target="CommentsPlacement.Background" Value="#464b57" />
                         <Setter Target="CommentsPlacementBorder.OffsetX" Value="-2" />
-                        <Setter Target="CommentsPlacementBorder.VerticalAlignment" Value="Stretch" />
                         <Setter Target="CommentsPlacement.VerticalAlignment" Value="Stretch" />
-                        <Setter Target="MediaPlacement.(Grid.Row)" Value="1" />
-                        <Setter Target="MediaPlacement.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="MediaPlacement.Margin" Value="5,15,0,10" />
-                        <Setter Target="MediaPlacement.CornerRadius" Value="5,0,0,5" />
-                        <Setter Target="DockDyanmicData.Margin" Value="0,2,0,0" />
-                        <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
-                        <Setter Target="RootScrollView.(Grid.Column)" Value="1" />
-                        <Setter Target="RootScrollView.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="CommentsPlacement.Background" Value="#464b57" />
+                        <Setter Target="CommentsPlacement.CornerRadius" Value="0,5,5,0" />
+                        <Setter Target="CommentsPlacement.MaxHeight" Value="99999" />
+
+                        <!-- Botão voltar -->
                         <Setter Target="LeaveFloatButton.(Grid.Column)" Value="1" />
                         <Setter Target="LeaveFloatButton.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="LeaveFloatButton.Margin" Value="11,48,0,0" />
+
+                        <!-- Misc -->
                         <Setter Target="AppendMoreButton.Margin" Value="10" />
-                        <Setter Target="RootGrid.MaxHeight" Value="800" />
-                        <Setter Target="CommentsPlacement.CornerRadius" Value="0,5,5,0" />
-                        <Setter Target="LeaveFloatButton.Margin" Value="11,33,0,0" />
-                        <Setter Target="RootScrollView.VerticalScrollMode" Value="Auto" />
-                        <Setter Target="RootScrollView.MaxHeight" Value="900" />
-                        <Setter Target="CommentsPlacement.MaxHeight" Value="800" />
-                        <Setter Target="MediaPlacement.MaxHeight" Value="800" />
-                        <Setter Target="MediaViewPage.Margin" Value="-10,0,0,0" />
-                        <Setter Target="RootGrid.Padding" Value="10,0,0,0" />
+                        <Setter Target="DockDyanmicData.Margin" Value="0,2,0,0" />
+                        <Setter Target="RootGrid.MaxHeight" Value="99999" />
                     </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard />
                     </VisualState.Storyboard>
                 </VisualState>
 
+              
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <!--  Compact — 500px+                                      -->
+                <!-- ═══════════════════════════════════════════════════════ -->
                 <VisualState x:Name="Compact">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="500" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="ScrollColComments.MaxWidth" Value="400" />
                         <Setter Target="CommentsPlacement.CornerRadius" Value="5" />
                         <Setter Target="CommentsPlacement.Background" Value="#464b57" />
                         <Setter Target="CommentsPlacementBorder.Margin" Value="5,0,10,70" />
@@ -173,6 +186,9 @@
                     </VisualState.Storyboard>
                 </VisualState>
 
+                <!-- ═══════════════════════════════════════════════════════ -->
+                <!--  Minimal — 300px+                                      -->
+                <!-- ═══════════════════════════════════════════════════════ -->
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="300" />
@@ -204,43 +220,72 @@
 
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
-        <!-- Loading Overlay -->
-        <Grid x:Name="LoadingOverlay" Grid.ColumnSpan="3" Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}" Opacity="0.97" Canvas.ZIndex="100"  Visibility="{Binding LoadingElementsStatus,Mode=OneWay}" HorizontalAlignment="Stretch">
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  Loading Overlay                                               -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <Grid x:Name="LoadingOverlay"
+              Grid.ColumnSpan="3"
+              Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}"
+              Opacity="0.97"
+              Canvas.ZIndex="100"
+              Visibility="{Binding LoadingElementsStatus, Mode=OneWay}"
+              HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Opacity="0.7">
-                <TextBlock x:Uid="LoadingMedia" FontWeight="Bold"  FontSize="16" HorizontalAlignment="Center">Getting the hot stuff!</TextBlock>
+                <TextBlock x:Uid="LoadingMedia" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center">Getting the hot stuff!</TextBlock>
                 <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="20,5" />
             </StackPanel>
         </Grid>
-        
-        <!-- View Content -->
-        <ScrollViewer x:Name="RootScrollView" VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch"  ViewChanged="RootScrollView_ViewChanged" >
 
-            <Grid x:Name="RootScrollGrid" >
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  View Content (ScrollViewer raiz)                              -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <ScrollViewer x:Name="RootScrollView"
+                      
+                      VerticalScrollBarVisibility="Auto"
+                      VerticalAlignment="Top"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="3"
+                      HorizontalAlignment="Stretch"
+                      ViewChanged="RootScrollView_ViewChanged">
+
+            <Grid x:Name="RootScrollGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.60*" MaxWidth="1000"/>
-                    <ColumnDefinition Width="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolToGridLengthConverter}}" MaxWidth="400" MinWidth="0"/>
+                    <ColumnDefinition x:Name="ScrollColMedia" Width="0.50*" MaxWidth="2000"/>
+                    <ColumnDefinition x:Name="ScrollColComments"
+                                      Width="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolToGridLengthConverter}}"
+                                      MaxWidth="9999" MinWidth="0"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition x:Name="ScrollRow0" Height="auto"/>
+                    <RowDefinition x:Name="ScrollRow1" Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="MediaPlacement" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="#232424"  Margin="5,10,10,10" Padding="0,0,0,20" CornerRadius="5" MinHeight="200" VerticalAlignment="Stretch">
+                <!-- ─────────────────────────────────────────────────────── -->
+                <!--  MediaPlacement                                         -->
+                <!-- ─────────────────────────────────────────────────────── -->
+                <Grid x:Name="MediaPlacement"
+                      Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                      Background="#232424"
+                      Margin="5,10,10,10"
+                      Padding="0,0,0,20"
+                      CornerRadius="5"
+                      MinHeight="200"
+                      VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    
+
                     <!-- Media Title and Command Bar -->
-                    <Grid x:Name="DockCommandBar" Margin="30,0,0,0" VerticalAlignment="Top" Height="80" Padding ="15">
+                    <Grid x:Name="DockCommandBar" Margin="30,0,0,0" VerticalAlignment="Top" Height="80" Padding="15">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="auto" />
@@ -253,50 +298,83 @@
                         <StackPanel></StackPanel>
 
                         <StackPanel Margin="0,2,15,0">
-                            <TextBlock x:Name="DockTitle" Visibility="{Binding CurrentMedia.Title, Converter={StaticResource EmptyStringVisibilityConverter}}" Grid.Column="0" ToolTipService.ToolTip="{Binding CurrentMedia.Title}"  FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Text="{Binding Path=CurrentMedia.Title}" />
+                            <TextBlock x:Name="DockTitle"
+                                       Visibility="{Binding CurrentMedia.Title, Converter={StaticResource EmptyStringVisibilityConverter}}"
+                                       Grid.Column="0"
+                                       ToolTipService.ToolTip="{Binding CurrentMedia.Title}"
+                                       FontSize="18" FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"
+                                       Text="{Binding Path=CurrentMedia.Title}" />
 
-                            <Grid Margin="0,0,0,0"  Visibility="{Binding ReloadingCurrentMediaInfo,Converter={StaticResource BoolNegationConverter}}">
-                                <TextBlock x:Name="DockDyanmicData"   FontSize="12">
-                                <Run Text="{Binding CurrentMedia.Views}" />
-                                <Run x:Uid="Views" Text=" Views"></Run>       
-                                <Run Text=" • "></Run>              
-                               
-                                <Run Text="{Binding CurrentMedia.DateTime,Converter={StaticResource TimestampToElapsedTimeConverter}}" FontFamily="Segoe UI"></Run>
+                            <Grid Margin="0,0,0,0" Visibility="{Binding ReloadingCurrentMediaInfo, Converter={StaticResource BoolNegationConverter}}">
+                                <TextBlock x:Name="DockDyanmicData" FontSize="12">
+                                    <Run Text="{Binding CurrentMedia.Views}" />
+                                    <Run x:Uid="Views" Text=" Views"></Run>
+                                    <Run Text=" • "></Run>
+                                    <Run Text="{Binding CurrentMedia.DateTime, Converter={StaticResource TimestampToElapsedTimeConverter}}" FontFamily="Segoe UI"></Run>
                                 </TextBlock>
                             </Grid>
-                            
-                            <ProgressBar IsIndeterminate="{Binding ReloadingCurrentMediaInfo}" Grid.Row="1" Visibility="{Binding ReloadingCurrentMediaInfo}" Margin="0,0,0,0" HorizontalAlignment="Stretch" Foreground="White"  Grid.ColumnSpan="2" />
+
+                            <ProgressBar IsIndeterminate="{Binding ReloadingCurrentMediaInfo}"
+                                         Grid.Row="1"
+                                         Visibility="{Binding ReloadingCurrentMediaInfo}"
+                                         Margin="0,0,0,0"
+                                         HorizontalAlignment="Stretch"
+                                         Foreground="White"
+                                         Grid.ColumnSpan="2" />
 
                             <Grid Grid.Row="2" Margin="0,0,0,0" Visibility="{Binding LoadedSuccessfully}">
-                                <Grid  DataContext="{Binding UserAccount}">
+                                <Grid DataContext="{Binding UserAccount}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"  />
-                                        <ColumnDefinition Width="auto"  />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
-
-                                    <HyperlinkButton Margin="-5,0,0,0" Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolNegationConverter}}" Command="{Binding NavigateAccountViewCommand}" FontWeight="SemiBold"  Content="{Binding UserAccountInfo.Username,FallbackValue='...'}" Foreground="{ThemeResource SystemAccentColor}" Height="20" Padding="6,1" Opacity="0.7" FontSize="12">
-                                    </HyperlinkButton>
+                                    <HyperlinkButton Margin="-5,0,0,0"
+                                                     Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolNegationConverter}}"
+                                                     Command="{Binding NavigateAccountViewCommand}"
+                                                     FontWeight="SemiBold"
+                                                     Content="{Binding UserAccountInfo.Username, FallbackValue='...'}"
+                                                     Foreground="{ThemeResource SystemAccentColor}"
+                                                     Height="20" Padding="6,1" Opacity="0.7" FontSize="12" />
                                     <TextBlock Margin="0,0,0,0" FontSize="12" FontWeight="Bold" Opacity="0.5" x:Uid="Hidden" Visibility="{Binding UserAccountInfo.IsHidden}">Hidden</TextBlock>
-                                    <Button Grid.Column="1"  Width="18" Height="18" Padding="0" Style="{StaticResource CircleButtonStyle}" Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolNegationConverter}}" Command="{Binding Path=FollowAuthor }" Background="#BCC0C9"  Margin="2,0" Opacity="0.4">
+                                    <Button Grid.Column="1" Width="18" Height="18" Padding="0"
+                                            Style="{StaticResource CircleButtonStyle}"
+                                            Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolNegationConverter}}"
+                                            Command="{Binding Path=FollowAuthor}"
+                                            Background="#BCC0C9" Margin="2,0" Opacity="0.4">
                                         <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="12" Glyph="&#xE948;" Foreground="Black" Margin="0,1,0,0" HorizontalAlignment="Center" />
                                     </Button>
                                 </Grid>
                             </Grid>
-
                         </StackPanel>
-                        <CommandBar Style="{x:Null}" x:Name="DockCommands" Grid.Column="1"  Margin="0" VerticalAlignment="Top"  Grid.Row="0"  Grid.RowSpan="2" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
-                            <AppBarButton x:Uid="AppBarFavouriteButton" x:Name="AppBarFavouriteButton" Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"  Margin="-10,-2,0,0" Command="{Binding Favourite}" ToolTipService.ToolTip="Add to Favourites" Label="Add to Favourites" LabelPosition="Collapsed">
+
+                        <CommandBar Style="{x:Null}" x:Name="DockCommands"
+                                    Grid.Column="1" Margin="0"
+                                    VerticalAlignment="Top"
+                                    Grid.Row="0" Grid.RowSpan="2"
+                                    Background="Transparent"
+                                    IsOpen="False"
+                                    DefaultLabelPosition="Right">
+                            <AppBarButton x:Uid="AppBarFavouriteButton" x:Name="AppBarFavouriteButton"
+                                          Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                                          Margin="-10,-2,0,0"
+                                          Command="{Binding Favourite}"
+                                          ToolTipService.ToolTip="Add to Favourites"
+                                          Label="Add to Favourites"
+                                          LabelPosition="Collapsed">
                                 <AppBarButton.Icon>
-                                    <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl3.ttf#Segoe MDL2 Assets"  Foreground="{Binding IsFavorited, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}" FontSize="20" Glyph="&#xEB51;"/>
+                                    <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl3.ttf#Segoe MDL2 Assets"
+                                              Foreground="{Binding IsFavorited, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}"
+                                              FontSize="20" Glyph="&#xEB51;"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <CommandBar.SecondaryCommands>
-                                <AppBarButton x:Uid="AppBarShare" Label="Share to..." ToolTipService.ToolTip="Share the content" FontFamily="Segoe MDL2 Assets" IsEnabled="True"  Command="{Binding InvokeShareDialog}">
+                                <AppBarButton x:Uid="AppBarShare" Label="Share to..." ToolTipService.ToolTip="Share the content" FontFamily="Segoe MDL2 Assets" IsEnabled="True" Command="{Binding InvokeShareDialog}">
                                     <AppBarButton.Icon>
                                         <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl2.ttf#Segoe MDL2 Assets" FontSize="18" Glyph="&#xE72D;"/>
                                     </AppBarButton.Icon>
                                 </AppBarButton>
-                                <AppBarButton x:Uid="AppBarCopy" Label="Copy to Clipboard" ToolTipService.ToolTip="Copy the URL to Clipboard" Command="{Binding Copy}" CommandParameter="{Binding GalleryElement.Url,ElementName=GalleryDockControl}" >
+                                <AppBarButton x:Uid="AppBarCopy" Label="Copy to Clipboard" ToolTipService.ToolTip="Copy the URL to Clipboard" Command="{Binding Copy}" CommandParameter="{Binding GalleryElement.Url, ElementName=GalleryDockControl}">
                                     <AppBarButton.Icon>
                                         <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl2.ttf#Segoe MDL2 Assets" FontSize="18" Glyph="&#xE8C8;"/>
                                     </AppBarButton.Icon>
@@ -311,9 +389,21 @@
                             </CommandBar.SecondaryCommands>
                         </CommandBar>
                     </Grid>
-                    
-                    <!-- Itens View (Elements) -->
-                    <ListView x:Name="MediaRepeater" VerticalAlignment="Center"  Grid.Row="1" Visibility="{Binding LoadedSuccessfully}"  MinHeight="200" MaxHeight="{Binding CurrentMedia.Elements.Count, Converter={StaticResource ItemCountToMaxHeightConverter}}" BorderThickness="0" ScrollViewer.VerticalScrollMode="Disabled"  SelectionMode="None" Margin="0,5,0,0" ItemTemplateSelector="{StaticResource MediaDataTemplateSelector}" ItemsSource="{Binding CurrentMedia.Elements,Mode=OneWay}">
+
+                    <!-- ListView de Elementos -->
+                    <ListView x:Name="MediaRepeater"
+                              Grid.Row="1"
+                              VerticalAlignment="Center"
+                              IncrementalLoadingThreshold="1"
+                              Visibility="{Binding LoadedSuccessfully}"
+                              MinHeight="200"
+                              MaxHeight="{Binding CurrentMedia.Elements.Count, Converter={StaticResource ItemCountToMaxHeightConverter}}"
+                              BorderThickness="0"
+                              ScrollViewer.VerticalScrollMode="Disabled"
+                              SelectionMode="None"
+                              Margin="0,5,0,0"
+                              ItemTemplateSelector="{StaticResource MediaDataTemplateSelector}"
+                              ItemsSource="{Binding CurrentMedia.Elements, Mode=OneWay}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -321,36 +411,54 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    
+
                     <!-- Append More Button -->
                     <Grid x:Name="AppendMoreButton" Grid.Row="2" HorizontalAlignment="Stretch" Visibility="{Binding IsPartialLoading}">
-                        <Button Visibility="{Binding IsAppendingMediaData, Converter={StaticResource BoolNegationConverter}}" HorizontalAlignment="Center"  Command="{Binding LoadRemaningItensCommand}" VerticalAlignment="Center" Margin="0, 0, 00, 40" Style="{StaticResource AppRoundedButtonStyle}">
+                        <Button Visibility="{Binding IsAppendingMediaData, Converter={StaticResource BoolNegationConverter}}"
+                                HorizontalAlignment="Center"
+                                Command="{Binding LoadRemaningItensCommand}"
+                                VerticalAlignment="Center"
+                                Margin="0,0,0,40"
+                                Style="{StaticResource AppRoundedButtonStyle}">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock x:Uid="LoadMore"/>
-                                <TextBlock Margin="4,0,0,0" FontWeight="SemiBold" Text="{Binding RemainingItemsCount}"  />
+                                <TextBlock Margin="4,0,0,0" FontWeight="SemiBold" Text="{Binding RemainingItemsCount}" />
                             </StackPanel>
                         </Button>
-
                         <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="50,15" Visibility="{Binding IsAppendingMediaData}" />
                     </Grid>
 
-
                     <!-- Refresh Error View -->
-                    <Grid x:Name="RefreshGrid" Grid.Row="1"  VerticalAlignment="Center" Visibility="{Binding LoadingElementsStatus,Converter={StaticResource BoolNegationConverter}}">
-                        <StackPanel  VerticalAlignment="Center" Margin="0,30" Visibility="{Binding LoadedSuccessfully,Converter={StaticResource BoolNegationConverter}}">
-                            <Image MaxWidth="250"   Source="ms-appx:///Assets/App/raccon.png" Margin="10,0,0,0" />
+                    <Grid x:Name="RefreshGrid" Grid.Row="1" VerticalAlignment="Center" Visibility="{Binding LoadingElementsStatus, Converter={StaticResource BoolNegationConverter}}">
+                        <StackPanel VerticalAlignment="Center" Margin="0,30" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolNegationConverter}}">
+                            <Image MaxWidth="250" Source="ms-appx:///Assets/App/raccon.png" Margin="10,0,0,0" />
                             <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" FontWeight="ExtraBold" TextAlignment="Center" FontSize="25">
-                        Imgur, we have a problem.
+                                Imgur, we have a problem.
                             </TextBlock>
-                            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" TextAlignment="Center" FontSize="18"> Sorry, We're encountering some technical difficulties.</TextBlock>
+                            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" TextAlignment="Center" FontSize="18">Sorry, We're encountering some technical difficulties.</TextBlock>
                             <Button Margin="0,10,0,0" HorizontalAlignment="Center" MinWidth="200" Command="{Binding InitializeCommand}">Reload</Button>
                         </StackPanel>
                     </Grid>
                 </Grid>
 
-                <!-- Comments Area -->
-                <toolkit:DropShadowPanel Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" x:Name="CommentsPlacementBorder" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" Grid.ColumnSpan="2" BlurRadius="10" OffsetX="0" OffsetY="2" ShadowOpacity="0.5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalAlignment="Top">
-                    <Grid x:Name="CommentsPlacement" Background="#3d4140" CornerRadius="0,0,0,0"  VerticalAlignment="Top" MinHeight="150" >
+                <!-- ─────────────────────────────────────────────────────── -->
+                <!--  Comments Area                                          -->
+                <!-- ─────────────────────────────────────────────────────── -->
+                <toolkit:DropShadowPanel
+                    Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                    x:Name="CommentsPlacementBorder"
+                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                    Margin="0,0,10,10"
+                    BlurRadius="10" OffsetX="0" OffsetY="2" ShadowOpacity="0.5"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    VerticalAlignment="Top">
+
+                    <Grid x:Name="CommentsPlacement"
+                          Background="#3d4140"
+                          CornerRadius="0,0,0,0"
+                          VerticalAlignment="Top"
+                          MinHeight="150">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="*" />
@@ -360,42 +468,46 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
+
                         <Button Grid.Column="0" HorizontalAlignment="Left" Height="50" Background="Transparent" BorderBrush="Transparent" Command="{Binding ToggleCommentFilter}">
                             <StackPanel Orientation="Horizontal" Opacity="0.7" HorizontalAlignment="Stretch">
                                 <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="14" Glyph="&#xE8CB;" Margin="0,0,0,0" HorizontalAlignment="Center" />
-                                <TextBlock x:Uid="BestComments" FontSize="12" FontWeight="SemiBold" Visibility="{Binding FilterCommentsByNew, Converter={StaticResource BoolNegationConverter}}" Margin="10,0" >BEST COMMENTS</TextBlock>
-                                <TextBlock x:Uid="NewComments" FontSize="12" FontWeight="SemiBold" Visibility="{Binding FilterCommentsByNew}" Margin="10,0" >NEW COMMENTS</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Grid.Column="1" HorizontalAlignment="Right" Command="{Binding StartCommentCommand}" Background="Transparent" Height="50" BorderBrush="Transparent">
-                            <StackPanel Orientation="Horizontal" Opacity="1">
-                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="Bold" FontSize="14" Glyph="&#xe8bd;" Margin="0,0,0,0" HorizontalAlignment="Center" />
-                                <TextBlock x:Uid="Comment"  Margin="5,0" FontSize="12" FontWeight="SemiBold" >COMMENT</TextBlock>
+                                <TextBlock x:Uid="BestComments" FontSize="12" FontWeight="SemiBold" Visibility="{Binding FilterCommentsByNew, Converter={StaticResource BoolNegationConverter}}" Margin="10,0">BEST COMMENTS</TextBlock>
+                                <TextBlock x:Uid="NewComments" FontSize="12" FontWeight="SemiBold" Visibility="{Binding FilterCommentsByNew}" Margin="10,0">NEW COMMENTS</TextBlock>
                             </StackPanel>
                         </Button>
 
+                        <Button Grid.Column="1" HorizontalAlignment="Right" Command="{Binding StartCommentCommand}" Background="Transparent" Height="50" BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal" Opacity="1">
+                                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="Bold" FontSize="14" Glyph="&#xe8bd;" Margin="0,0,0,0" HorizontalAlignment="Center" />
+                                <TextBlock x:Uid="Comment" Margin="5,0" FontSize="12" FontWeight="SemiBold">COMMENT</TextBlock>
+                            </StackPanel>
+                        </Button>
 
                         <Grid Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,20,0" Visibility="{Binding HasComments, Converter={StaticResource BoolNegationConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.5*" />
                                 <ColumnDefinition Width="0.5*" />
                             </Grid.ColumnDefinitions>
-                            <RichTextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"  Padding="10" TextWrapping="Wrap">
-                                <Paragraph  Foreground="#b4b9c2">
-                                    <Run x:Uid="EmptyCommentsParagraphFirst" >Looks like there aren't any comments yet.</Run>
+                            <RichTextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="10" TextWrapping="Wrap">
+                                <Paragraph Foreground="#b4b9c2">
+                                    <Run x:Uid="EmptyCommentsParagraphFirst">Looks like there aren't any comments yet.</Run>
                                 </Paragraph>
-                                <Paragraph  Foreground="SteelBlue">
-                                    <Run x:Uid="EmptyCommentsParagraphSecond"> 
-                                        BE THE FIRST!
-                                    </Run>
+                                <Paragraph Foreground="SteelBlue">
+                                    <Run x:Uid="EmptyCommentsParagraphSecond">BE THE FIRST!</Run>
                                 </Paragraph>
                             </RichTextBlock>
-                            <Image  MaxWidth="50" Opacity="0.7" Grid.Column="1"   HorizontalAlignment="Right" VerticalAlignment="Bottom"  Source="ms-appx:///Assets/App/giraffe_faded.png"  />
+                            <Image MaxWidth="50" Opacity="0.7" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="ms-appx:///Assets/App/giraffe_faded.png" />
                         </Grid>
 
-
-
-                        <ListView   x:Name="commentList" Visibility="{Binding HasComments}" Margin="0,5,0,0" ItemsSource="{Binding Comments}" Grid.ColumnSpan="2" Grid.Row="1"  SelectionMode="None" HorizontalContentAlignment="Stretch" ItemTemplate="{StaticResource CommentTemplate}">
+                        <ListView x:Name="commentList"
+                                  Visibility="{Binding HasComments}"
+                                  Margin="0,5,0,0"
+                                  ItemsSource="{Binding Comments}"
+                                  Grid.ColumnSpan="2" Grid.Row="1"
+                                  SelectionMode="None"
+                                  HorizontalContentAlignment="Stretch"
+                                  ItemTemplate="{StaticResource CommentTemplate}">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -410,110 +522,193 @@
                         </ListView>
 
                         <Grid Grid.ColumnSpan="2" Grid.Row="2" Margin="0" Visibility="{Binding HasMoreComments, Converter={StaticResource BoolVisibilityConverter}}">
-                            <Button x:Uid="ShowComments" Visibility="{Binding LoadingMoreComments, Converter={StaticResource InverseBoolVisibilityConverter}}" HorizontalAlignment="Stretch" Height="50" Command="{Binding LoadAllCommentsCommand}" Content="SEE ALL COMMENTS" Style="{StaticResource CommentButtonStyle}">
-
-                            </Button>
-
-                            <ProgressBar HorizontalAlignment="Stretch" 
-                         IsIndeterminate="True" 
-                         Margin="50,5"
-                         Visibility="{Binding LoadingMoreComments, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <Button x:Uid="ShowComments"
+                                    Visibility="{Binding LoadingMoreComments, Converter={StaticResource InverseBoolVisibilityConverter}}"
+                                    HorizontalAlignment="Stretch" Height="50"
+                                    Command="{Binding LoadAllCommentsCommand}"
+                                    Content="SEE ALL COMMENTS"
+                                    Style="{StaticResource CommentButtonStyle}" />
+                            <ProgressBar HorizontalAlignment="Stretch"
+                                         IsIndeterminate="True"
+                                         Margin="50,5"
+                                         Visibility="{Binding LoadingMoreComments, Converter={StaticResource BoolVisibilityConverter}}"/>
                         </Grid>
                     </Grid>
-
-                    
                 </toolkit:DropShadowPanel>
+
             </Grid>
         </ScrollViewer>
-        
-        <!-- Desktop Vertical Bar-->
-        <Grid Grid.Column="2" Visibility="Collapsed" x:Name="CompactVerticalBar" Background="Transparent" BorderBrush="#464b57" BorderThickness="2" CornerRadius="4" HorizontalAlignment="Center" Margin="10,0,15,0" VerticalAlignment="Center" Width="60">
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  Desktop Vertical Bar (coluna 2 — sempre reserva espaço)       -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <Grid Grid.Column="2"
+              Visibility="Collapsed"
+              x:Name="CompactVerticalBar"
+              Background="Transparent"
+              BorderBrush="#464b57" BorderThickness="2" CornerRadius="4"
+              HorizontalAlignment="Center"
+              Margin="10,0,15,0"
+              VerticalAlignment="Center"
+              Width="60">
             <StackPanel HorizontalAlignment="Center" Padding="5">
-                <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" Background="Transparent" BorderBrush="Transparent" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Width="40" Height="40" Padding="-5" Command="{Binding Vote}" CommandParameter="up">
-                    <FontIcon FontSize="32" Foreground="{Binding IsUpvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
+                <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                        Background="Transparent" BorderBrush="Transparent"
+                        FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                        FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"
+                        Width="40" Height="40" Padding="-5"
+                        Command="{Binding Vote}" CommandParameter="up">
+                    <FontIcon FontSize="32"
+                              Foreground="{Binding IsUpvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}"
+                              FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
                 </Button>
-
                 <TextBlock HorizontalAlignment="Center" FontWeight="SemiBold" Text="{Binding CurrentMedia.Votes}" Margin="0,10" />
-
-                <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" Background="Transparent" BorderBrush="Transparent" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"  Width="40" Height="40" Padding="-5" Command="{Binding Vote}" CommandParameter="down">
+                <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                        Background="Transparent" BorderBrush="Transparent"
+                        FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                        FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"
+                        Width="40" Height="40" Padding="-5"
+                        Command="{Binding Vote}" CommandParameter="down">
                     <Button.Content>
-                        <FontIcon FontSize="32" Foreground="{Binding IsDownvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
+                        <FontIcon FontSize="32"
+                                  Foreground="{Binding IsDownvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}"
+                                  FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
                     </Button.Content>
                 </Button>
-                
-                
             </StackPanel>
         </Grid>
-        
-        <!-- Go Back Button -->
-        <Button Grid.Column="0" x:Name="LeaveFloatButton" Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="11,18,0,0" Width="34" Height="34" Background="#232424" Opacity="0.9" >
-            <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="14" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  Go Back Button                                                -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <Button Grid.Column="0"
+                x:Name="LeaveFloatButton"
+                Command="{Binding LeaveCurrentPage}"
+                VerticalAlignment="Top"
+                Style="{StaticResource CircleButtonStyle}"
+                Margin="11,18,0,0"
+                Width="34" Height="34"
+                Background="#232424"
+                Opacity="0.9">
+            <FontIcon Visibility="Visible" Grid.Column="0" FontSize="14" FontWeight="Normal"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      FontFamily="{StaticResource FluentUIGlyphs}"
+                      Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
         </Button>
 
-        <!-- Compact Gray Bottom Bar -->
-        <toolkit:DropShadowPanel x:Name="CompactBottomBar" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Visibility="Collapsed" Margin="10"  BlurRadius="20" OffsetX="0" OffsetY="2" ShadowOpacity="0.8" HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" VerticalAlignment="Bottom">
-            <Grid Background="#464b57" CornerRadius="15"  Height="56" Padding="5,0" >
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  Compact Gray Bottom Bar                                       -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <toolkit:DropShadowPanel x:Name="CompactBottomBar"
+                                 Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                                 Visibility="Collapsed"
+                                 Margin="10"
+                                 BlurRadius="20" OffsetX="0" OffsetY="2" ShadowOpacity="0.8"
+                                 HorizontalContentAlignment="Stretch"
+                                 VerticalContentAlignment="Stretch"
+                                 VerticalAlignment="Bottom">
+            <Grid Background="#464b57" CornerRadius="15" Height="56" Padding="5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MinWidth="150" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <StackPanel x:Name="LeftCommands" Orientation="Horizontal" Margin="10,0,10,0" HorizontalAlignment="Center" >
-                    <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" Background="Transparent" BorderBrush="Transparent" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Width="40" Height="40" Padding="-5" Command="{Binding Vote}" CommandParameter="up" >
-                        <FontIcon FontSize="32" Foreground="{Binding IsUpvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
+
+                <StackPanel x:Name="LeftCommands" Orientation="Horizontal" Margin="10,0,10,0" HorizontalAlignment="Center">
+                    <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                            Background="Transparent" BorderBrush="Transparent"
+                            FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                            FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"
+                            Width="40" Height="40" Padding="-5"
+                            Command="{Binding Vote}" CommandParameter="up">
+                        <FontIcon FontSize="32"
+                                  Foreground="{Binding IsUpvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}"
+                                  FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
                     </Button>
-                    <Grid x:Name="VotesPanel" MinWidth="0" Width="40" Visibility="{Binding ReloadingCurrentMediaInfo,Converter={StaticResource BoolNegationConverter}}">
+
+                    <Grid x:Name="VotesPanel" MinWidth="0" Width="40" Visibility="{Binding ReloadingCurrentMediaInfo, Converter={StaticResource BoolNegationConverter}}">
                         <FontIcon Margin="0,-30,0,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="20" Glyph="&#xE971;" Opacity="0.5"/>
-                        
-                        <TextBlock  TextAlignment="Center" Padding="10,0,10,0" Width="40"   Margin="0,0,0,0"  VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Text="{Binding CurrentMedia.Votes}" HorizontalAlignment="Center"/>
-                        
+                        <TextBlock TextAlignment="Center" Padding="10,0,10,0" Width="40" Margin="0,0,0,0"
+                                   VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold"
+                                   Text="{Binding CurrentMedia.Votes}" HorizontalAlignment="Center"/>
                         <Interactivity:Interaction.Behaviors>
-
                             <Core:EventTriggerBehavior EventName="Tapped">
-                                <Core:ChangePropertyAction TargetObject="{Binding ElementName=ToggleThemeTeachingTip1}" PropertyName="IsOpen" Value="{Binding ElementName=ToggleThemeTeachingTip1,Path=IsOpen,Converter={StaticResource BoolNegationConverter} }">
-
-                                </Core:ChangePropertyAction>
+                                <Core:ChangePropertyAction TargetObject="{Binding ElementName=ToggleThemeTeachingTip1}" PropertyName="IsOpen"
+                                                           Value="{Binding ElementName=ToggleThemeTeachingTip1, Path=IsOpen, Converter={StaticResource BoolNegationConverter}}"/>
                             </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>
                     </Grid>
 
-                    <ProgressRing Visibility="{Binding ReloadingCurrentMediaInfo}" Width="20" Height="10" Margin="10,0"  Foreground="White" IsActive="{Binding ReloadingCurrentMediaInfo}" />
-                    <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" Background="Transparent" BorderBrush="Transparent"  FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"  Width="40" Height="40" Padding="-5" Command="{Binding Vote}" CommandParameter="down">
+                    <ProgressRing Visibility="{Binding ReloadingCurrentMediaInfo}" Width="20" Height="10" Margin="10,0" Foreground="White" IsActive="{Binding ReloadingCurrentMediaInfo}" />
+
+                    <Button IsEnabled="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                            Background="Transparent" BorderBrush="Transparent"
+                            FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                            FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"
+                            Width="40" Height="40" Padding="-5"
+                            Command="{Binding Vote}" CommandParameter="down">
                         <Button.Content>
-                            <FontIcon FontSize="32" Foreground="{Binding IsDownvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#FC6369|#FFFFFF}" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
+                            <FontIcon FontSize="32"
+                                      Foreground="{Binding IsDownvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#FC6369|#FFFFFF}"
+                                      FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
                         </Button.Content>
                     </Button>
                 </StackPanel>
 
-
-                <Button Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" Background="Transparent" Grid.Column="1" BorderBrush="Transparent" HorizontalAlignment="Center" Command="{Binding Favourite}"  MinWidth="40" Height="40"  ToolTipService.ToolTip="Reload"  FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Padding="-5">
+                <Button Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                        Background="Transparent" Grid.Column="1" BorderBrush="Transparent"
+                        HorizontalAlignment="Center" Command="{Binding Favourite}"
+                        MinWidth="40" Height="40" ToolTipService.ToolTip="Reload"
+                        FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                        FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Padding="-5">
                     <Button.Content>
-                        <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="{Binding IsFavorited, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}" FontWeight="ExtraBold" FontSize="18" Glyph="&#xEB51;"/>
+                        <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}"
+                                  Foreground="{Binding IsFavorited, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}"
+                                  FontWeight="ExtraBold" FontSize="18" Glyph="&#xEB51;"/>
                     </Button.Content>
                 </Button>
 
-                <Button Background="Transparent" Grid.Column="2" BorderBrush="Transparent" Command="{Binding ReloadCurrentMediaInfo}"  HorizontalAlignment="Center" MinWidth="40"  Height="40"  ToolTipService.ToolTip="Reload"  FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Padding="-5">
+                <Button Background="Transparent" Grid.Column="2" BorderBrush="Transparent"
+                        Command="{Binding ReloadCurrentMediaInfo}"
+                        HorizontalAlignment="Center" MinWidth="40" Height="40"
+                        ToolTipService.ToolTip="Reload"
+                        FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                        FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Padding="-5">
                     <Button.Content>
                         <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="18" Glyph="&#xE777;"/>
                     </Button.Content>
                 </Button>
-                <Button Background="Transparent" Grid.Column="3" BorderBrush="Transparent"  Width="40" Height="40" HorizontalAlignment="Center" ToolTipService.ToolTip="Move to Top" Click="NavigateToTop_Click"  FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Padding="-5">
+
+                <Button Background="Transparent" Grid.Column="3" BorderBrush="Transparent"
+                        Width="40" Height="40" HorizontalAlignment="Center"
+                        ToolTipService.ToolTip="Move to Top"
+                        Click="NavigateToTop_Click"
+                        FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                        FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Padding="-5">
                     <Button.Content>
-                        <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="18"  Glyph="&#xE74A;"/>
+                        <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="18" Glyph="&#xE74A;"/>
                     </Button.Content>
                 </Button>
 
-                <winui:TeachingTip x:Name="ToggleThemeTeachingTip1" Target="{x:Bind VotesPanel}" IsOpen="False"  DataContext="{Binding CurrentMedia}" HeroContentPlacement="Auto">
+                <winui:TeachingTip x:Name="ToggleThemeTeachingTip1"
+                                   Target="{x:Bind VotesPanel}"
+                                   IsOpen="False"
+                                   DataContext="{Binding CurrentMedia}"
+                                   HeroContentPlacement="Auto">
                     <winui:TeachingTip.HeroContent>
-                        <Button Visibility="{Binding IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" Grid.Row="0" Height="50" Margin="1" HorizontalAlignment="Stretch" BorderThickness="2" Click="ScrollToComments_Click"  BorderBrush="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}" Foreground="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"  FontWeight="SemiBold">
+                        <Button Visibility="{Binding IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                                Grid.Row="0" Height="50" Margin="1" HorizontalAlignment="Stretch"
+                                BorderThickness="2" Click="ScrollToComments_Click"
+                                BorderBrush="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                                Foreground="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                                FontWeight="SemiBold">
                             <Button.Content>
                                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
                                     <TextBlock MaxWidth="80" FontSize="10" TextWrapping="Wrap" TextAlignment="Center">Jump to Comments</TextBlock>
                                     <Interactivity:Interaction.Behaviors>
                                         <Core:EventTriggerBehavior EventName="Tapped">
-                                            <Core:ChangePropertyAction TargetObject="{Binding ElementName=ToggleThemeTeachingTip1}" PropertyName="IsOpen" Value="False">
-                                            </Core:ChangePropertyAction>
+                                            <Core:ChangePropertyAction TargetObject="{Binding ElementName=ToggleThemeTeachingTip1}" PropertyName="IsOpen" Value="False"/>
                                         </Core:EventTriggerBehavior>
                                     </Interactivity:Interaction.Behaviors>
                                 </Grid>
@@ -521,51 +716,70 @@
                         </Button>
                     </winui:TeachingTip.HeroContent>
                     <winui:TeachingTip.Content>
-                        <StackPanel Background="Transparent" HorizontalAlignment="Center" Padding="5" Margin="0,-15,5,0"  Width="110"  >
+                        <StackPanel Background="Transparent" HorizontalAlignment="Center" Padding="5" Margin="0,-15,5,0" Width="110">
                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}"  Glyph="&#xe90b;"/>
-                                <TextBlock FontWeight="SemiBold" Text="{Binding Ups,Mode=OneWay}" VerticalAlignment="Center" />
+                                <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
+                                <TextBlock FontWeight="SemiBold" Text="{Binding Ups, Mode=OneWay}" VerticalAlignment="Center" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}"   Glyph="&#xe900;"/>
-                                <TextBlock FontWeight="SemiBold" Text="{Binding Downs,Mode=OneWay}" VerticalAlignment="Center" />
+                                <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
+                                <TextBlock FontWeight="SemiBold" Text="{Binding Downs, Mode=OneWay}" VerticalAlignment="Center" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                <FontIcon Margin="5,0,8,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="17"  FontWeight="ExtraBold" Glyph="&#xEB51;"/>
-                                <TextBlock FontWeight="SemiBold" Text="{Binding Likes,Mode=OneWay,FallbackValue=0}" VerticalAlignment="Center" />
+                                <FontIcon Margin="5,0,8,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="17" FontWeight="ExtraBold" Glyph="&#xEB51;"/>
+                                <TextBlock FontWeight="SemiBold" Text="{Binding Likes, Mode=OneWay, FallbackValue=0}" VerticalAlignment="Center" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5">
-                                <FontIcon Margin="5,0,8,0" FontSize="17" FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold"  Glyph="&#xE890;"/>
-                                <TextBlock FontWeight="SemiBold" Text="{Binding Views,Mode=OneWay,FallbackValue=0}" VerticalAlignment="Center" />
+                                <FontIcon Margin="5,0,8,0" FontSize="17" FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" Glyph="&#xE890;"/>
+                                <TextBlock FontWeight="SemiBold" Text="{Binding Views, Mode=OneWay, FallbackValue=0}" VerticalAlignment="Center" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5">
                                 <FontIcon Margin="3,0,6,0" FontSize="22" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90a;"/>
-                                <TextBlock FontWeight="SemiBold" Text="{Binding CommentCount,Mode=OneWay,FallbackValue=0}" VerticalAlignment="Center" />
+                                <TextBlock FontWeight="SemiBold" Text="{Binding CommentCount, Mode=OneWay, FallbackValue=0}" VerticalAlignment="Center" />
                             </StackPanel>
                         </StackPanel>
                     </winui:TeachingTip.Content>
-
                 </winui:TeachingTip>
             </Grid>
         </toolkit:DropShadowPanel>
 
-        <!-- Minimal Bottom Bar -->
-        <toolkit:DropShadowPanel x:Name="FloatCommandBar" Visibility="Collapsed" Grid.ColumnSpan="3" VerticalAlignment="Bottom" OffsetY="3" Margin="10" BlurRadius="24" ShadowOpacity="0.6" Opacity="0.9"  >
-            <Grid  Background="{StaticResource SystemControlBackgroundAccentBrush}" CornerRadius="24"  Height="48">
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  Minimal Bottom Bar (FloatCommandBar)                          -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <toolkit:DropShadowPanel x:Name="FloatCommandBar"
+                                 Visibility="Collapsed"
+                                 Grid.ColumnSpan="3"
+                                 VerticalAlignment="Bottom"
+                                 OffsetY="3" Margin="10"
+                                 BlurRadius="24" ShadowOpacity="0.6" Opacity="0.9">
+            <Grid Background="{StaticResource SystemControlBackgroundAccentBrush}" CornerRadius="24" Height="48">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Margin="10,0">
-                    <Button Background="Transparent" BorderBrush="Transparent" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Width="40" Height="40" Padding="-5" Command="{Binding Vote}" CommandParameter="up" >
-                        <FontIcon FontSize="32" Foreground="{Binding IsUpvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#744FE6|#FFFFFF}" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
+                    <Button Background="Transparent" BorderBrush="Transparent"
+                            FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                            FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"
+                            Width="40" Height="40" Padding="-5"
+                            Command="{Binding Vote}" CommandParameter="up">
+                        <FontIcon FontSize="32"
+                                  Foreground="{Binding IsUpvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#744FE6|#FFFFFF}"
+                                  FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
                     </Button>
-                    <TextBlock Padding="5,0" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" Text="{Binding CurrentMedia.Votes}" HorizontalAlignment="Center" Visibility="{Binding ReloadingCurrentMediaInfo,Converter={StaticResource BoolNegationConverter}}" />
+                    <TextBlock Padding="5,0" VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold"
+                               Text="{Binding CurrentMedia.Votes}" HorizontalAlignment="Center"
+                               Visibility="{Binding ReloadingCurrentMediaInfo, Converter={StaticResource BoolNegationConverter}}" />
                     <ProgressRing Visibility="{Binding ReloadingCurrentMediaInfo}" Width="20" Height="20" Foreground="White" IsActive="{Binding ReloadingCurrentMediaInfo}" />
-
-                    <Button Background="Transparent" BorderBrush="Transparent" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"  Width="40" Height="40" Padding="-5" Command="{Binding Vote}" CommandParameter="down">
+                    <Button Background="Transparent" BorderBrush="Transparent"
+                            FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
+                            FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}"
+                            Width="40" Height="40" Padding="-5"
+                            Command="{Binding Vote}" CommandParameter="down">
                         <Button.Content>
-                            <FontIcon FontSize="32" Foreground="{Binding IsDownvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#FC6369|#FFFFFF}" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
+                            <FontIcon FontSize="32"
+                                      Foreground="{Binding IsDownvoted, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#FC6369|#FFFFFF}"
+                                      FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
                         </Button.Content>
                     </Button>
                 </StackPanel>
@@ -574,47 +788,51 @@
 
                 <Button Grid.Column="1" Margin="0,0,6,0" Width="40" Height="40" Background="Transparent" BorderBrush="Transparent">
                     <Button.Content>
-                        <FontIcon   FontFamily="{StaticResource FluentUIGlyphs}" FontSize="20" Glyph="&#xE971;" Opacity="0.9" />
+                        <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontSize="20" Glyph="&#xE971;" Opacity="0.9" />
                     </Button.Content>
                     <Button.Flyout>
                         <Flyout Placement="Top">
-                            <Grid Margin="-15"  Background="Transparent" >
+                            <Grid Margin="-15" Background="Transparent">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Grid Grid.Row="1" Margin="10,0,10,0" Visibility="{Binding ReloadingCurrentMediaInfo,Converter={StaticResource BoolNegationConverter}}">
-                                    <StackPanel Background="Transparent" HorizontalAlignment="Center" Padding="5" Margin="0,-5,5,0"  MinWidth="100" DataContext="{Binding CurrentMedia}" >
+                                <Grid Grid.Row="1" Margin="10,0,10,0" Visibility="{Binding ReloadingCurrentMediaInfo, Converter={StaticResource BoolNegationConverter}}">
+                                    <StackPanel Background="Transparent" HorizontalAlignment="Center" Padding="5" Margin="0,-5,5,0" MinWidth="100" DataContext="{Binding CurrentMedia}">
                                         <StackPanel Orientation="Horizontal" Margin="0,5">
-                                            <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}"  Glyph="&#xe90b;"/>
-                                            <TextBlock FontWeight="SemiBold" Text="{Binding Ups,Mode=OneWay}" VerticalAlignment="Center" />
+                                            <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90b;"/>
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding Ups, Mode=OneWay}" VerticalAlignment="Center" />
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,5">
-                                            <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}"   Glyph="&#xe900;"/>
-                                            <TextBlock FontWeight="SemiBold" Text="{Binding Downs,Mode=OneWay}" VerticalAlignment="Center" />
+                                            <FontIcon Margin="0,0,3,0" FontSize="27" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe900;"/>
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding Downs, Mode=OneWay}" VerticalAlignment="Center" />
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,5">
-                                            <FontIcon Margin="5,0,8,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="17"  FontWeight="ExtraBold" Glyph="&#xEB51;"/>
-                                            <TextBlock FontWeight="SemiBold" Text="{Binding Likes,Mode=OneWay,FallbackValue=0}" VerticalAlignment="Center" />
+                                            <FontIcon Margin="5,0,8,0" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="17" FontWeight="ExtraBold" Glyph="&#xEB51;"/>
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding Likes, Mode=OneWay, FallbackValue=0}" VerticalAlignment="Center" />
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,5">
-                                            <FontIcon Margin="5,0,8,0" FontSize="17" FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold"  Glyph="&#xE890;"/>
-                                            <TextBlock FontWeight="SemiBold" Text="{Binding Views,Mode=OneWay,FallbackValue=0}" VerticalAlignment="Center" />
+                                            <FontIcon Margin="5,0,8,0" FontSize="17" FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" Glyph="&#xE890;"/>
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding Views, Mode=OneWay, FallbackValue=0}" VerticalAlignment="Center" />
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,5">
                                             <FontIcon Margin="3,0,6,0" FontSize="22" FontFamily="{StaticResource ImgurGlyphs}" Glyph="&#xe90a;"/>
-                                            <TextBlock FontWeight="SemiBold" Text="{Binding CommentCount,Mode=OneWay,FallbackValue=0}" VerticalAlignment="Center" />
+                                            <TextBlock FontWeight="SemiBold" Text="{Binding CommentCount, Mode=OneWay, FallbackValue=0}" VerticalAlignment="Center" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>
-                                <Button Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}" Grid.Row="0" Height="50" Margin="1" HorizontalAlignment="Stretch" BorderThickness="2"  Click="ScrollToComments_Click"  BorderBrush="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}" Foreground="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"  FontWeight="SemiBold">
+                                <Button Visibility="{Binding CurrentMedia.IsBasicAlbum, Converter={StaticResource BoolNegationConverter}}"
+                                        Grid.Row="0" Height="50" Margin="1" HorizontalAlignment="Stretch"
+                                        BorderThickness="2" Click="ScrollToComments_Click"
+                                        BorderBrush="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                                        Foreground="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                                        FontWeight="SemiBold">
                                     <Button.Content>
                                         <TextBlock MaxWidth="80" FontSize="10" TextWrapping="Wrap" TextAlignment="Center">Jump to Comments</TextBlock>
                                     </Button.Content>
                                     <Interactivity:Interaction.Behaviors>
                                         <Core:EventTriggerBehavior EventName="Tapped">
-                                            <Core:ChangePropertyAction TargetObject="{Binding ElementName=ToggleThemeTeachingTip1}" PropertyName="IsOpen" Value="False">
-                                            </Core:ChangePropertyAction>
+                                            <Core:ChangePropertyAction TargetObject="{Binding ElementName=ToggleThemeTeachingTip1}" PropertyName="IsOpen" Value="False"/>
                                         </Core:EventTriggerBehavior>
                                     </Interactivity:Interaction.Behaviors>
                                 </Button>
@@ -625,19 +843,42 @@
                 </Button>
             </Grid>
         </toolkit:DropShadowPanel>
-        
-        <!-- Reload and Go to Top -->
-        <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" x:Name="BottomNavigationBar" Visibility="Collapsed">
-            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4" Opacity="0.9">
-                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Command="{Binding ReloadCurrentMediaInfo}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Gallery">
-                    <FontIcon Visibility="Visible" Grid.Column="0" FontSize="18" FontWeight="Normal"  VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  Reload and Go to Top                                          -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="10" VerticalAlignment="Bottom"
+                    x:Name="BottomNavigationBar"
+                    Visibility="Collapsed">
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4" Opacity="0.9">
+                <Button Style="{StaticResource CircleButtonStyle}"
+                        Background="{StaticResource SystemControlBackgroundAccentBrush}"
+                        Command="{Binding ReloadCurrentMediaInfo}"
+                        Width="48" Height="48"
+                        ToolTipService.ToolTip="Refresh Gallery">
+                    <FontIcon Visibility="Visible" Grid.Column="0" FontSize="18" FontWeight="Normal"
+                              VerticalAlignment="Center"
+                              FontFamily="{StaticResource SegoeMDLGlyphs}"
+                              Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
                 </Button>
             </toolkit:DropShadowPanel>
-            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4" Opacity="0.9"  Margin="10,0,0,0">
-                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Click="NavigateToTop_Click" Width="48" Height="48" IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}" ToolTipService.ToolTip="Move to the top"  >
-                    <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="18" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE898;"/>
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4" Opacity="0.9" Margin="10,0,0,0">
+                <Button Style="{StaticResource CircleButtonStyle}"
+                        Background="{StaticResource SystemControlBackgroundAccentBrush}"
+                        Click="NavigateToTop_Click"
+                        Width="48" Height="48"
+                        IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}"
+                        ToolTipService.ToolTip="Move to the top">
+                    <FontIcon Visibility="Visible" Grid.Column="0" FontSize="18" FontWeight="Normal"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                              FontFamily="{StaticResource SegoeMDLGlyphs}"
+                              Foreground="WhiteSmoke" Glyph="&#xE898;"/>
                 </Button>
             </toolkit:DropShadowPanel>
         </StackPanel>
+
     </Grid>
 </Page>

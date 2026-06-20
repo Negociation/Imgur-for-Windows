@@ -150,6 +150,21 @@ namespace Imgur.Uwp.Services
                         f.Tag = name;
                         f.Navigate(typeof(ExplorerSearchView), searchVm, new DrillInNavigationTransitionInfo());
                         break;
+                    case "explorerBrowserTags":
+                        this.setFullScreenMode(false);
+                        f.Tag = name;
+                        f.Navigate(typeof(ExplorerBrowserTagsView), vm as ExplorerBrowserTagsViewModel, new DrillInNavigationTransitionInfo());
+                        break;
+                    case "explorerBrowserUsers":
+                        this.setFullScreenMode(false);
+                        f.Tag = name;
+                        f.Navigate(typeof(ExplorerBrowserUsersView), vm as ExplorerBrowserUsersViewModel, new DrillInNavigationTransitionInfo());
+                        break;
+                    case "explorerBrowserGalleries":
+                        this.setFullScreenMode(false);
+                        f.Tag = name;
+                        f.Navigate(typeof(ExplorerBrowserGalleriesView), vm as ExplorerBrowserGalleriesViewModel, new DrillInNavigationTransitionInfo());
+                        break;
                     case "tags":
                         //Can't Navigate Twice to the same View
                         if (f.Content.GetType() != typeof(TagsView))

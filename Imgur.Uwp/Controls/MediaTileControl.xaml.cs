@@ -1,9 +1,10 @@
 ﻿using Imgur.ViewModels.Media;
 using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Media;
 
 namespace Imgur.Uwp.Controls
 {
@@ -25,7 +26,18 @@ namespace Imgur.Uwp.Controls
                 nameof(ViewModel),
                 typeof(MediaViewModel),
                 typeof(MediaTileControl),
-                new PropertyMetadata(null));
+                new PropertyMetadata(null, OnViewModelChanged));
+
+        private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (MediaTileControl)d;
+
+            // Container reciclado para um novo item -> religa os indicadores.
+            // (Best-effort: se o template ainda não foi materializado, o reset
+            //  confiável acontece no Loaded e/ou o stop ocorre no ImageOpened/Failed.)
+            if (e.NewValue != null)
+                control.ResetLoadingIndicators();
+        }
 
         public MediaViewModel ViewModel
         {
@@ -34,55 +46,74 @@ namespace Imgur.Uwp.Controls
         }
 
         // =========================================================
-        // LIFECYCLE (recycle-safe)
+        // LIFECYCLE
         // =========================================================
         private void MediaTileControl_Loaded(object sender, RoutedEventArgs e)
         {
-            RestoreTileImageSources();
+            // Sem cover não há ImageOpened -> evita ring eterno.
+            var cover = ViewModel?.CurrentMedia?.CoverImage;
+            if (string.IsNullOrWhiteSpace(cover))
+                StopLoadingIndicators();
         }
 
         private void MediaTileControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            ReleaseTileImageSources();
+            // Com binding+converter, o release de bitmap é tratado pela virtualização
+            // (rebind ao reciclar). Se quiser release agressivo, faça via
+            // ContainerContentChanging (args.InRecycleQueue) no AdaptiveGridView.
         }
 
-        private void RestoreTileImageSources()
-        {
-            var media = ViewModel?.CurrentMedia;
-            if (media == null) return;
+        // =========================================================
+        // IMAGE / GIF LOADED OU FALHOU  -> PARA OS INDICADORES
+        // =========================================================
+        private void MediaThumb_ImageOpened(object sender, RoutedEventArgs e)
+            => StopLoadingIndicators();
 
-            TrySetImageSource("mediaThumb", media.CoverImage);
-            TrySetImageSource("mediaPlaceholderImage", media.CoverPlaceholder);
+        private void MediaThumb_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[Tile] ImageFailed: " + e.ErrorMessage);
+            StopLoadingIndicators();
         }
 
-        private void ReleaseTileImageSources()
+        private void MediaThumb_GifOpened(object sender, RoutedEventArgs e)
+            => StopLoadingIndicators();
+
+        private void MediaThumb_GifFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            TryClearImageSource("mediaThumb");
-            TryClearImageSource("mediaPlaceholderImage");
+            System.Diagnostics.Debug.WriteLine("[Tile] GifFailed: " + e.ErrorMessage);
+            StopLoadingIndicators();
         }
 
-        private void TrySetImageSource(string elementName, string uri)
+        // =========================================================
+        // INDICADORES (ProgressRing + ProgressBar / overlay do GIF)
+        // =========================================================
+        private void StopLoadingIndicators()
         {
-            var image = FindChild<Image>(this, elementName);
-            if (image == null) return;
-
-            try
+            // Para qualquer ProgressRing do template ativo (Image/Gif/Video).
+            foreach (var ring in FindChildren<ProgressRing>(this))
             {
-                image.Source = string.IsNullOrWhiteSpace(uri)
-                    ? null
-                    : new BitmapImage(new Uri(uri));
+                ring.IsActive = false;
+                ring.Visibility = Visibility.Collapsed;
             }
-            catch
-            {
-                image.Source = null;
-            }
+
+            // O overlay do GIF (gifPlaceholderContainer) contém a LoadingBar:
+            // colapsar o container já interrompe a barra.
+            var placeholder = FindChild<Grid>(this, "gifPlaceholderContainer");
+            if (placeholder != null)
+                placeholder.Visibility = Visibility.Collapsed;
         }
 
-        private void TryClearImageSource(string elementName)
+        private void ResetLoadingIndicators()
         {
-            var image = FindChild<Image>(this, elementName);
-            if (image != null)
-                image.Source = null;
+            foreach (var ring in FindChildren<ProgressRing>(this))
+            {
+                ring.IsActive = true;
+                ring.Visibility = Visibility.Visible;
+            }
+
+            var placeholder = FindChild<Grid>(this, "gifPlaceholderContainer");
+            if (placeholder != null)
+                placeholder.Visibility = Visibility.Visible;
         }
 
         // =========================================================
@@ -94,38 +125,6 @@ namespace Imgur.Uwp.Controls
         }
 
         // =========================================================
-        // IMAGE LOADED
-        // =========================================================
-        private void MediaThumb_ImageOpened(object sender, RoutedEventArgs e)
-        {
-            if (sender is Image)
-            {
-                var ring = FindChild<ProgressRing>(this, "ImageLoadingRing");
-                if (ring != null)
-                {
-                    ring.IsActive = false;
-                    ring.Visibility = Visibility.Collapsed;
-                }
-            }
-        }
-
-        private void MediaThumb_GifOpened(object sender, RoutedEventArgs e)
-        {
-            var ring = FindChild<ProgressRing>(this, "GifLoadingRing");
-            if (ring != null)
-            {
-                ring.IsActive = false;
-                ring.Visibility = Visibility.Collapsed;
-            }
-
-            var placeholder = FindChild<Grid>(this, "gifPlaceholderContainer");
-            if (placeholder != null)
-            {
-                placeholder.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        // =========================================================
         // SAFE VISUAL TREE SEARCH (LOCAL ONLY)
         // =========================================================
         private T FindChild<T>(DependencyObject parent, string name)
@@ -133,11 +132,10 @@ namespace Imgur.Uwp.Controls
         {
             if (parent == null) return null;
 
-            int count = Windows.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(parent);
-
+            int count = VisualTreeHelper.GetChildrenCount(parent);
             for (int i = 0; i < count; i++)
             {
-                var child = Windows.UI.Xaml.Media.VisualTreeHelper.GetChild(parent, i);
+                var child = VisualTreeHelper.GetChild(parent, i);
 
                 if (child is T element && element.Name == name)
                     return element;
@@ -148,6 +146,31 @@ namespace Imgur.Uwp.Controls
             }
 
             return null;
+        }
+
+        private List<T> FindChildren<T>(DependencyObject parent)
+            where T : FrameworkElement
+        {
+            var results = new List<T>();
+            CollectChildren(parent, results);
+            return results;
+        }
+
+        private void CollectChildren<T>(DependencyObject parent, List<T> results)
+            where T : FrameworkElement
+        {
+            if (parent == null) return;
+
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is T element)
+                    results.Add(element);
+
+                CollectChildren(child, results);
+            }
         }
     }
 }

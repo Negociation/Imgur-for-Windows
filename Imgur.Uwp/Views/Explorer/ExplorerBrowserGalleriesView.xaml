@@ -1,0 +1,68 @@
+﻿<Page
+    x:Class="Imgur.Uwp.Views.Explorer.ExplorerBrowserGalleriesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imgur.Uwp.Views.Explorer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mediavm="using:Imgur.ViewModels.Media"
+    xmlns:controls="using:Imgur.Uwp.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d">
+    <Grid>
+
+        <!-- BACKGROUND -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.4">
+                <GradientStop Color="#292c30" Offset="0.6"/>
+                <GradientStop Color="#073169" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <!-- HEADER -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,5,0,10" Grid.Row="0" Opacity="0.8">
+                <Button Command="{Binding LeaveCurrentPage}" VerticalAlignment="Top" Style="{StaticResource CircleButtonStyle}" Margin="5,0,0,0" Width="34" Height="34" Background="Transparent" Opacity="0.9">
+                    <FontIcon Visibility="Visible" Grid.Column="0" FontSize="16" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
+                </Button>
+                <TextBlock  FontWeight="SemiBold" Margin="5,0,0,0" FontSize="22">
+                        <Run x:Uid="GalleriesSection"></Run>
+                        <Run>: </Run>
+                        <Run Text="{Binding Query}"></Run>
+                </TextBlock>
+            </StackPanel>
+
+            <toolkit:AdaptiveGridView
+                            x:Name="SearchGalleriesRepeaterControl"
+                            DesiredWidth="220"
+                            ItemHeight="200"
+                            Grid.Row="1"
+                            IncrementalLoadingThreshold="0.1"
+                            DataFetchSize="1"
+                            IncrementalLoadingTrigger="Edge"
+                            OneRowModeEnabled="False"
+                            StretchContentForSingleRow="False"
+                            ItemsSource="{Binding GalleryMediaVmCollection, Mode=OneWay}"
+                            IsItemClickEnabled="True"
+                            SelectionMode="None">
+                <toolkit:AdaptiveGridView.ItemTemplate>
+                    <DataTemplate x:Name="SearchGalleriesItemTemplate" x:DataType="mediavm:MediaViewModel">
+                        <controls:MediaTileControl ViewModel="{Binding}"/>
+                    </DataTemplate>
+                </toolkit:AdaptiveGridView.ItemTemplate>
+                <toolkit:AdaptiveGridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Width" Value="220"/>
+                        <Setter Property="Height" Value="200"/>
+                    </Style>
+                </toolkit:AdaptiveGridView.ItemContainerStyle>
+            </toolkit:AdaptiveGridView>
+        </Grid>
+    </Grid>
+</Page>

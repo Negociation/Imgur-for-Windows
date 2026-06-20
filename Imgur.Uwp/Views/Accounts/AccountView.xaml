@@ -7,6 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:Imgur.Uwp.Controls"
+    xmlns:mediavm="using:Imgur.ViewModels.Media"
+    xmlns:commentvm="using:Imgur.ViewModels.Account"
     mc:Ignorable="d">
     <Grid>
         <VisualStateManager.VisualStateGroups>
@@ -17,7 +20,7 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            
+
             <VisualStateGroup  x:Uid="RootViewTriggers">
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -84,7 +87,7 @@
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
-                <VisualState.StateTriggers>
+                    <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
@@ -94,12 +97,39 @@
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                    <AdaptiveTrigger MinWindowWidth="1100" />
-                </VisualState.StateTriggers>
-                <VisualState.Setters>
-                    <Setter Target="UserInfoPanel.Margin" Value="40,40,0,0"/>
-                    <Setter Target="UserInfoPanel.Width" Value="600"/>
-                </VisualState.Setters>
+                        <AdaptiveTrigger MinWindowWidth="1100" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="UserInfoPanel.Margin" Value="40,40,0,0"/>
+                        <Setter Target="UserInfoPanel.Width" Value="600"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Uid="MediaViewTriggers">
+                <VisualState x:Name="MediaGrid_Small">
+                    <VisualState.Setters>
+                        <Setter Target="PostsContentRepeaterControl.DesiredWidth" Value="250" />
+                        <Setter Target="PostsContentRepeaterControl.ItemHeight" Value="200" />
+                        <Setter Target="FavoritesContentRepeaterControl.DesiredWidth" Value="250" />
+                        <Setter Target="FavoritesContentRepeaterControl.ItemHeight" Value="200" />
+                        
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MediaGrid_Medium">
+                    <VisualState.Setters>
+                        <Setter Target="PostsContentRepeaterControl.DesiredWidth" Value="300" />
+                        <Setter Target="PostsContentRepeaterControl.ItemHeight" Value="220" />
+                        <Setter Target="FavoritesContentRepeaterControl.DesiredWidth" Value="300" />
+                        <Setter Target="FavoritesContentRepeaterControl.ItemHeight" Value="220" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MediaGrid_Larger">
+                    <VisualState.Setters>
+                        <Setter Target="PostsContentRepeaterControl.DesiredWidth" Value="400" />
+                        <Setter Target="PostsContentRepeaterControl.ItemHeight" Value="280" />
+                        <Setter Target="FavoritesContentRepeaterControl.DesiredWidth" Value="400" />
+                        <Setter Target="FavoritesContentRepeaterControl.ItemHeight" Value="280" />
+                    </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
@@ -161,7 +191,7 @@
                                 </Grid>
                             </StackPanel>
                         </Viewbox>
-                        <toolkit:DropShadowPanel x:Name="UserFollowButton" BlurRadius="20" Margin="10,100,0,0" OffsetX="0" OffsetY="2" ShadowOpacity="0.5" HorizontalContentAlignment="Stretch" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,0" VerticalContentAlignment="Stretch">
+                        <toolkit:DropShadowPanel x:Name="UserFollowButton" BlurRadius="20" Margin="-30,100,0,0" OffsetX="0" OffsetY="2" ShadowOpacity="0.5" HorizontalContentAlignment="Stretch" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,0" VerticalContentAlignment="Stretch">
                             <Button Style="{StaticResource FollowButtonStyle}" Command="{Binding FollowAuthor}"  Opacity="1">
                                 <TextBlock x:Uid="Follow"></TextBlock>
                             </Button>
@@ -170,28 +200,177 @@
                     </Grid>
                 </Grid>
 
-                
 
 
-                <Pivot Grid.Row="1"  Margin="0,0,0,0">
-                    <Pivot.Resources>
-                        <Style TargetType="PivotHeaderItem">
-                            <Setter Property="Margin" Value="12,0"/>
-                            <Setter Property="Padding" Value="0"/>
-                        </Style>
-                        <Thickness x:Key="PivotHeaderItemMargin">12,0,12,0</Thickness>
-                    </Pivot.Resources>
 
-                    <PivotItem x:Uid="PostsHeader" Header="Posts">
-                        <TextBlock Text="Nothing to show... Try Again Later!" />
-                    </PivotItem>
-                    <PivotItem x:Uid="FavouritesHeader" Header="Favourites">
-                        <TextBlock Text="Nothing to show... Try Again Later!" />
-                    </PivotItem>
-                    <PivotItem x:Uid="CommentsHeader" Header="Comments">
-                        <TextBlock Text="Nothing to show... Try Again Later!" />
-                    </PivotItem>
-                </Pivot>
+                <Grid Grid.Row="1">
+
+                    <Grid Height="60" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
+                        <toolkit:DropShadowPanel  VerticalAlignment="Top" Margin="0,39,0,0"  BlurRadius="10"  OffsetX="0" OffsetY="0" ShadowOpacity="0.5"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="0,0" VerticalContentAlignment="Stretch">
+                            <Button HorizontalAlignment="Stretch" Padding="0" Height="10" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent" Style="{x:Null}" BorderThickness="0" />
+                        </toolkit:DropShadowPanel>
+                        <Grid BorderThickness="0,1,0,1" MaxHeight="44" BorderBrush="#1D1D1F" VerticalAlignment="Top">
+                            <Rectangle Height="47" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Fill="{StaticResource SystemControlAcrylicElementBrush}" />
+                        </Grid>
+ 
+                    </Grid>
+
+
+                    <Pivot x:Name="AccountPivot" Margin="0,-3,0,0">
+                        <Pivot.Resources>
+                            <Style TargetType="PivotHeaderItem">
+                                <Setter Property="Margin" Value="12,0"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                            <Thickness x:Key="PivotHeaderItemMargin">12,0,12,0</Thickness>
+                        </Pivot.Resources>
+
+                        <!-- Submissions -->
+                        <PivotItem x:Uid="PostsHeader" Header="Posts">
+                            <Grid MinHeight="200" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
+                                <toolkit:AdaptiveGridView
+                                    x:Name="PostsContentRepeaterControl"
+                                    Margin="0,10,0,0"
+                                    IncrementalLoadingTrigger="Edge"
+                                    IncrementalLoadingThreshold="0.5"
+                                    ItemsSource="{Binding SubmissionsCollection, Mode=OneWay}"
+                                    IsItemClickEnabled="True"
+                                    DataFetchSize="1"
+                                    SelectionMode="None"
+                                    DesiredWidth="250"
+                                    ItemHeight="200">
+                                    <toolkit:AdaptiveGridView.ItemContainerStyle>
+                                        <Style TargetType="GridViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                            <Setter Property="Padding" Value="0"/>
+                                        </Style>
+                                    </toolkit:AdaptiveGridView.ItemContainerStyle>
+
+                                    <toolkit:AdaptiveGridView.ItemTemplate>
+                                        <DataTemplate x:DataType="mediavm:MediaViewModel">
+                                            <controls:MediaTileControl ViewModel="{Binding}" />
+                                        </DataTemplate>
+                                    </toolkit:AdaptiveGridView.ItemTemplate>
+
+                                    <toolkit:AdaptiveGridView.Footer>
+                                        <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
+                                            <TextBlock Text="Nothing to show... Try Again Later!"
+                                                       HorizontalAlignment="Center"
+                                                       Visibility="{Binding HasSubmissions, Converter={StaticResource BoolNegationConverter}}"
+                                                       Opacity="0.6"/>
+                                        </Grid>
+                                    </toolkit:AdaptiveGridView.Footer>
+                                </toolkit:AdaptiveGridView>
+                            </Grid>
+                        </PivotItem>
+
+                        <!-- Favourites -->
+                        <PivotItem x:Uid="FavouritesHeader" Header="Favourites">
+                            <Grid MinHeight="200" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
+                                <toolkit:AdaptiveGridView
+                                    x:Name="FavoritesContentRepeaterControl"
+                                    Margin="0,10,0,0"
+                                    IncrementalLoadingTrigger="Edge"
+                                    IncrementalLoadingThreshold="0.5"
+                                    ItemsSource="{Binding FavoritesCollection, Mode=OneWay}"
+                                    IsItemClickEnabled="True"
+                                    DataFetchSize="1"
+                                    SelectionMode="None"
+                                    DesiredWidth="250"
+                                    ItemHeight="200">
+                                    <toolkit:AdaptiveGridView.ItemContainerStyle>
+                                        <Style TargetType="GridViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                            <Setter Property="Padding" Value="0"/>
+                                        </Style>
+                                    </toolkit:AdaptiveGridView.ItemContainerStyle>
+
+                                    <toolkit:AdaptiveGridView.ItemTemplate>
+                                        <DataTemplate x:DataType="mediavm:MediaViewModel">
+                                            <controls:MediaTileControl ViewModel="{Binding}" />
+                                        </DataTemplate>
+                                    </toolkit:AdaptiveGridView.ItemTemplate>
+
+                                    <toolkit:AdaptiveGridView.Footer>
+                                        <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
+                                            <TextBlock Text="Nothing to show... Try Again Later!"
+                                                       HorizontalAlignment="Center"
+                                                       Visibility="{Binding HasFavorites, Converter={StaticResource BoolNegationConverter}}"
+                                                       Opacity="0.6"/>
+                                        </Grid>
+                                    </toolkit:AdaptiveGridView.Footer>
+                                </toolkit:AdaptiveGridView>
+                            </Grid>
+                        </PivotItem>
+
+                        <!-- Comments -->
+                        <PivotItem x:Uid="CommentsHeader" Header="Comments" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
+                            <Grid MinHeight="200">
+                                <ListView
+                                    x:Name="CommentsRepeaterControl"
+                                    Margin="0,10,0,0"
+                                    IncrementalLoadingTrigger="Edge"
+                                    DataFetchSize="1"
+                                    ItemsSource="{Binding CommentsCollection, Mode=OneWay}"
+                                    SelectionMode="None">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Margin" Value="0,0,0,8"/>
+                                            <Setter Property="Padding" Value="0"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="mediavm:CommentViewModel">
+                                          <!--  <controls:CommentTileControl ViewModel="{Binding}" /> -->
+                                            <TextBlock>Oi</TextBlock>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+
+                                    <ListView.Footer>
+                                        <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
+                                            <TextBlock Text="Nothing to show... Try Again Later!"
+                                                       HorizontalAlignment="Center"
+                                                       Visibility="{Binding HasComments, Converter={StaticResource BoolNegationConverter}}"
+                                                       Opacity="0.6"/>
+                                        </Grid>
+                                    </ListView.Footer>
+                                </ListView>
+                            </Grid>
+                        </PivotItem>
+                    </Pivot>
+
+                    <!-- Error Page sobre o Pivot inteiro: visível quando LoadedSuccessfully == false E Loading == false -->
+                    <Grid x:Name="AccountErrorGrid"
+                          Background="Transparent"
+                          Opacity="0.7"
+                          Visibility="{Binding ShowErrorPage, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="0.2*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,-30,0,0">
+                            <Image MaxWidth="250" Source="ms-appx:///Assets/App/raccon.png"/>
+                            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" FontWeight="ExtraBold" TextAlignment="Center" FontSize="25">
+                                Imgur, we have a problem.
+                            </TextBlock>
+                            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" TextAlignment="Center" FontSize="18">Sorry, We're encountering some technical difficulties.</TextBlock>
+                            <Button Margin="0,10,0,0" HorizontalAlignment="Center" MinWidth="200" Command="{Binding RetryCommand}">Reload</Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Loading Ring sobre o Pivot enquanto carrega -->
+                    <ProgressRing Width="80" Height="80" FontWeight="SemiLight"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  IsActive="{Binding Loading}"
+                                  Visibility="{Binding Loading, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}"/>
+                </Grid>
             </Grid>
         </ScrollViewer>
 
@@ -213,6 +392,6 @@
                 </Button>
             </toolkit:DropShadowPanel>
         </StackPanel>
-        
+
     </Grid>
 </Page>

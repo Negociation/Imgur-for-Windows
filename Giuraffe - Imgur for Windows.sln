@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.36617.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imgur.Api", "Imgur.Api\Imgur.Api.csproj", "{CFF437FE-2435-4CE5-9644-6F983C3A6FC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imgur.Api", "Imgur.Api\Imgur.Api.csproj", "{CFF437FE-2435-4CE5-9644-6F983C3A6FC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imgur", "Imgur\Imgur.csproj", "{F9E23A95-7CE0-4C62-93C5-5997C24A0F43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imgur", "Imgur\Imgur.csproj", "{F9E23A95-7CE0-4C62-93C5-5997C24A0F43}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imgur.Uwp", "Imgur.Uwp\Imgur.Uwp.csproj", "{3FFA5D06-A848-49E5-91DE-D896603806FD}"
 EndProject

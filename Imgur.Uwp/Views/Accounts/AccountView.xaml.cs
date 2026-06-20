@@ -35,15 +35,19 @@ namespace Imgur.Uwp.Views.Accounts
             this.LoadDesignAdapters();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             this.DataContext = e.Parameter as AccountViewModel;
+
+            await ViewModel.InitializeAsync();
 
             App.Services.GetRequiredService<IShareService>().Initialize();
 
             // Aplica o layout mobile/xbox correto ao navegar
             ApplyMobileLayout();
+
+            UpdateThumbailsState();
         }
 
         private void LoadDesignAdapters()
@@ -76,6 +80,22 @@ namespace Imgur.Uwp.Views.Accounts
             {
                 await Task.Delay(100);
                 VisualStateManager.GoToState(this, "LeaveButtonMobileInlineState", false);
+            }
+        }
+
+        private void UpdateThumbailsState()
+        {
+            switch (ViewModel.ThumbSize)
+            {
+                case 0:
+                    VisualStateManager.GoToState(this, nameof(MediaGrid_Small), false);
+                    break;
+                case 1:
+                    VisualStateManager.GoToState(this, nameof(MediaGrid_Medium), false);
+                    break;
+                case 2:
+                    VisualStateManager.GoToState(this, nameof(MediaGrid_Larger), false);
+                    break;
             }
         }
 

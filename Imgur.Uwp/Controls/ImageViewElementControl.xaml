@@ -27,7 +27,7 @@
 
         <Image 
             x:Name="Image" 
-            Source="{Binding ImageElement.Link, ElementName=ImageViewElement}" 
+            Source="{Binding ImageElement.Link, ElementName=ImageViewElement, Converter={StaticResource DecodeImageConverter}, ConverterParameter=800}" 
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Stretch="Uniform" />

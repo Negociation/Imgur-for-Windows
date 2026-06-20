@@ -99,7 +99,7 @@ namespace Imgur.Uwp.Views.Explorer
         }
         private void ContentScrollView_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            Debug.WriteLine("Teste");
+
             if (_gridScrollViewer.VerticalOffset > 0 && !ViewModel.CanScrollToTop)
             {
                 ViewModel.CanScrollToTop = true;

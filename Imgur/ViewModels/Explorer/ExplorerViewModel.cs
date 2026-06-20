@@ -1,4 +1,5 @@
 ﻿using Imgur.Api.Services.Models.Enum;
+using Imgur.Collections;
 using Imgur.Constants;
 using Imgur.Contracts;
 using Imgur.Factories;
@@ -11,7 +12,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -50,7 +50,6 @@ namespace Imgur.ViewModels.Explorer
                 OnPropertyChanged("LoadedSuccessfully");
             }
         }
-
 
 
         //-- Static Sections Avaliable for Selection
@@ -93,8 +92,30 @@ namespace Imgur.ViewModels.Explorer
         public int ThumbSize => _localSettings.Get<int>(LocalSettingsConstants.ThumbSize);
 
 
-        //-- Listagem de Itens (ViewModels)
-        public ObservableCollection<MediaViewModel> RetrievedMediaVmCollection { get; } = new ObservableCollection<MediaViewModel>();
+        //-- Listagem de Itens (MediaViewModel já criados). É o ItemsSource do AdaptiveGridView.
+        //   Tipada pela interface NEUTRA -> a VM não conhece nada de UWP.
+        public IIncrementalCollection<MediaViewModel> RetrievedMediaVmCollection { get; private set; }
+
+
+        //-- Indica se ainda há uma próxima página de 60 para o botão "Load More".
+        //   Atualizada via evento StateChanged da coleção.
+        private bool _canLoadMore;
+
+        public bool CanLoadMore
+        {
+            get { return _canLoadMore; }
+            set
+            {
+                _canLoadMore = value;
+                OnPropertyChanged("CanLoadMore");
+                OnPropertyChanged("ShowLoadMoreButton");
+            }
+        }
+
+
+        //-- Visibilidade efetiva do botão: só aparece se há mais páginas E não está carregando.
+        public bool ShowLoadMoreButton => CanLoadMore && !IsLoadingNewPage;
+
 
         //-- Scroll to Top Flag
         private bool _canScrollToTop;
@@ -110,16 +131,9 @@ namespace Imgur.ViewModels.Explorer
         }
 
 
-        //-- Cancellation Token para Busca
-        private CancellationTokenSource cancellationToken = new CancellationTokenSource();
-
-        //Current Page
-        private int _currentPage = 0;
-
-        //-- Status for Appending Current Media Info (Metadata only)
+        //-- Status for Loading a new Page (botão / ProgressBar do footer)
         private bool _isLoadingNewPage;
 
-        //-- Status for Loading a new Page 
         public bool IsLoadingNewPage
         {
             get { return _isLoadingNewPage; }
@@ -127,8 +141,13 @@ namespace Imgur.ViewModels.Explorer
             {
                 _isLoadingNewPage = value;
                 OnPropertyChanged("IsLoadingNewPage");
+                OnPropertyChanged("ShowLoadMoreButton");
             }
         }
+
+
+        //-- Cancellation Token para a busca atual (cancela carga anterior ao trocar seção/sort)
+        private CancellationTokenSource _cts = new CancellationTokenSource();
 
 
         //***************************************************************
@@ -150,6 +169,9 @@ namespace Imgur.ViewModels.Explorer
         //-- Serviço de Navegação
         private readonly INavigator _navigator;
 
+        //-- Factory da coleção incremental (impl. concreta vive no Imgur.Uwp)
+        private readonly IIncrementalCollectionFactory _collectionFactory;
+
         //***************************************************************
         // Constructors e Initializers
         //***************************************************************
@@ -158,7 +180,8 @@ namespace Imgur.ViewModels.Explorer
             IDispatcher dispatcher,
             IMediaVmFactory mediaVmFactory,
             ILocalSettings localSettings,
-            INavigator navigator
+            INavigator navigator,
+            IIncrementalCollectionFactory collectionFactory
             )
         {
             _galleryService = galleryService;
@@ -166,6 +189,7 @@ namespace Imgur.ViewModels.Explorer
             _mediaVmFactory = mediaVmFactory;
             _localSettings = localSettings;
             _navigator = navigator;
+            _collectionFactory = collectionFactory;
             Loading = false;
         }
 
@@ -206,7 +230,7 @@ namespace Imgur.ViewModels.Explorer
         // View Commands 
         //***************************************************************
 
-        //-- Command para Busca de Itens do Explore
+        //-- Command para (re)montar a galeria: troca de seção/sort, refresh e reload.
         private ICommand _retrieveGalleryContentCommand;
 
         public ICommand RetrieveGalleryContentCommand
@@ -215,74 +239,16 @@ namespace Imgur.ViewModels.Explorer
             {
                 if (_retrieveGalleryContentCommand == null)
                 {
-                    _retrieveGalleryContentCommand = new RelayCommand(() =>
+                    _retrieveGalleryContentCommand = new RelayCommand(async () =>
                     {
-                        // Inicia Loading imediatamente
-                        Loading = true;
-                        LoadedSuccessfully = true;
-                        _currentPage = 0;
-
-                        // Executa a tarefa assíncrona em background
-                        Task.Run(async () =>
-                        {
-                            try
-                            {
-                                //Delay para tempo suficiente para atualizar sections
-                                await Task.Delay(1000);
-
-                                // Buscar lista do service
-                                var retrievedMediaList = await _galleryService.GetExplorerMedia(Sections[SelectedSectionIndex].section,
-
-                                    AvailableSorts[SelectedSortIndex].sort);
-
-                                // Se deu erro
-                                if (!retrievedMediaList.IsSuccess)
-                                {
-                                    throw new Exception("Erro durante a busca dos itens: " + retrievedMediaList.Error);
-                                }
-
-                                // Criar ViewModels
-                                var vmList = new List<MediaViewModel>();
-                                foreach (var media in retrievedMediaList.Data)
-                                {
-                                    vmList.Add(_mediaVmFactory.GetMediaViewModel(media));
-                                }
-                                // Atualizar UI thread
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    RetrievedMediaVmCollection.Clear();
-                                    foreach (var vm in vmList)
-                                        RetrievedMediaVmCollection.Add(vm);
-
-                                    LoadedSuccessfully = true;
-                                });
-
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine(ex.Message);
-                                // Atualiza flag de sucesso na UI thread
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    LoadedSuccessfully = false;
-                                });
-                            }
-                            finally
-                            {
-                                // Sempre desativa loading na UI thread
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    Loading = false;
-                                });
-                            }
-                        });
+                        await ReloadAsync();
                     });
                 }
                 return _retrieveGalleryContentCommand;
             }
         }
 
-        //-- Command para Busca de Itens do Explore
+        //-- Command do botão "Load More": pede a PRÓXIMA página de 60 (manual).
         private ICommand _loadMoreGalleryContentCommand;
 
         public ICommand LoadMoreGalleryContentCommand
@@ -291,110 +257,27 @@ namespace Imgur.ViewModels.Explorer
             {
                 if (_loadMoreGalleryContentCommand == null)
                 {
-                    _loadMoreGalleryContentCommand = new RelayCommand(() =>
+                    _loadMoreGalleryContentCommand = new RelayCommand(async () =>
                     {
-                        Task.Run(async () =>
+                        if (RetrievedMediaVmCollection == null || IsLoadingNewPage) return;
+
+                        try
                         {
-                            try
-                            {
-                                // UI: iniciar loading
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    try
-                                    {
-                                        IsLoadingNewPage = true;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Debug.WriteLine("Erro UI (start loading): " + ex);
-                                    }
-                                });
+                            // UI: inicia loading do footer
+                            IsLoadingNewPage = true;
 
-                                // Delay visual
-                                await Task.Delay(1000);
-
-                                // Incrementar página
-                                _currentPage += 1;
-
-                                // Buscar lista
-                                var retrievedMediaList =
-                                    await _galleryService.GetExplorerMedia(
-                                        Sections[SelectedSectionIndex].section,
-                                        AvailableSorts[SelectedSortIndex].sort,
-                                        _currentPage);
-
-                                if (!retrievedMediaList.IsSuccess)
-                                {
-                                    // UI: finalizar loading em erro
-                                    _dispatcher.CheckBeginInvokeOnUi(() =>
-                                    {
-                                        try
-                                        {
-                                            IsLoadingNewPage = false;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Debug.WriteLine("Erro UI (stop loading - erro): " + ex);
-                                        }
-                                    });
-
-                                    throw new Exception("Erro durante a busca dos itens: " +
-                                                        retrievedMediaList.Error);
-                                }
-
-                                // Criar VMs fora da UI thread
-                                var vmList = new List<MediaViewModel>();
-                                foreach (var media in retrievedMediaList.Data)
-                                {
-                                    vmList.Add(_mediaVmFactory.GetMediaViewModel(media));
-                                }
-
-                                // UI: append dos itens
-                                _dispatcher.CheckBeginInvokeOnUi(async () =>
-                                {
-                                    try
-                                    {
-                                        foreach (var vm in vmList)
-                                        {
-                                            RetrievedMediaVmCollection.Add(vm);
-                                            await Task.Delay(10);
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Debug.WriteLine("Erro UI (append itens): " + ex);
-                                    }
-                                    finally
-                                    {
-                                        try
-                                        {
-                                            IsLoadingNewPage = false;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Debug.WriteLine("Erro UI (stop loading final): " + ex);
-                                        }
-                                    }
-                                });
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine("Erro background LoadMore: " + ex);
-
-                                // Garantir que o loading não fique travado
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    try
-                                    {
-                                        IsLoadingNewPage = false;
-                                    }
-                                    catch (Exception uiEx)
-                                    {
-                                        Debug.WriteLine("Erro UI (catch final): " + uiEx);
-                                    }
-                                });
-                            }
-                        });
+                            // Busca +60 na API, reabastece o buffer e entrega o 1º batch.
+                            // O restante dos 60 é entregue automaticamente pelo grid ao rolar.
+                            await RetrievedMediaVmCollection.LoadNextPageAsync(_cts.Token);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("Erro LoadMore: " + ex.Message);
+                        }
+                        finally
+                        {
+                            IsLoadingNewPage = false;
+                        }
                     });
                 }
 
@@ -402,14 +285,93 @@ namespace Imgur.ViewModels.Explorer
             }
         }
 
+
         //***************************************************************
         // View Functions 
         //***************************************************************
 
+        //-- (Re)constrói a coleção incremental e carrega a primeira página de 60.
+        private async Task ReloadAsync()
+        {
+            try
+            {
+                // Inicia Loading imediatamente
+                Loading = true;
+                LoadedSuccessfully = true;
+
+                // Cancela qualquer carga anterior em andamento
+                _cts.Cancel();
+                _cts = new CancellationTokenSource();
+                var ct = _cts.Token;
+
+                // Delay para dar tempo das sections/sorts atualizarem na UI
+                await Task.Delay(1000);
+
+                // Captura seção/sort atuais (evita corrida se o usuário trocar depois)
+                var section = Sections[SelectedSectionIndex].section;
+                var sort = AvailableSorts[SelectedSortIndex].sort;
+
+                // Desinscreve a coleção anterior, se houver
+                if (RetrievedMediaVmCollection != null)
+                    RetrievedMediaVmCollection.StateChanged -= OnCollectionStateChanged;
+
+                // Monta a coleção incremental:
+                //   pageSize 60  -> tamanho da página da API (buffer interno)
+                //   batchSize 10 -> quantos itens o grid recebe por "drip" ao rolar
+                RetrievedMediaVmCollection = _collectionFactory.Create<MediaViewModel>(
+                    async (page, token) =>
+                    {
+                        var result = await _galleryService.GetExplorerMedia(section, sort, page);
+
+                        if (!result.IsSuccess || result.Data == null)
+                            return new List<MediaViewModel>();
+
+                        // Cria PREVIAMENTE os MediaViewModel desta página de 60
+                        return result.Data
+                                     .Select(_mediaVmFactory.GetMediaViewModel)
+                                     .ToList();
+                    },
+                    60,
+                    10);
+
+                // Escuta mudanças de estado (fim de bloco / fim de carga) p/ ligar o botão
+                RetrievedMediaVmCollection.StateChanged += OnCollectionStateChanged;
+
+                // Notifica o binding do ItemsSource do AdaptiveGridView
+                OnPropertyChanged("RetrievedMediaVmCollection");
+                CanLoadMore = false;
+
+                // Carrega a primeira página (60) -> entrega o primeiro batch ao grid
+                await RetrievedMediaVmCollection.LoadNextPageAsync(ct);
+
+                LoadedSuccessfully = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                LoadedSuccessfully = false;
+            }
+            finally
+            {
+                Loading = false;
+            }
+        }
+
+        //-- Atualiza a visibilidade do botão "Load More" sempre que a coleção muda de estado.
+        private void OnCollectionStateChanged(object sender, EventArgs e)
+        {
+            // Garante execução na UI thread (o binding é atualizado aqui)
+            _dispatcher.CheckBeginInvokeOnUi(() =>
+            {
+                CanLoadMore = RetrievedMediaVmCollection != null
+                              && RetrievedMediaVmCollection.CanLoadMorePages;
+            });
+        }
+
         //-- Update Sorts based on current Selected Section
         private void UpdateAvaliableSorts()
         {
-                
+
             this.AvailableSorts.Clear();
             foreach (var sort in this.Sections[SelectedSectionIndex].sorts)
             {

@@ -36,6 +36,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage;
 using Imgur.Constants;
+using Imgur.Collections;
+using Imgur.Uwp.Collections;
 
 namespace Imgur.Uwp
 {
@@ -288,6 +290,12 @@ namespace Imgur.Uwp
                 .AddSingleton<IUploadFileVmFactory, UploadFileVmFactory>()
                 .AddSingleton<IUploadInterceptorVmFactory, UploadInterceptorVmFactory>()
                 .AddSingleton<ICommentVmFactory, CommentVmFactory>()
+                .AddSingleton<IExplorerBrowserTagsVmFactory, ExplorerBrowserTagsVmFactory>()
+                .AddSingleton<IExplorerBrowserGalleriesVmFactory, ExplorerBrowserGalleriesVmFactory>()
+                .AddSingleton<IExplorerBrowserUsersVmFactory, ExplorerBrowserUsersVmFactory>()
+
+                //Collection Factories
+                .AddSingleton<IIncrementalCollectionFactory, IncrementalBatchCollectionFactory>()
 
                 // ViewModels Transient
                 .AddTransient<ShellViewModel>()
@@ -303,6 +311,9 @@ namespace Imgur.Uwp
                 .AddTransient<UploadFileViewModel>()
                 .AddTransient<ShareTargetViewModel>()
                 .AddTransient<CommentViewModel>()
+                .AddTransient<ExplorerBrowserGalleriesViewModel>()
+                .AddTransient<ExplorerBrowserTagsViewModel>()
+                .AddTransient<ExplorerBrowserUsersViewModel>()
 
                 // Services Domain Transient
                 .AddTransient<Imgur.Services.GalleryService>()
@@ -437,7 +448,7 @@ namespace Imgur.Uwp
             {
                 var view = ApplicationView.GetForCurrentView();
                 var size = view.VisibleBounds;
-                view.TryResizeView(new Size(size.Width + 1, size.Height + 1));
+                view.TryResizeView(new Size(size.Width -1 , size.Height - 1));
                 await Task.Delay(50);
                 view.TryResizeView(new Size(size.Width, size.Height));
             }

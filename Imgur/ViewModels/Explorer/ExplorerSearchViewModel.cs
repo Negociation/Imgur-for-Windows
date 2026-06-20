@@ -1,4 +1,5 @@
-﻿using Imgur.Constants;
+﻿using Imgur.Collections;
+using Imgur.Constants;
 using Imgur.Contracts;
 using Imgur.Factories;
 using Imgur.Helpers;
@@ -11,7 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,7 +20,6 @@ namespace Imgur.ViewModels.Explorer
 {
     public class ExplorerSearchViewModel : Observable
     {
-
         //***************************************************************
         // View Parameters
         //***************************************************************
@@ -107,17 +107,26 @@ namespace Imgur.ViewModels.Explorer
             }
         }
 
-        //-- Listagem de Itens Random (ViewModels)
+        //-- Listagem de Itens Random (ViewModels) — Explorer mode (grid vertical, sem incremental)
         public ObservableCollection<MediaViewModel> RandomMediaVmCollection { get; } = new ObservableCollection<MediaViewModel>();
 
-        //-- Listagem de Itens Search "Tags" (ViewModels)
-        public ObservableCollection<TagViewModel> TagsSearchMediaVmCollection { get; } = new ObservableCollection<TagViewModel>();
+        //-- Carrossel Search "Tags" (incremental / preview)
+        public IIncrementalCollection<TagViewModel> TagsSearchPartialMediaVmCollection { get; private set; }
 
-        //-- Listagem de Itens Search "Gallery" (ViewModels)
-        public ObservableCollection<MediaViewModel> GallerySearchMediaVmCollection { get; } = new ObservableCollection<MediaViewModel>();
+        //-- Complete Search "Users" (Page 0)
+        private List<TagViewModel> _tagsSearchMediaVmCollection { get; set; }
 
-        //-- Listagem de Itens Search "Users" (ViewModels)
-        public ObservableCollection<AccountViewModel> UsersSearchMediaVmCollection { get; } = new ObservableCollection<AccountViewModel>();
+        //-- Carrossel Search "Gallery" (incremental / preview)
+        public IIncrementalCollection<MediaViewModel> GallerySearchPartialMediaVmCollection { get; private set; }
+
+        //-- Complete Search "Gallery" (Page 0)
+        private List<MediaViewModel> _gallerySearchMediaVmCollection { get; set; }
+
+        //-- Carrossel Search "Users" (incremental / preview)
+        public IIncrementalCollection<AccountViewModel> UsersSearchPartialMediaVmCollection { get; private set; }
+
+        //-- Complete Search "Users" (Page 0)
+        private List<AccountViewModel> _usersSearchMediaVmCollection { get; set; }
 
         //-- Thumbnail Config Size
         public int ThumbSize => _localSettings.Get<int>(LocalSettingsConstants.ThumbSize);
@@ -129,13 +138,13 @@ namespace Imgur.ViewModels.Explorer
         public bool NothingFound => !UsersAvaliableToShow && !GalleriesAvaliableToShow && !TagsAvaliableToShow;
 
         //-- There's Tags Avaliable to Show during Search
-        public bool TagsAvaliableToShow => TagsSearchMediaVmCollection.Count() > 0;
+        public bool TagsAvaliableToShow => (TagsSearchPartialMediaVmCollection?.Count ?? 0) > 0;
 
         //-- There's Galleries Avaliable to Show during Search
-        public bool GalleriesAvaliableToShow => GallerySearchMediaVmCollection.Count() > 0;
+        public bool GalleriesAvaliableToShow => (GallerySearchPartialMediaVmCollection?.Count ?? 0) > 0;
 
-        //-- There's Galleries Avaliable to Show during Search
-        public bool UsersAvaliableToShow => UsersSearchMediaVmCollection.Count() > 0;
+        //-- There's Users Avaliable to Show during Search
+        public bool UsersAvaliableToShow => (UsersSearchPartialMediaVmCollection?.Count ?? 0) > 0;
 
         //***************************************************************
         // Services
@@ -167,6 +176,14 @@ namespace Imgur.ViewModels.Explorer
         //-- Factory para criar Account ViewModels
         private readonly IAccountVmFactory _accountVmFactory;
 
+        //-- Factory da coleção incremental (impl. concreta vive no Imgur.Uwp)
+        private readonly IIncrementalCollectionFactory _collectionFactory;
+
+        //-- Factories para as views de Browse (SEE ALL)
+        private readonly IExplorerBrowserTagsVmFactory _browserTagsVmFactory;
+        private readonly IExplorerBrowserGalleriesVmFactory _browserGalleriesVmFactory;
+        private readonly IExplorerBrowserUsersVmFactory _browserUsersVmFactory;
+
         //***************************************************************
         // Constructors e Initializers
         //***************************************************************
@@ -179,7 +196,11 @@ namespace Imgur.ViewModels.Explorer
             IMediaVmFactory mediaVmFactory,
             ILocalSettings localSettings,
             AccountService accountService,
-            IAccountVmFactory accountVmFactory
+            IAccountVmFactory accountVmFactory,
+            IIncrementalCollectionFactory collectionFactory,
+            IExplorerBrowserTagsVmFactory browserTagsVmFactory,
+            IExplorerBrowserGalleriesVmFactory browserGalleriesVmFactory,
+            IExplorerBrowserUsersVmFactory browserUsersVmFactory
             )
         {
             _dispatcher = dispatcher;
@@ -191,6 +212,10 @@ namespace Imgur.ViewModels.Explorer
             _localSettings = localSettings;
             _accountService = accountService;
             _accountVmFactory = accountVmFactory;
+            _collectionFactory = collectionFactory;
+            _browserTagsVmFactory = browserTagsVmFactory;
+            _browserGalleriesVmFactory = browserGalleriesVmFactory;
+            _browserUsersVmFactory = browserUsersVmFactory;
         }
 
         public void InitializeSearch(string query)
@@ -200,14 +225,10 @@ namespace Imgur.ViewModels.Explorer
             _searchQuery = query;
         }
 
-        public void Initialize() {
-            // Clear anterior ao carregar novos dados
-            //StaffPicks = null;
-    }
+        public void Initialize() { }
 
         public async Task InitializeAsync()
         {
-            //Debug.WriteLine(StaffPicks.CurrentTag?.Items?.Count());
             //If already loaded just ignore 
             if (LoadedSuccessfully)
             {
@@ -271,7 +292,7 @@ namespace Imgur.ViewModels.Explorer
         }
 
 
-        //-- Command para Carregar Dados do Explorer (unificado)
+        //-- Command para Carregar Dados do Explorer (Staff Picks + Random)
         private ICommand _retrieveExplorerDataCommand;
 
         public ICommand RetrieveExplorerDataCommand
@@ -285,12 +306,11 @@ namespace Imgur.ViewModels.Explorer
                         // Inicia Loading imediatamente
                         Loading = true;
 
-                        // Executa a tarefa assíncrona em background
+                        // Explorer mode usa ObservableCollection comum -> pode ficar em background
                         Task.Run(async () =>
                         {
                             try
                             {
-                                // Delay para dar tempo da UI atualizar
                                 await Task.Delay(10);
                                 await RetrieveStaffPicksAsync();
                                 await RetrieveRandomMediaAsync();
@@ -298,14 +318,9 @@ namespace Imgur.ViewModels.Explorer
                             catch (Exception ex)
                             {
                                 Debug.WriteLine(ex.Message);
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    //LoadingFailed = true;
-                                });
                             }
                             finally
                             {
-                                // Sempre desativa loading na UI thread
                                 _dispatcher.CheckBeginInvokeOnUi(() =>
                                 {
                                     Loading = false;
@@ -318,12 +333,11 @@ namespace Imgur.ViewModels.Explorer
             }
         }
 
+
         private async Task RetrieveStaffPicksAsync()
         {
             try
             {
-
-                // Buscar lista do service
                 var retrivedTagContent = await _tagsService.GetStaffPicks();
 
                 if (!retrivedTagContent.IsSuccess)
@@ -331,7 +345,6 @@ namespace Imgur.ViewModels.Explorer
                     throw new Exception("Erro durante a busca dos itens: " + retrivedTagContent.Error);
                 }
 
-                // Cria ViewModel para Tag
                 var vm = _tagVmFactory.GetTagViewModel(retrivedTagContent.Data);
 
                 _dispatcher.CheckBeginInvokeOnUi(() =>
@@ -356,7 +369,6 @@ namespace Imgur.ViewModels.Explorer
                     throw new Exception("Erro durante a busca dos itens: " + retrievedRandomMedia.Error);
                 }
 
-                // Criar ViewModels
                 var vmList = new List<MediaViewModel>();
                 foreach (var media in retrievedRandomMedia.Data)
                 {
@@ -369,7 +381,6 @@ namespace Imgur.ViewModels.Explorer
                     foreach (var vm in vmList.Take(20))
                         RandomMediaVmCollection.Add(vm);
                 });
-
             }
             catch (Exception ex)
             {
@@ -377,7 +388,7 @@ namespace Imgur.ViewModels.Explorer
             }
         }
 
-        //-- Command para Carregar Dados de Search (unificado)
+        //-- Command para Carregar Dados de Search (carrosséis incrementais)
         private ICommand _retrieveSearchDataCommand;
 
         public ICommand RetrieveSearchDataCommand
@@ -386,160 +397,206 @@ namespace Imgur.ViewModels.Explorer
             {
                 if (_retrieveSearchDataCommand == null)
                 {
-                    _retrieveSearchDataCommand = new RelayCommand<string>((query) =>
+                    // async na UI thread: a IncrementalBatchCollection faz o Add dela mesma,
+                    // então NÃO pode rodar em Task.Run.
+                    _retrieveSearchDataCommand = new RelayCommand<string>(async (query) =>
                     {
-                        // Inicia Loading imediatamente
-                        Loading = true;
-
-                        // Executa a tarefa assíncrona em background
-                        Task.Run(async () =>
+                        try
                         {
-                            try
-                            {
-                                // Delay para dar tempo da UI atualizar
-                                await Task.Delay(10);
-                                await RetrieveGalleriesAsync(query);
-                                await Task.Delay(10);
-                                await RetrieveTagsAsync(query);
-                                await Task.Delay(10);
-                                await RetrieveUsersAsync(query);
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine(ex.Message);
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    //LoadingFailed = true;
-                                });
-                            }
-                            finally
-                            {
-                                // Sempre desativa loading na UI thread
-                                _dispatcher.CheckBeginInvokeOnUi(() =>
-                                {
-                                    Loading = false;
-                                    OnPropertyChanged(nameof(NothingFound));
-                                });
-                            }
-                        });
+                            Loading = true;
+
+                            await BuildGalleriesCarouselAsync(query);
+                            await BuildTagsCarouselAsync(query);
+                            await BuildUsersCarouselAsync(query);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            Loading = false;
+                            OnPropertyChanged(nameof(NothingFound));
+                        }
                     });
                 }
                 return _retrieveSearchDataCommand;
             }
         }
 
-        private async Task RetrieveGalleriesAsync(string query)
+        //-- Command para explorar Usuários Encontados
+        private ICommand _browseUsersCommand;
+
+        public ICommand BrowseUsersCommand
         {
-            try
+            get
             {
-                var retrievedGalleryMedia = await _galleryService.SearchGalleries(query);
-
-                if (!retrievedGalleryMedia.IsSuccess)
+                if (_browseUsersCommand == null)
                 {
-                    throw new Exception("Erro durante a busca dos itens: " + retrievedGalleryMedia.Error);
+                    _browseUsersCommand = new RelayCommand(() =>
+                    {
+                        var vm = _browserUsersVmFactory.GetViewModel(
+                            _searchQuery,
+                            _usersSearchMediaVmCollection ?? new List<AccountViewModel>());
+
+                        _navigator.Navigate("explorerBrowserUsers", vm);
+                    });
                 }
-
-                var vmList = new List<MediaViewModel>();
-                foreach (var media in retrievedGalleryMedia.Data)
-                {
-                    vmList.Add(_mediaVmFactory.GetMediaViewModel(media));
-                }
-
-                _dispatcher.CheckBeginInvokeOnUi(() =>
-                {
-                    GallerySearchMediaVmCollection.Clear();
-                    foreach (var vm in vmList.Take(20))
-                        GallerySearchMediaVmCollection.Add(vm);
-
-                    // ✅ Dentro do dispatcher
-                    OnPropertyChanged(nameof(GallerySearchMediaVmCollection));
-                    OnPropertyChanged(nameof(GalleriesAvaliableToShow));
-                });
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
+                return _browseUsersCommand;
             }
         }
 
-        private async Task RetrieveTagsAsync(string query)
+        //-- Command para explorar Tags Encontados
+        private ICommand _browseTagsCommand;
+
+        public ICommand BrowseTagsCommand
         {
-            try
+            get
             {
-                var retrievedTags = await _tagsService.SearchTags(query);
-
-                if (!retrievedTags.IsSuccess)
+                if (_browseTagsCommand == null)
                 {
-                    throw new Exception("Erro durante a busca dos itens: " + retrievedTags.Error);
-                }
-
-                var vmList = new List<TagViewModel>();
-                foreach (var item in retrievedTags.Data)
-                {
-                    if (item == null)
+                    _browseTagsCommand = new RelayCommand(() =>
                     {
-                        Debug.WriteLine("WARNING: null tag item");
-                        continue;
-                    }
+                        var vm = _browserTagsVmFactory.GetViewModel(
+                            _searchQuery,
+                            _tagsSearchMediaVmCollection ?? new List<TagViewModel>());
 
-                    vmList.Add(_tagVmFactory.GetTagViewModel(item));
+                        _navigator.Navigate("explorerBrowserTags", vm);
+                    });
                 }
-
-                _dispatcher.CheckBeginInvokeOnUi(() =>
-                {
-                    
-                    TagsSearchMediaVmCollection.Clear();
-                    foreach (var vm in vmList.Take(20))
-                        TagsSearchMediaVmCollection.Add(vm);
-                   OnPropertyChanged(nameof(TagsSearchMediaVmCollection));
-                   OnPropertyChanged(nameof(TagsAvaliableToShow));
-                   
-                });
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
+                return _browseTagsCommand;
             }
         }
 
-        private async Task RetrieveUsersAsync(string query)
+        //-- Command para explorar Galerias Encontados
+        private ICommand _browseGalleriesCommand;
+
+        public ICommand BrowseGalleriesCommand
         {
-            try
+            get
             {
-                var retrievedUsers = await _accountService.SearchAccounts(query);
-
-                if (!retrievedUsers.IsSuccess)
+                if (_browseGalleriesCommand == null)
                 {
-                    throw new Exception("Erro durante a busca dos itens: " + retrievedUsers.Error);
-                }
-
-                var vmList = new List<AccountViewModel>();
-                foreach (var item in retrievedUsers.Data)
-                {
-                    if (item == null)
+                    _browseGalleriesCommand = new RelayCommand(() =>
                     {
-                        Debug.WriteLine("WARNING: null tag item");
-                        continue;
-                    }
+                        var vm = _browserGalleriesVmFactory.GetViewModel(
+                            _searchQuery,
+                            _gallerySearchMediaVmCollection ?? new List<MediaViewModel>());
 
-                    vmList.Add(_accountVmFactory.GetAccountViewModel(item));
+                        _navigator.Navigate("explorerBrowserGalleries", vm);
+                    });
                 }
+                return _browseGalleriesCommand;
+            }
+        }
 
-                _dispatcher.CheckBeginInvokeOnUi(() =>
+        //***************************************************************
+        // Construção dos carrosséis incrementais (preview de 1 página)
+        //***************************************************************
+
+        private async Task BuildGalleriesCarouselAsync(string query)
+        {
+            if (GallerySearchPartialMediaVmCollection != null)
+                GallerySearchPartialMediaVmCollection.StateChanged -= OnSearchCollectionStateChanged;
+
+            GallerySearchPartialMediaVmCollection = _collectionFactory.Create<MediaViewModel>(
+                async (page, ct) =>
                 {
+                    // Preview: só a 1ª página. (Para "infinito" no carrossel, é só deixar paginar.)
+                    if (page > 0) return new List<MediaViewModel>();
 
-                    UsersSearchMediaVmCollection.Clear();
-                    foreach (var vm in vmList.Take(20))
-                        UsersSearchMediaVmCollection.Add(vm);
-                    OnPropertyChanged(nameof(UsersSearchMediaVmCollection));
-                    OnPropertyChanged(nameof(UsersAvaliableToShow));
+                    var result = await _galleryService.SearchGalleries(query, 0);
+                    if (!result.IsSuccess || result.Data == null)
+                        return new List<MediaViewModel>();
 
-                });
-            }
-            catch (Exception ex)
+                    var resultData = result.Data.Select(_mediaVmFactory.GetMediaViewModel);
+
+                    this._gallerySearchMediaVmCollection = resultData.ToList();
+                    return resultData.Take(30).ToList();
+                },
+                30,   // pageSize (teto do preview)
+                8);   // batchSize (drip horizontal)
+
+            GallerySearchPartialMediaVmCollection.StateChanged += OnSearchCollectionStateChanged;
+            OnPropertyChanged(nameof(GallerySearchPartialMediaVmCollection));
+
+            await GallerySearchPartialMediaVmCollection.LoadNextPageAsync();
+
+            OnPropertyChanged(nameof(GalleriesAvaliableToShow));
+        }
+
+        private async Task BuildTagsCarouselAsync(string query)
+        {
+            if (TagsSearchPartialMediaVmCollection != null)
+                TagsSearchPartialMediaVmCollection.StateChanged -= OnSearchCollectionStateChanged;
+
+            TagsSearchPartialMediaVmCollection = _collectionFactory.Create<TagViewModel>(
+                async (page, ct) =>
+                {
+                    if (page > 0) return new List<TagViewModel>();
+
+                    var result = await _tagsService.SearchTags(query, 0);
+                    if (!result.IsSuccess || result.Data == null)
+                        return new List<TagViewModel>();
+
+                    var resultData = result.Data
+                            .Where(t => t != null)
+                            .Select(_tagVmFactory.GetTagViewModel);
+
+                    this._tagsSearchMediaVmCollection = resultData.ToList();
+
+                    return this._tagsSearchMediaVmCollection.Take(30).ToList();
+                },
+                30,
+                8);
+
+            TagsSearchPartialMediaVmCollection.StateChanged += OnSearchCollectionStateChanged;
+            OnPropertyChanged(nameof(TagsSearchPartialMediaVmCollection));
+
+            await TagsSearchPartialMediaVmCollection.LoadNextPageAsync();
+
+            OnPropertyChanged(nameof(TagsAvaliableToShow));
+        }
+
+        private async Task BuildUsersCarouselAsync(string query)
+        {
+            if (UsersSearchPartialMediaVmCollection != null)
+                UsersSearchPartialMediaVmCollection.StateChanged -= OnSearchCollectionStateChanged;
+
+            UsersSearchPartialMediaVmCollection = _collectionFactory.Create<AccountViewModel>(
+                async (page, ct) =>
+                {
+                    if (page > 0) return new List<AccountViewModel>();
+
+                    var result = await _accountService.SearchAccounts(query, 0);
+                    if (!result.IsSuccess || result.Data == null)
+                        return new List<AccountViewModel>();
+
+                    var resultData = result.Data.Where(u => u != null).Select(_accountVmFactory.GetAccountViewModel);
+                    this._usersSearchMediaVmCollection = resultData.ToList();
+                    return resultData.Take(30).ToList();
+                },
+                30,
+                8);
+
+            UsersSearchPartialMediaVmCollection.StateChanged += OnSearchCollectionStateChanged;
+            OnPropertyChanged(nameof(UsersSearchPartialMediaVmCollection));
+
+            await UsersSearchPartialMediaVmCollection.LoadNextPageAsync();
+
+            OnPropertyChanged(nameof(UsersAvaliableToShow));
+        }
+
+        //-- Atualiza visibilidade das seções conforme os carrosséis drenam.
+        private void OnSearchCollectionStateChanged(object sender, EventArgs e)
+        {
+            _dispatcher.CheckBeginInvokeOnUi(() =>
             {
-                Debug.WriteLine(ex.Message);
-            }
+                OnPropertyChanged(nameof(TagsAvaliableToShow));
+                OnPropertyChanged(nameof(GalleriesAvaliableToShow));
+                OnPropertyChanged(nameof(UsersAvaliableToShow));
+                OnPropertyChanged(nameof(NothingFound));
+            });
         }
     }
 }

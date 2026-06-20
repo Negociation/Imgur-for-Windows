@@ -74,7 +74,7 @@ namespace Imgur.Mappers
                 AccountId = dto.account_url,
                 MostViral = dto.in_most_viral,
                 Vote = dto.Vote,
-                Favorite = dto.Favorite
+                Favorite = dto.Favorite ?? false
             };
 
             // Define CoverType

@@ -19,7 +19,7 @@ namespace Imgur.Api.Services.Models.Response
         public long Views { get; set; }
         public long Bandwidth { get; set; }
         public string Vote { get; set; }
-        public bool Favorite { get; set; }
+        public bool? Favorite { get; set; }
         public bool? Nsfw { get; set; }
         public string Section { get; set; }
         public string account_url { get; set; }

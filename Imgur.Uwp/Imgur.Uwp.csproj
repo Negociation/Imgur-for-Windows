@@ -126,6 +126,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Collections\IncrementalBatchCollection.cs" />
+    <Compile Include="Collections\IncrementalBatchCollectionFactory.cs" />
     <Compile Include="Controls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
@@ -163,6 +165,7 @@
       <DependentUpon>VideoViewElementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\Base64BitmapConverter.cs" />
+    <Compile Include="Converters\DecodeImageConverter.cs" />
     <Compile Include="Converters\ReplyingStringConverter.cs" />
     <Compile Include="Converters\BoolToBrushConverter.cs" />
     <Compile Include="Converters\BoolToGridLengthConverter.cs" />
@@ -225,11 +228,20 @@
     <Compile Include="Views\Accounts\AccountView.xaml.cs">
       <DependentUpon>AccountView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Explorer\ExplorerBrowserUsersView.xaml.cs">
+      <DependentUpon>ExplorerBrowserUsersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Explorer\ExplorerBrowserGalleriesView.xaml.cs">
+      <DependentUpon>ExplorerBrowserGalleriesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Explorer\ExplorerSearchView.xaml.cs">
       <DependentUpon>ExplorerSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Explorer\ExplorerView.xaml.cs">
       <DependentUpon>ExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Explorer\ExplorerBrowserTagsView.xaml.cs">
+      <DependentUpon>ExplorerBrowserTagsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Media\MediaView.xaml.cs">
       <DependentUpon>MediaView.xaml</DependentUpon>
@@ -391,11 +403,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Explorer\ExplorerBrowserUsersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Explorer\ExplorerBrowserGalleriesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Explorer\ExplorerSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Explorer\ExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Explorer\ExplorerBrowserTagsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

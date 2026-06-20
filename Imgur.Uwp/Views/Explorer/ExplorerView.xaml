@@ -661,10 +661,10 @@
                         Margin="0,10,0,0"
                         Loaded="ContentRepeaterControl_Loaded"
                         IncrementalLoadingTrigger="Edge"
-                        IncrementalLoadingThreshold="10"
+                        IncrementalLoadingThreshold="0.5"
                         ItemsSource="{Binding RetrievedMediaVmCollection,Mode=OneWay}"
                         IsItemClickEnabled="True"
-                        
+                        DataFetchSize="1"
                         SelectionMode="None">
                         <toolkit:AdaptiveGridView.ItemContainerStyle>
                             <Style TargetType="GridViewItem">
@@ -687,10 +687,9 @@
                         -->
                         <toolkit:AdaptiveGridView.Footer>
                             <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
-                                <Button HorizontalAlignment="Center" Visibility="{Binding IsLoadingNewPage, Converter={StaticResource BoolNegationConverter}}"  VerticalAlignment="Top" Command="{Binding LoadMoreGalleryContentCommand}" Style="{StaticResource AppRoundedButtonStyle}">
+                                <Button HorizontalAlignment="Center" Visibility="{Binding ShowLoadMoreButton, Converter={StaticResource BoolVisibilityConverter}}" VerticalAlignment="Top" Command="{Binding LoadMoreGalleryContentCommand}" Style="{StaticResource AppRoundedButtonStyle}">
                                     <TextBlock x:Uid="LoadMore" ></TextBlock>
                                 </Button>
-
                                 <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="50,15" Visibility="{Binding IsLoadingNewPage}" />
                             </Grid>
                         </toolkit:AdaptiveGridView.Footer>
