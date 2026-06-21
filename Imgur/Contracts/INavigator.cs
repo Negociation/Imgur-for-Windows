@@ -9,6 +9,18 @@ namespace Imgur.Contracts
 
         event EventHandler<bool> FullScreenModeChanged;
 
+        /// <summary>
+        /// Fired whenever a fullscreen view reports its current scroll offset.
+        /// Listeners (e.g. ShellView) can use this to adjust UI opacity.
+        /// </summary>
+        event EventHandler<double> ScrollOffsetChanged;
+
+        /// <summary>
+        /// Called from a fullscreen view code-behind to broadcast the current
+        /// vertical scroll offset to any registered listener.
+        /// </summary>
+        void ReportScrollOffset(double offset);
+
         object RootFrame { get; set; }
 
         /// <summary>

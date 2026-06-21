@@ -1,5 +1,6 @@
 ﻿using Imgur.Services;
 using Imgur.Contracts;
+using Imgur.Api.Services.Contracts;
 using Imgur.Models;
 using Imgur.ViewModels.Media;
 using Microsoft.Extensions.DependencyInjection; // necessário para GetRequiredService
@@ -35,6 +36,8 @@ namespace Imgur.Factories
             var userContext = _serviceProvider.GetRequiredService<IUserContext>();
             var mediaActionsService = _serviceProvider.GetRequiredService<UserMediaActionsService>();
             var commentsService = _serviceProvider.GetRequiredService<CommentsService>();
+            var contentStorageService = _serviceProvider.GetRequiredService<IContentStorageService>();
+            var folderDialogService = _serviceProvider.GetRequiredService<IFolderDialogService>();
 
             var vm = new MediaViewModel(
                 media,
@@ -50,7 +53,9 @@ namespace Imgur.Factories
                 galleryService,
                 accountService,
                 mediaActionsService,
-                commentsService
+                commentsService,
+                contentStorageService,
+                folderDialogService
                 );
 
             vm.Initialize();

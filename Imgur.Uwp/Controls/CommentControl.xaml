@@ -108,8 +108,48 @@
                                     <Button x:Uid="Reply" Background="Transparent" BorderBrush="Transparent" Foreground="#B8BCC5" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" FontSize="12" Height="30" Padding="10,-5" Command="{Binding StartCommentCommand}">
                                     
                                     </Button>
-                                    <Button Background="Transparent" Foreground="#B8BCC5" BorderBrush="Transparent" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Width="30" Height="30" Padding="-5">
+                                    <Button x:Name="MoreOptions" Background="Transparent" Foreground="#B8BCC5" BorderBrush="Transparent" FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}" FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Width="30" Height="30" Padding="-5">
                                         <SymbolIcon Symbol="More"></SymbolIcon>
+                                        <Button.Flyout>
+                                            <MenuFlyout Placement="Left">
+
+                                                <!-- Ações de usuário -->
+                                                <MenuFlyoutItem Text="Block User" Command="{Binding BlockUserCommand}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE8D8;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="Report User" Command="{Binding ReportUserCommand}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE946;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+
+                                                <MenuFlyoutSeparator/>
+
+                                                <!-- Share -->
+                                                <MenuFlyoutItem Text="Share" Command="{Binding ShareCommand}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE72D;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+
+                                                <MenuFlyoutSeparator/>
+
+                                                <!-- Ações de cópia -->
+                                                <MenuFlyoutItem Text="Copy Comment Text" Command="{Binding CopyCommentTextCommand}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE8C8;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="Copy Permalink" Command="{Binding CopyPermalinkCommand}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE71B;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+
+                                            </MenuFlyout>
+                                        </Button.Flyout>
                                     </Button>
                                 </StackPanel>
                             </Grid>

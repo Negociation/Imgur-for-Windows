@@ -18,14 +18,26 @@ namespace Imgur.Factories
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public CommentViewModel GetCommentViewModel(string galleryId, Comment comment)
+        public CommentViewModel GetCommentViewModel(Comment comment)
         {
             var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
             var userContext = _serviceProvider.GetRequiredService<IUserContext>();
             var commentService = _serviceProvider.GetRequiredService<ICommentService>();
             var appNotificationService = _serviceProvider.GetRequiredService<IAppNotificationService>();
+            var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
 
-            return new CommentViewModel(galleryId, comment, commentService,  dialogService, appNotificationService, userContext);
+            return new CommentViewModel(comment, commentService, dialogService, appNotificationService, userContext, clipboardService);
+        }
+
+        public CommentViewModel GetMediaCommentViewModel(string galleryId, Comment comment)
+        {
+            var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
+            var userContext = _serviceProvider.GetRequiredService<IUserContext>();
+            var commentService = _serviceProvider.GetRequiredService<ICommentService>();
+            var appNotificationService = _serviceProvider.GetRequiredService<IAppNotificationService>();
+            var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
+
+            return new CommentViewModel(comment, commentService, dialogService, appNotificationService, userContext, clipboardService, galleryId);
         }
     }
 }

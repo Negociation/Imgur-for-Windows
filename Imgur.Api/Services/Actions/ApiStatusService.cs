@@ -4,6 +4,7 @@ using Imgur.API.Resources.Status;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,8 +29,15 @@ namespace Imgur.Api.Services.Actions
             }
             catch (HttpRequestException ex)
             {
+                Debug.WriteLine($"[ApiStatusService.GetApiStatusAsync] Erro de rede — {ex.Message}");
                 apiResponse.Success = false;
                 apiResponse.Status = (int)(((HttpResponseMessage)ex.InnerException.Data["response"]).StatusCode);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ApiStatusService.GetApiStatusAsync] Erro genérico — {ex.Message}");
+                apiResponse.Success = false;
+                apiResponse.Status = 0;
             }
             return (apiResponse);
         }

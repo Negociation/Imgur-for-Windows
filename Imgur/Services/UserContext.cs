@@ -111,7 +111,9 @@ namespace Imgur.Services
                     Username = profile.Data.url,
                     Avatar = profile.Data.avatar,
                     Cover = profile.Data.cover,
-                    AccessToken = accessToken
+                    AccessToken = accessToken,
+                    Reputation = profile.Data.reputation,
+                    ReputationName = profile.Data.reputation_name
                 };
                 Debug.WriteLine($"[UserContext] Perfil carregado: {CurrentUser.Username}");
             }

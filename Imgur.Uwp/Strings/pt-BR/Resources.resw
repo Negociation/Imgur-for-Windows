@@ -126,6 +126,9 @@
   <data name="AppBarDownload.Label" xml:space="preserve">
     <value>Download</value>
   </data>
+  <data name="ImageDownload.Text" xml:space="preserve">
+    <value>Download</value>
+  </data>
   <data name="AppBarDownload.ToolTipService.ToolTip" xml:space="preserve">
     <value>Fazer download do conteudo</value>
   </data>
@@ -368,6 +371,9 @@
   </data>
   <data name="Follow.Text" xml:space="preserve">
     <value>Seguir</value>
+  </data>
+  <data name="Unfollow.Text" xml:space="preserve">
+    <value>Deixar de seguir</value>
   </data>
   <data name="GalleriesSection.Text" xml:space="preserve">
     <value>Galerias</value>
@@ -619,6 +625,51 @@
   <data name="notification_comment_success_content" xml:space="preserve">
     <value>Comentário adicionado com sucesso.</value>
   </data>
+  <data name="notification_follow_null_content" xml:space="preserve">
+    <value>Não foi possível seguir: informações do utilizador indisponíveis.</value>
+  </data>
+  <data name="notification_follow_error_content" xml:space="preserve">
+    <value>Ocorreu um erro ao tentar seguir este utilizador.</value>
+  </data>
+  <data name="notification_follow_success_content" xml:space="preserve">
+    <value>Usuário seguido com sucesso.</value>
+  </data>
+  <data name="notification_unfollow_success_content" xml:space="preserve">
+    <value>Você deixou de seguir o usuário.</value>
+  </data>
+  <data name="notification_copy_comment_success_content" xml:space="preserve">
+    <value>Comentário copiado para a área de transferência com sucesso.</value>
+  </data>
+  <data name="notification_copy_permalink_success_content" xml:space="preserve">
+    <value>Permalink copiado para a área de transferência.</value>
+  </data>
+  <data name="notification_favourite_success_content" xml:space="preserve">
+    <value>Adicionado aos favoritos.</value>
+  </data>
+  <data name="notification_favourite_error_content" xml:space="preserve">
+    <value>Erro ao favoritar. Tente novamente.</value>
+  </data>
+  <data name="notification_vote_error_content" xml:space="preserve">
+    <value>Erro ao votar. Tente novamente.</value>
+  </data>
+  <data name="CopyImageLink.Text" xml:space="preserve">
+    <value>Copiar Link da Imagem</value>
+  </data>
+  <data name="notification_copy_image_link_success_content" xml:space="preserve">
+    <value>Link da imagem copiado para a área de transferência.</value>
+  </data>
+  <data name="notification_download_success_content" xml:space="preserve">
+    <value>Arquivo baixado com sucesso.</value>
+  </data>
+  <data name="notification_download_error_content" xml:space="preserve">
+    <value>Ocorreu um erro ao baixar o arquivo. Tente novamente.</value>
+  </data>
+  <data name="EmptySectionTitle.Text" xml:space="preserve">
+    <value>Nada por aqui ainda.</value>
+  </data>
+  <data name="EmptySectionSubtitle.Text" xml:space="preserve">
+    <value>Esta secção não tem nada para mostrar.</value>
+  </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>COMENTÁRIOS RECENTES</value>
   </data>
@@ -631,6 +682,14 @@
   <data name="CommentingPlaceholder" xml:space="preserve">
     <value>Comentando como {0}</value>
     <comment>CommentControl</comment>
+  </data>
+  <data name="CommentDialogTitle.Text" xml:space="preserve">
+    <value>Comentar Post</value>
+    <comment>CommentDialog header title</comment>
+  </data>
+  <data name="ReplyDialogTitle.Text" xml:space="preserve">
+    <value>Responder Post</value>
+    <comment>ReplyDialog header title</comment>
   </data>
   <data name="UploadCancellation.Text" xml:space="preserve">
     <value>Cancelar</value>

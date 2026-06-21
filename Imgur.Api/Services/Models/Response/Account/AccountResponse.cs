@@ -19,6 +19,6 @@ namespace Imgur.Api.Services.Models.Response.Account
         public int created { get; set; }
         public bool pro_expiration { get; set; }
         public bool is_blocked { get; set; }
-
+        public UserFollowResponse user_follow { get; set; }
     }
 }

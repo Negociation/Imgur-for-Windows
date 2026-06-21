@@ -11,6 +11,22 @@
     d:DesignWidth="400">
 
     <Grid x:Name="RootMedia">
+
+        <Grid.ContextFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem x:Name="CopyImageLinkItem" x:Uid="CopyImageLink" Click="CopyImageLink_Click">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE71B;"/>
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem x:Name="DownloadImageItem" x:Uid="ImageDownload" Click="DownloadImage_Click">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE896;"/>
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+            </MenuFlyout>
+        </Grid.ContextFlyout>
+
         <FontIcon 
             FontFamily="{StaticResource SegoeMDLGlyphs}" 
             FontSize="100" 

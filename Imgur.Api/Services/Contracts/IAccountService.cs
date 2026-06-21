@@ -19,5 +19,9 @@ namespace Imgur.Api.Services.Contracts
 
         Task<ApiResponse<List<AccountResponse>>> AccountSearchAsync(string query, int page = 0);
 
+        Task<ApiResponse<bool>> FollowUserAsync(string username);
+        Task<ApiResponse<bool>> UnfollowUserAsync(string username);
+
+        Task<ApiResponse<AccountResponse>> GetFollowStatusAsync(string username);
     }
 }

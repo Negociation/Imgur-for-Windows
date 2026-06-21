@@ -2,6 +2,7 @@
 using Imgur.Api.Services.Models.Common;
 using Imgur.Api.Services.Models.Response.Account;
 using Imgur.Api.Services.Models.Response.Auth;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +18,12 @@ namespace Imgur.Api.Services.Actions
         // ── Valida token batendo em account/me com Bearer ──────
         public async Task<ApiResponse<AccountResponse>> ValidateTokenAsync(string accessToken)
         {
-            return await GetAsync<AccountResponse>("account/me", accessToken);
+            var response = await GetAsync<AccountResponse>("account/me", accessToken);
+
+            var json = JsonConvert.SerializeObject(response, Formatting.Indented);
+            Debug.WriteLine(json);
+
+            return response;
         }
 
         // ── Renova o token via oauth2/token ────────────────────

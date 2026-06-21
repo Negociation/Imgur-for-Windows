@@ -11,7 +11,7 @@ namespace Imgur.Mappers
 {
     public class AccountMapper
     {
-        public UserAccount ToUserAccount(AccountResponse dto)
+        public UserAccount ToUserAccount(AccountResponse dto, bool ?followStatus = null)
         {
             var account = new UserAccount
             {
@@ -20,6 +20,7 @@ namespace Imgur.Mappers
                 Cover = dto.cover,
                 Reputation = dto.reputation,
                 ReputationName = dto.reputation_name,
+                IsFollowing = dto.user_follow?.status ?? followStatus,
                 IsHidden = false
         };
 

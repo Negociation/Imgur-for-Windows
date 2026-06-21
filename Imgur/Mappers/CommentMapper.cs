@@ -2,6 +2,7 @@
 using Imgur.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Imgur.Mappers
@@ -16,6 +17,7 @@ namespace Imgur.Mappers
             {
                 Id = dto.Id,
                 ImageId = dto.ImageId,
+                Cover = $"https://i.imgur.com/{dto.AlbumCover}b.png",
                 Body = System.Net.WebUtility.HtmlDecode(dto.Body),
                 Author = dto.Author,
                 AuthorId = dto.AuthorId,

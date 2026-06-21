@@ -81,24 +81,28 @@ namespace Imgur.ViewModels.Media
 
         private readonly ICommentService _commentService;
 
+        //-- Serviço de Clipboard para ações de cópia
+        private readonly IClipboardService _clipboardService;
+
         //***************************************************************
         // Constructors e Initializers
         //***************************************************************
 
         //-- Constructor
         public CommentViewModel(
-            string galleryId,
-  
             Comment comment,
             ICommentService commentService,
             IDialogService dialogService,
             IAppNotificationService appNotificationService,
-            IUserContext userContext
+            IUserContext userContext,
+            IClipboardService clipboardService,
+            string galleryId = null
             ) : base(dialogService, appNotificationService, userContext)
         {
             _galleryId = galleryId;
             _comment = comment;
             _commentService = commentService;
+            _clipboardService = clipboardService;
         }
 
         //-- Command para Vote ( Upvote ("up") | Downvote ("down") ) em Comentário
@@ -177,12 +181,14 @@ namespace Imgur.ViewModels.Media
                                 Replies = new ObservableCollection<CommentViewModel>(
                                 Comment.Children.Select(reply =>
                                     new CommentViewModel(
-                                        _galleryId,
+                                        
                                         reply,
                                         _commentService,
                                         _dialogService,
                                         _appNotification,
-                                        _userContext
+                                        _userContext,
+                                        _clipboardService,
+                                        _galleryId
                                     )
                                 )
                             );
@@ -217,5 +223,92 @@ namespace Imgur.ViewModels.Media
 
             return result.Success;
         }
-    }
+
+        //***************************************************************
+        // Commands — MoreOptions Context Menu
+        //***************************************************************
+
+        //-- Block User (TODO: implementar API)
+        private ICommand _blockUserCommand;
+        public ICommand BlockUserCommand
+        {
+            get
+            {
+                if (_blockUserCommand == null)
+                    _blockUserCommand = new RelayCommand(() =>
+                    {
+                        // TODO: bloquear usuário via API
+                    });
+                return _blockUserCommand;
+            }
+        }
+
+        //-- Report User (TODO: implementar API)
+        private ICommand _reportUserCommand;
+        public ICommand ReportUserCommand
+        {
+            get
+            {
+                if (_reportUserCommand == null)
+                    _reportUserCommand = new RelayCommand(() =>
+                    {
+                        // TODO: denunciar usuário via API
+                    });
+                return _reportUserCommand;
+            }
+        }
+
+        //-- Share (TODO: abrir diálogo de compartilhamento)
+        private ICommand _shareCommand;
+        public ICommand ShareCommand
+        {
+            get
+            {
+                if (_shareCommand == null)
+                    _shareCommand = new RelayCommand(() =>
+                    {
+                        // TODO: abrir share dialog
+                    });
+                return _shareCommand;
+            }
+        }
+
+        //-- Copy Comment Text — copia o corpo do comentário para a área de transferência
+        private ICommand _copyCommentTextCommand;
+        public ICommand CopyCommentTextCommand
+        {
+            get
+            {
+                if (_copyCommentTextCommand == null)
+                    _copyCommentTextCommand = new RelayCommand(() =>
+                    {
+                        _clipboardService.SetText(Comment?.Body ?? string.Empty);
+                        _appNotification.AddNotification(new NotificationViewModel
+                        {
+                            Message = "notification_copy_comment_success_content"
+                        });
+                    });
+                return _copyCommentTextCommand;
+            }
+        }
+
+        //-- Copy Permalink — copia o permalink do comentário (vazio por enquanto)
+        private ICommand _copyPermalinkCommand;
+        public ICommand CopyPermalinkCommand
+        {
+            get
+            {
+                if (_copyPermalinkCommand == null)
+                    _copyPermalinkCommand = new RelayCommand(() =>
+                    {
+                        // TODO: construir URL real do permalink
+                        _clipboardService.SetText(string.Empty);
+                        _appNotification.AddNotification(new NotificationViewModel
+                        {
+                            Message = "notification_copy_permalink_success_content"
+                        });
+                    });
+                return _copyPermalinkCommand;
+            }
+        }    }
 }

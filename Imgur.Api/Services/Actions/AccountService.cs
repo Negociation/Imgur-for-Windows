@@ -78,5 +78,22 @@ namespace Imgur.Api.Services.Actions
 
             return successResponse;
         }
+
+        public async Task<ApiResponse<bool>> FollowUserAsync(string username)
+        {
+            Debug.WriteLine($"[AccountService] Follow: {username}");
+            return await PostAsync<bool>($"account/{username}/follow");
+        }
+
+        public async Task<ApiResponse<bool>> UnfollowUserAsync(string username)
+        {
+            Debug.WriteLine($"[AccountService] Unfollow: {username}");
+            return await DeleteAsync<bool>($"account/{username}/follow");
+        }
+
+        public async Task<ApiResponse<AccountResponse>> GetFollowStatusAsync(string username)
+        {
+            return await GetAsync<AccountResponse>($"account/{username}/follow");
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace Imgur.Contracts
 {
     public interface ICommentVmFactory
     {
-        CommentViewModel GetCommentViewModel(string galleryId, Comment comment);
+        CommentViewModel GetMediaCommentViewModel(string galleryId, Comment comment);
+        CommentViewModel GetCommentViewModel(Comment comment);
     }
 }

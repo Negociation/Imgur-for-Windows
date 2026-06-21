@@ -129,9 +129,16 @@
     <value>Download</value>
     <comment>AppBar</comment>
   </data>
+  <data name="ImageDownload.Text" xml:space="preserve">
+    <value>Download</value>
+    <comment>AppBar</comment>
+  </data>
   <data name="AppBarDownload.ToolTipService.ToolTip" xml:space="preserve">
     <value>Download the content</value>
     <comment>AppBar</comment>
+  </data>
+  <data name="CopyImageLink.Text" xml:space="preserve">
+    <value>Copy Image Link</value>
   </data>
   <data name="AppBarEmbed.Label" xml:space="preserve">
     <value>Embed</value>
@@ -408,6 +415,9 @@
   <data name="Follow.Text" xml:space="preserve">
     <value>Follow</value>
   </data>
+  <data name="Unfollow.Text" xml:space="preserve">
+    <value>Unfollow</value>
+  </data>
   <data name="GalleriesSection.Text" xml:space="preserve">
     <value>Galleries</value>
     <comment>ExploreSearchView</comment>
@@ -638,6 +648,48 @@
   <data name="notification_comment_success_content" xml:space="preserve">
     <value>Comment posted successfully.</value>
   </data>
+  <data name="notification_follow_null_content" xml:space="preserve">
+    <value>Unable to follow: user information is unavailable.</value>
+  </data>
+  <data name="notification_follow_error_content" xml:space="preserve">
+    <value>Something went wrong while trying to follow this user.</value>
+  </data>
+  <data name="notification_follow_success_content" xml:space="preserve">
+    <value>User followed successfully.</value>
+  </data>
+  <data name="notification_unfollow_success_content" xml:space="preserve">
+    <value>You unfollowed the user.</value>
+  </data>
+  <data name="notification_copy_comment_success_content" xml:space="preserve">
+    <value>Comment text copied to clipboard.</value>
+  </data>
+  <data name="notification_copy_permalink_success_content" xml:space="preserve">
+    <value>Permalink copied to clipboard.</value>
+  </data>
+  <data name="notification_favourite_success_content" xml:space="preserve">
+    <value>Added to favourites.</value>
+  </data>
+  <data name="notification_favourite_error_content" xml:space="preserve">
+    <value>Something went wrong while favouriting. Please try again.</value>
+  </data>
+  <data name="notification_vote_error_content" xml:space="preserve">
+    <value>Something went wrong while voting. Please try again.</value>
+  </data>
+  <data name="notification_copy_image_link_success_content" xml:space="preserve">
+    <value>Image link copied to clipboard.</value>
+  </data>
+  <data name="notification_download_success_content" xml:space="preserve">
+    <value>File downloaded successfully.</value>
+  </data>
+  <data name="notification_download_error_content" xml:space="preserve">
+    <value>Something went wrong while downloading the file. Please try again.</value>
+  </data>
+  <data name="EmptySectionTitle.Text" xml:space="preserve">
+    <value>Nothing here yet.</value>
+  </data>
+  <data name="EmptySectionSubtitle.Text" xml:space="preserve">
+    <value>This section doesn't have anything to show.</value>
+  </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>NEW COMMENTS</value>
   </data>
@@ -658,5 +710,13 @@
   <data name="CommentingPlaceholder" xml:space="preserve">
     <value>Commenting as {0}</value>
     <comment>CommentControl</comment>
+  </data>
+  <data name="CommentDialogTitle.Text" xml:space="preserve">
+    <value>Comment Post</value>
+    <comment>CommentDialog header title</comment>
+  </data>
+  <data name="ReplyDialogTitle.Text" xml:space="preserve">
+    <value>Reply Post</value>
+    <comment>ReplyDialog header title</comment>
   </data>
 </root>

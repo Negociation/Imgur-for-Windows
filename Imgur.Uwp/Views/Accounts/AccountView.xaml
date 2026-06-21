@@ -10,7 +10,25 @@
     xmlns:controls="using:Imgur.Uwp.Controls"
     xmlns:mediavm="using:Imgur.ViewModels.Media"
     xmlns:commentvm="using:Imgur.ViewModels.Account"
+    SizeChanged="AccountViewPage_SizeChanged"
     mc:Ignorable="d">
+
+    <Page.Resources>
+
+        <Style x:Key="CommentMobileStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <Style x:Key="CommentDesktopStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+    </Page.Resources>
+    
     <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LeaveButton">
@@ -29,9 +47,6 @@
                     <VisualState.Setters>
                         <Setter Target="AccountViewPage.Margin" Value="0,-10,0,0"/>
                         <Setter Target="ExpandedHeader.Height" Value="200"/>
-                        <Setter Target="UserFollowButton.Margin" Value="30,50,0,0"/>
-
-
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -43,7 +58,6 @@
                         <Setter Target="AccountViewPage.Padding" Value="0"/>
                         <Setter Target="LeaveFloatButton.Margin" Value="17,17,0,0"/>
                         <Setter Target="LeaveFloatButton.Background" Value="#AD19191C"/>
-                        <Setter Target="UserFollowButton.Margin" Value="30,50,0,0"/>
 
                     </VisualState.Setters>
                 </VisualState>
@@ -71,7 +85,6 @@
                         <Setter Target="LeaveFloatButton.Margin" Value="17,30,0,0"/>
                         <Setter Target="LeaveFloatButton.MinWidth" Value="34"/>
                         <Setter Target="LeaveFloatButton.MinHeight" Value="34"/>
-                        <Setter Target="UserFollowButton.Margin" Value="-30,100,0,0"/>
 
                     </VisualState.Setters>
                 </VisualState>
@@ -83,7 +96,7 @@
                         <AdaptiveTrigger MinWindowWidth="300" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="UserInfoPanel.Width" Value="300"/>
+                        <Setter Target="UserInfoPanel.Width" Value="380"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -91,6 +104,7 @@
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="CommentsRepeaterControl.Margin" Value="20,30,40,20"/>
                         <Setter Target="UserInfoPanel.Margin" Value="40,40,0,0"/>
                         <Setter Target="UserInfoPanel.Width" Value="400"/>
                     </VisualState.Setters>
@@ -100,6 +114,7 @@
                         <AdaptiveTrigger MinWindowWidth="1100" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="CommentsRepeaterControl.Margin" Value="40,30,40,40"/>
                         <Setter Target="UserInfoPanel.Margin" Value="40,40,0,0"/>
                         <Setter Target="UserInfoPanel.Width" Value="600"/>
                     </VisualState.Setters>
@@ -135,6 +150,7 @@
         </VisualStateManager.VisualStateGroups>
         <ScrollViewer x:Name="MainScrollViewer" 
                       Padding="0,0,0,0"
+                      ViewChanged="MainScrollViewer_ViewChanged"
                       VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
@@ -151,7 +167,7 @@
                             AlignmentY="Center"/>
                     </Grid.Background>
                     <Grid Background="Black" Opacity="0.3"></Grid>
-                    <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <Viewbox x:Name="UserInfoPanel" Width="320"  Margin="30,0,0,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
                                 <toolkit:DropShadowPanel
@@ -187,17 +203,21 @@
                                 <Run FontWeight="SemiBold" Text="{Binding UserAccountInfo.Reputation}"></Run>
                                 <Run x:Uid="Points" FontWeight="SemiBold"  Text=" Points"></Run>
                                     </TextBlock>
-
+                                    <toolkit:DropShadowPanel Grid.Row="2" x:Name="UserFollowButton" Visibility="{Binding IsUserOwnPage, Converter={StaticResource BoolNegationConverter}}" BlurRadius="20" Margin="0,10" OffsetX="0" OffsetY="2" ShadowOpacity="0.5" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,0" VerticalContentAlignment="Stretch">
+                                        <Button x:Name="UserFollow" Style="{StaticResource FollowButtonStyle}" Command="{Binding FollowAuthor}"  Opacity="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock x:Uid="Follow" Visibility="{Binding IsFollowing, Converter={StaticResource BoolNegationConverter}}"></TextBlock>
+                                                <TextBlock x:Uid="Unfollow" Visibility="{Binding IsFollowing, Converter={StaticResource BoolVisibilityConverter}}"></TextBlock>
+                                            </StackPanel>
+                                        </Button>
+                                    </toolkit:DropShadowPanel>
                                 </Grid>
+                                
                             </StackPanel>
                         </Viewbox>
-                        <toolkit:DropShadowPanel x:Name="UserFollowButton" BlurRadius="20" Margin="-30,100,0,0" OffsetX="0" OffsetY="2" ShadowOpacity="0.5" HorizontalContentAlignment="Stretch" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,0" VerticalContentAlignment="Stretch">
-                            <Button Style="{StaticResource FollowButtonStyle}" Command="{Binding FollowAuthor}"  Opacity="1">
-                                <TextBlock x:Uid="Follow"></TextBlock>
-                            </Button>
-                        </toolkit:DropShadowPanel>
 
-                    </Grid>
+
+                    </StackPanel>
                 </Grid>
 
 
@@ -216,7 +236,7 @@
                     </Grid>
 
 
-                    <Pivot x:Name="AccountPivot" Margin="0,-3,0,0">
+                        <Pivot x:Name="AccountPivot" Margin="0,-3,0,0" SelectionChanged="AccountPivot_SelectionChanged">
                         <Pivot.Resources>
                             <Style TargetType="PivotHeaderItem">
                                 <Setter Property="Margin" Value="12,0"/>
@@ -228,11 +248,13 @@
                         <!-- Submissions -->
                         <PivotItem x:Uid="PostsHeader" Header="Posts">
                             <Grid MinHeight="200" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
+                                <controls:EmptyAccountSectionControl Visibility="{Binding IsSubmissionsEmpty, Converter={StaticResource BoolVisibilityConverter}}" />
+
                                 <toolkit:AdaptiveGridView
                                     x:Name="PostsContentRepeaterControl"
                                     Margin="0,10,0,0"
                                     IncrementalLoadingTrigger="Edge"
-                                    IncrementalLoadingThreshold="0.5"
+                                    IncrementalLoadingThreshold="0.1"
                                     ItemsSource="{Binding SubmissionsCollection, Mode=OneWay}"
                                     IsItemClickEnabled="True"
                                     DataFetchSize="1"
@@ -256,10 +278,15 @@
 
                                     <toolkit:AdaptiveGridView.Footer>
                                         <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
-                                            <TextBlock Text="Nothing to show... Try Again Later!"
-                                                       HorizontalAlignment="Center"
-                                                       Visibility="{Binding HasSubmissions, Converter={StaticResource BoolNegationConverter}}"
-                                                       Opacity="0.6"/>
+                                            <Button HorizontalAlignment="Center"
+                                                    Visibility="{Binding ShowLoadMoreSubmissionsButton, Converter={StaticResource BoolVisibilityConverter}}"
+                                                    VerticalAlignment="Top"
+                                                    Command="{Binding LoadMoreSubmissionsCommand}"
+                                                    Style="{StaticResource AppRoundedButtonStyle}">
+                                                <TextBlock x:Uid="LoadMore"></TextBlock>
+                                            </Button>
+                                            <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="50,15"
+                                                         Visibility="{Binding IsLoadingNewPage, Converter={StaticResource BoolVisibilityConverter}}" />
                                         </Grid>
                                     </toolkit:AdaptiveGridView.Footer>
                                 </toolkit:AdaptiveGridView>
@@ -269,11 +296,13 @@
                         <!-- Favourites -->
                         <PivotItem x:Uid="FavouritesHeader" Header="Favourites">
                             <Grid MinHeight="200" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
+                                <controls:EmptyAccountSectionControl Visibility="{Binding IsFavoritesEmpty, Converter={StaticResource BoolVisibilityConverter}}" />
+
                                 <toolkit:AdaptiveGridView
                                     x:Name="FavoritesContentRepeaterControl"
                                     Margin="0,10,0,0"
                                     IncrementalLoadingTrigger="Edge"
-                                    IncrementalLoadingThreshold="0.5"
+                                    IncrementalLoadingThreshold="0.1"
                                     ItemsSource="{Binding FavoritesCollection, Mode=OneWay}"
                                     IsItemClickEnabled="True"
                                     DataFetchSize="1"
@@ -297,10 +326,16 @@
 
                                     <toolkit:AdaptiveGridView.Footer>
                                         <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
-                                            <TextBlock Text="Nothing to show... Try Again Later!"
-                                                       HorizontalAlignment="Center"
-                                                       Visibility="{Binding HasFavorites, Converter={StaticResource BoolNegationConverter}}"
-                                                       Opacity="0.6"/>
+                                           
+                                            <Button HorizontalAlignment="Center"
+                                                    Visibility="{Binding ShowLoadMoreFavoritesButton, Converter={StaticResource BoolVisibilityConverter}}"
+                                                    VerticalAlignment="Top"
+                                                    Command="{Binding LoadMoreFavoritesCommand}"
+                                                    Style="{StaticResource AppRoundedButtonStyle}">
+                                                <TextBlock x:Uid="LoadMore"></TextBlock>
+                                            </Button>
+                                            <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="50,15"
+                                                         Visibility="{Binding IsLoadingNewPage, Converter={StaticResource BoolVisibilityConverter}}" />
                                         </Grid>
                                     </toolkit:AdaptiveGridView.Footer>
                                 </toolkit:AdaptiveGridView>
@@ -310,9 +345,11 @@
                         <!-- Comments -->
                         <PivotItem x:Uid="CommentsHeader" Header="Comments" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
                             <Grid MinHeight="200">
+                                <controls:EmptyAccountSectionControl Visibility="{Binding IsCommentsEmpty, Converter={StaticResource BoolVisibilityConverter}}" />
                                 <ListView
                                     x:Name="CommentsRepeaterControl"
-                                    Margin="0,10,0,0"
+                                    Margin="-12,10,-12,40"
+                                    MaxWidth="900"
                                     IncrementalLoadingTrigger="Edge"
                                     DataFetchSize="1"
                                     ItemsSource="{Binding CommentsCollection, Mode=OneWay}"
@@ -328,16 +365,27 @@
                                     <ListView.ItemTemplate>
                                         <DataTemplate x:DataType="mediavm:CommentViewModel">
                                           <!--  <controls:CommentTileControl ViewModel="{Binding}" /> -->
-                                            <TextBlock>Oi</TextBlock>
+                                            <Grid HorizontalAlignment="Stretch">
+                                                <Button Padding="0" Style="{x:Null}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                                    <controls:AccountCommentControl/>
+                                                </Button>
+                                                
+                                            </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
 
                                     <ListView.Footer>
                                         <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
-                                            <TextBlock Text="Nothing to show... Try Again Later!"
-                                                       HorizontalAlignment="Center"
-                                                       Visibility="{Binding HasComments, Converter={StaticResource BoolNegationConverter}}"
-                                                       Opacity="0.6"/>
+                                            
+                                            <Button HorizontalAlignment="Center"
+                                                    Visibility="{Binding ShowLoadMoreCommentsButton, Converter={StaticResource BoolVisibilityConverter}}"
+                                                    VerticalAlignment="Top"
+                                                    Command="{Binding LoadMoreCommentsCommand}"
+                                                    Style="{StaticResource AppRoundedButtonStyle}">
+                                                <TextBlock x:Uid="LoadMore"></TextBlock>
+                                            </Button>
+                                            <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="50,15"
+                                                         Visibility="{Binding IsLoadingNewPage, Converter={StaticResource BoolVisibilityConverter}}" />
                                         </Grid>
                                     </ListView.Footer>
                                 </ListView>
@@ -379,16 +427,44 @@
             <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="14" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" Glyph="&#xE72B;"/>
         </Button>
 
-        <!-- Bottom Navigation Bar -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="10" VerticalAlignment="Bottom" x:Name="BottomNavigationBar" Visibility="Visible">
-            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4">
-                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Gallery">
-                    <FontIcon Visibility="Visible" Grid.Column="0" FontSize="20" FontWeight="SemiLight"  VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
+        <!-- Bottom Navigation Bar — Posts -->
+        <StackPanel x:Name="BottomBarPosts" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" Visibility="Visible">
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Command="{Binding ReloadSubmissionsCommand}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Posts">
+                    <FontIcon FontSize="20" FontWeight="SemiLight" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
                 </Button>
             </toolkit:DropShadowPanel>
-            <toolkit:DropShadowPanel  OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.5" Margin="10,0,0,0">
-                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Width="48" Height="48" IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}" ToolTipService.ToolTip="Move to the top">
-                    <FontIcon Visibility="Visible"  Grid.Column="0" FontSize="20" Margin="1,0,0,0" FontWeight="SemiLight" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE898;"/>
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.5" Margin="10,0,0,0">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Click="NavigateToTop_Click" Width="48" Height="48" IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}" ToolTipService.ToolTip="Move to the top">
+                    <FontIcon FontSize="20" Margin="1,0,0,0" FontWeight="SemiLight" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE898;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+        </StackPanel>
+
+        <!-- Bottom Navigation Bar — Favourites -->
+        <StackPanel x:Name="BottomBarFavorites" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" Visibility="Collapsed">
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Command="{Binding ReloadFavoritesCommand}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Favourites">
+                    <FontIcon FontSize="20" FontWeight="SemiLight" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.5" Margin="10,0,0,0">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Click="NavigateToTop_Click" Width="48" Height="48" IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}" ToolTipService.ToolTip="Move to the top">
+                    <FontIcon FontSize="20" Margin="1,0,0,0" FontWeight="SemiLight" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE898;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+        </StackPanel>
+
+        <!-- Bottom Navigation Bar — Comments -->
+        <StackPanel x:Name="BottomBarComments" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" Visibility="Collapsed">
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.4">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Command="{Binding ReloadCommentsCommand}" Width="48" Height="48" ToolTipService.ToolTip="Refresh Comments">
+                    <FontIcon FontSize="20" FontWeight="SemiLight" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE72C;"/>
+                </Button>
+            </toolkit:DropShadowPanel>
+            <toolkit:DropShadowPanel OffsetY="5" OffsetX="0" BlurRadius="20" ShadowOpacity="0.5" Margin="10,0,0,0">
+                <Button Style="{StaticResource CircleButtonStyle}" Background="{StaticResource SystemControlBackgroundAccentBrush}" Click="NavigateToTop_Click" Width="48" Height="48" IsEnabled="{Binding CanScrollToTop, FallbackValue='False'}" ToolTipService.ToolTip="Move to the top">
+                    <FontIcon FontSize="20" Margin="1,0,0,0" FontWeight="SemiLight" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="WhiteSmoke" Glyph="&#xE898;"/>
                 </Button>
             </toolkit:DropShadowPanel>
         </StackPanel>

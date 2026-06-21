@@ -8,7 +8,7 @@ namespace Imgur.Collections
 {
     public interface IIncrementalCollectionFactory
     {
-        IIncrementalCollection<T> Create<T>(Func<int, CancellationToken, Task<IReadOnlyList<T>>> fetchPage, int pageSize = 60, int batchSize = 10);
+        IIncrementalCollection<T> Create<T>(Func<int, CancellationToken, Task<IReadOnlyList<T>>> fetchPage, int pageSize = 60, int batchSize = 10, bool autoTriggerNextPage = true);
     }
 }
 

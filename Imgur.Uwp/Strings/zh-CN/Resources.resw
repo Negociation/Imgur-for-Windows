@@ -1,64 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -118,605 +59,605 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppBarCopy.Label" xml:space="preserve">
-    <value>Salin ke papanklip</value>
+    <value>复制到剪贴板</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Salin tautan ke papanklip</value>
+    <value>将链接复制到剪贴板</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarDownload.Label" xml:space="preserve">
-    <value>Unduh</value>
+    <value>下载</value>
     <comment>AppBar</comment>
   </data>
   <data name="ImageDownload.Text" xml:space="preserve">
-    <value>Unduh</value>
+    <value>下载</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarDownload.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Unduh konten</value>
+    <value>下载内容</value>
     <comment>AppBar</comment>
   </data>
+  <data name="CopyImageLink.Text" xml:space="preserve">
+    <value>复制图片链接</value>
+  </data>
   <data name="AppBarEmbed.Label" xml:space="preserve">
-    <value>Semat</value>
+    <value>嵌入</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarEmbed.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Sematkan konten</value>
+    <value>嵌入内容</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarFavouriteButton.Label" xml:space="preserve">
-    <value>Tambahkan ke favorit</value>
+    <value>添加到收藏夹</value>
   </data>
   <data name="AppBarOpen.Label" xml:space="preserve">
-    <value>Buka Album</value>
+    <value>打开相册</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarOpen.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Jelajahi Konten Album</value>
+    <value>浏览相册内容</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarShare.Label" xml:space="preserve">
-    <value>Bagikan ke...</value>
+    <value>分享到...</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Bagikan konten</value>
+    <value>分享内容</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBranch.Text" xml:space="preserve">
-    <value>Cabang</value>
+    <value>分支</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppDesc.Text" xml:space="preserve">
-    <value>Sebuah Klien Platform Windows Universal Nativ untuk Komunitas Imgur.</value>
+    <value>适用于 Imgur 社区的原生通用 Windows 平台客户端。</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppTitle.Text" xml:space="preserve">
-    <value>Imgur untuk Windows</value>
+    <value>Windows 版 Imgur</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppVersion.Text" xml:space="preserve">
-    <value>Versi</value>
+    <value>版本</value>
     <comment>AboutControl</comment>
   </data>
   <data name="category_hot" xml:space="preserve">
-    <value>Paling Viral</value>
-    <comment>Enum -&gt; Sections</comment>
+    <value>最受欢迎</value>
+    <comment>Enum -> Sections</comment>
   </data>
   <data name="category_top" xml:space="preserve">
-    <value>Skor tertinggi</value>
-    <comment>Enum -&gt; Sections</comment>
+    <value>最高分</value>
+    <comment>Enum -> Sections</comment>
   </data>
   <data name="category_user" xml:space="preserve">
-    <value>Dikirim Pengguna</value>
-    <comment>Enum -&gt; Sections</comment>
+    <value>用户投稿</value>
+    <comment>Enum -> Sections</comment>
   </data>
   <data name="Connect.Text" xml:space="preserve">
-    <value>Terhubung</value>
-    <comment>ShellView -&gt; NavigationViewItem </comment>
+    <value>连接</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="DaysElapsedFormat" xml:space="preserve">
-    <value>{0} hari</value>
+    <value>{0} 天前</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="Explorer.Text" xml:space="preserve">
-    <value>Jelajah konten baru!</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>探索新内容！</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="HoursElapsedFormat" xml:space="preserve">
-    <value>{0} jam</value>
+    <value>{0} 小时前</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="MinutesElapsedFormat" xml:space="preserve">
-    <value>{0} menit</value>
+    <value>{0} 分钟前</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Gambar, #tags, @users oh my!</value>
-    <comment>ShellView -&gt; AutoSugestBox</comment>
+    <value>图片、#标签、@用户，尽在此处！</value>
+    <comment>ShellView -> AutoSuggestBox</comment>
   </data>
   <data name="SecondsElapsedFormat" xml:space="preserve">
-    <value>{0} detik</value>
+    <value>{0} 秒前</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="Settings.Text" xml:space="preserve">
-    <value>Pengaturan</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>设置</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="SettingsAutoPlay.Header" xml:space="preserve">
-    <value>Putar-Otomatis Thumbnails</value>
+    <value>自动播放缩略图</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsAutoPlay.Text" xml:space="preserve">
-    <value>Nyalakan Putar Otomatis thumbnails.</value>
+    <value>启用缩略图自动播放。</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsData.Header" xml:space="preserve">
-    <value> Kontrol Data</value>
+    <value>数据控制</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsData.Text" xml:space="preserve">
-    <value>Beritahukan ketika menggunakan data seluler .</value>
+    <value>使用移动数据时发出通知。</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Header" xml:space="preserve">
-    <value>Nyakakan Live Tiles</value>
+    <value>使用动态磁贴</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Text" xml:space="preserve">
-    <value>Tampilkan Live Tiles dengan konten paling viral.</value>
+    <value>显示包含热门内容的动态磁贴。</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsMobileUsage.Header" xml:space="preserve">
-    <value>Batas penggunaan data seluler</value>
+    <value>限制移动数据使用</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsMobileUsage.Text" xml:space="preserve">
-    <value>Hanya putar Video Kualitas HD via Wi-Fi.</value>
+    <value>仅在 Wi-Fi 下播放高清视频。</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsNotification.Header" xml:space="preserve">
-    <value>Ingatkan Pemberitahuan </value>
-    <comment>Settings </comment>
+    <value>提醒通知</value>
+    <comment>Settings</comment>
   </data>
   <data name="SettingsNotification.Text" xml:space="preserve">
-    <value>Kirimkan pemberitahuan sesekali tentang apa yang terjadi di komunitas imgur.</value>
+    <value>偶尔发送关于 Imgur 社区动态的通知。</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
-    <value>Tentang aplikasi ini</value>
+    <value>关于此应用</value>
     <comment>AboutControl</comment>
   </data>
   <data name="SettingsPageAppearanceTitle.Text" xml:space="preserve">
-    <value>Penampilan</value>
+    <value>外观</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageGeneralTitle.Text" xml:space="preserve">
-    <value>Pengaturan Umum</value>
+    <value>常规设置</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>Pengaturan aplikasi</value>
+    <value>应用设置</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnail.Header" xml:space="preserve">
-    <value>Ukuran Thumbnail</value>
+    <value>缩略图大小</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnail.Text" xml:space="preserve">
-    <value>Ukuran album thumbnails.</value>
+    <value>相册缩略图的大小。</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailLarge.Content" xml:space="preserve">
-    <value>Besar</value>
+    <value>大</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailMedium.Content" xml:space="preserve">
-    <value>Sedang</value>
+    <value>中</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailSmall.Content" xml:space="preserve">
-    <value>Kecil</value>
+    <value>小</value>
     <comment>Settings</comment>
   </data>
   <data name="ShellSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Gambar, #tags, @users oh my!</value>
+    <value>图片、#标签、@用户，尽在此处！</value>
     <comment>Shellview</comment>
   </data>
   <data name="SortLabel.Text" xml:space="preserve">
-    <value>Urutkan berdasarkan:</value>
-    <comment>ExplorerView-&gt;Command Bar</comment>
+    <value>排序方式：</value>
+    <comment>ExplorerView->Command Bar</comment>
   </data>
   <data name="sort_all" xml:space="preserve">
-    <value>Semua waktu</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>全部时间</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_day" xml:space="preserve">
-    <value>Hari inu</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>今天</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_month" xml:space="preserve">
-    <value>Bulan</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>本月</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_rising" xml:space="preserve">
-    <value>Kenaikan</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>上升中</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_time" xml:space="preserve">
-    <value>Terbaru</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>最新</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_top" xml:space="preserve">
-    <value>Terbaik</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>最佳</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_viral" xml:space="preserve">
-    <value>Populer</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>热门</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_week" xml:space="preserve">
-    <value>Minggu</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>本周</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_year" xml:space="preserve">
-    <value>Tahun</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>今年</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="Tags.Text" xml:space="preserve">
-    <value>Eksplorasi Tagar</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>探索标签</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="Upload.Text" xml:space="preserve">
-    <value>Unggah berkas baru</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>上传新文件</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="Views.Text" xml:space="preserve">
-    <value>Lihat</value>
+    <value>浏览量</value>
   </data>
   <data name="LoadMore.Text" xml:space="preserve">
-    <value>Muat lebih</value>
-  </data>
-  <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Save</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="Save.Text" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="SettingsApiKey.Header" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
-    <comment>Settings</comment>
-  </data>
-  <data name="SettingsApiKey.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
-    <comment>Settings</comment>
-  </data>
-  <data name="SettingsApiKeyButton.Text" xml:space="preserve">
-    <value>Configure</value>
-  </data>
-  <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
-    <value>In order to use the default Api Keys, just leave the fields blank and save it.</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
-    <value>Advanced Settings</value>
-    <comment>Settings</comment>
-  </data>
-  <data name="SignInIntercetorMsg.Text" xml:space="preserve">
-    <value>Sign in to save it!</value>
-    <comment>LoginInterceptorDialog</comment>
-  </data>
-  <data name="AppCloseCancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="AppCloseConfirm" xml:space="preserve">
-    <value>Leave</value>
-  </data>
-  <data name="AppCloseContent" xml:space="preserve">
-    <value>Are you sure you want to close the app ?</value>
-  </data>
-  <data name="AppCloseTitle" xml:space="preserve">
-    <value>Leaving Already ?</value>
-  </data>
-  <data name="notification_api_warning" xml:space="preserve">
-    <value>Api Status Notice!</value>
-  </data>
-  <data name="notification_api_warning_content" xml:space="preserve">
-    <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
-  </data>
-  <data name="notification_open_account" xml:space="preserve">
-    <value>Open Imgurian Profile ?</value>
-  </data>
-  <data name="notification_open_album" xml:space="preserve">
-    <value>Open Album</value>
-  </data>
-  <data name="notification_open_image" xml:space="preserve">
-    <value>Open Image ?</value>
-  </data>
-  <data name="notification_open_tag" xml:space="preserve">
-    <value>Open Tag ?</value>
-  </data>
-  <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
-    <value>In order to apply the new api settings , the application was restarted.</value>
-  </data>
-  <data name="Hidden.Text" xml:space="preserve">
-    <value>Hidden</value>
-  </data>
-  <data name="HiddenAuthor" xml:space="preserve">
-    <value>Hidden</value>
-  </data>
-  <data name="NotificationTitleRestartMsg" xml:space="preserve">
-    <value>Restart Required!</value>
-  </data>
-  <data name="notification_clipboard_content" xml:space="preserve">
-    <value>Copied to Clipboard</value>
-  </data>
-  <data name="notification_generic" xml:space="preserve">
-    <value>New Notification!</value>
+    <value>加载更多</value>
   </data>
   <data name="Home.Text" xml:space="preserve">
-    <value>Beranda</value>
+    <value>主页</value>
   </data>
   <data name="InterceptorHeader_FollowUser" xml:space="preserve">
-    <value>Anda akan Mengikuti seorang Imgurian!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>您即将关注一位 Imgur 用户！</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Like" xml:space="preserve">
-    <value>Anda akan menyukai sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>您即将点赞一条 Imgur 帖子！</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Upload" xml:space="preserve">
-    <value>Anda akan membuat sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>您即将发布一条 Imgur 帖子！</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Vote" xml:space="preserve">
-    <value>Anda akan memberi suara pada sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>您即将对一条 Imgur 帖子投票！</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="LoginOrRegister.Text" xml:space="preserve">
-    <value>Masuk atau Daftar!</value>
+    <value>登录或注册！</value>
     <comment>LoginInterceptorDialog</comment>
   </data>
   <data name="BestComments.Text" xml:space="preserve">
-    <value>KOMENTAR TERBAIK</value>
+    <value>最佳评论</value>
     <comment>MediaView</comment>
   </data>
   <data name="Comment.Text" xml:space="preserve">
-    <value>KOMENTAR</value>
+    <value>评论</value>
     <comment>MediaView</comment>
   </data>
   <data name="CommentsHeader.Header" xml:space="preserve">
-    <value>Komentar</value>
-    <comment>AccountView -&gt;Pivot</comment>
+    <value>评论</value>
+    <comment>AccountView ->Pivot</comment>
   </data>
   <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
-    <value>Sepertinya belum ada komentar.</value>
+    <value>目前还没有评论。</value>
     <comment>MediaView</comment>
   </data>
   <data name="EmptyCommentsParagraphSecond.Text" xml:space="preserve">
-    <value>JADILAH YANG PERTAMA!</value>
+    <value>成为第一个！</value>
     <comment>MediaView</comment>
   </data>
   <data name="ExpandMore.Text" xml:space="preserve">
-    <value>LIHAT SEMUA</value>
+    <value>查看全部</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="FavouritesHeader.Header" xml:space="preserve">
-    <value>Favorit</value>
-    <comment>AccountView -&gt;Pivot</comment>
+    <value>收藏夹</value>
+    <comment>AccountView ->Pivot</comment>
   </data>
   <data name="Follow.Text" xml:space="preserve">
-    <value>Ikuti</value>
+    <value>关注</value>
   </data>
   <data name="Unfollow.Text" xml:space="preserve">
-    <value>Berhenti Ikuti</value>
+    <value>取消关注</value>
   </data>
   <data name="GalleriesSection.Text" xml:space="preserve">
-    <value>Galeri</value>
+    <value>相册</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="InterceptorHeader_FollowTag" xml:space="preserve">
-    <value>Anda akan Mengikuti sebuah Tag!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>您即将关注一个标签！</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="LoadingMedia.Text" xml:space="preserve">
-    <value>Mendapatkan yang Terpanas!</value>
+    <value>正在加载热门内容！</value>
     <comment>MediaView</comment>
   </data>
+  <data name="notification_clipboard_content" xml:space="preserve">
+    <value>已复制到剪贴板</value>
+  </data>
+  <data name="notification_generic" xml:space="preserve">
+    <value>新通知！</value>
+  </data>
   <data name="notification_open_gallery" xml:space="preserve">
-    <value>Buka Galeri ?</value>
+    <value>打开相册？</value>
   </data>
   <data name="Points.Text" xml:space="preserve">
-    <value>Poin</value>
+    <value>积分</value>
   </data>
   <data name="Posts.Text" xml:space="preserve">
-    <value>Kiriman</value>
+    <value>帖子</value>
   </data>
   <data name="PostsHeader.Header" xml:space="preserve">
-    <value>Kiriman</value>
-    <comment>AccountView -&gt;Pivot</comment>
+    <value>帖子</value>
+    <comment>AccountView ->Pivot</comment>
   </data>
   <data name="QueryTitle.Text" xml:space="preserve">
-    <value>Kueri Pencarian:</value>
+    <value>搜索内容：</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="RandomSection.Text" xml:space="preserve">
-    <value>Konten Acak</value>
+    <value>随机内容</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="TagsSection.Text" xml:space="preserve">
-    <value>Tagar</value>
+    <value>标签</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="UsersSection.Text" xml:space="preserve">
-    <value>Pengguna</value>
+    <value>用户</value>
     <comment>ExploreSearchView</comment>
   </data>
+  <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
+    <value>为应用新的 API 设置，应用程序已重新启动。</value>
+  </data>
+  <data name="NotificationTitleRestartMsg" xml:space="preserve">
+    <value>需要重新启动！</value>
+  </data>
+  <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
+    <value>保存</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="Save.Text" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="SettingsApiKey.Header" xml:space="preserve">
+    <value>设置自定义 API 密钥</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKey.Text" xml:space="preserve">
+    <value>存储自定义 API 密钥以供应用使用，替代默认密钥。某些高资源功能可能需要此设置。</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKeyButton.Text" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
+    <value>设置自定义 API 密钥</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
+    <value>存储自定义 API 密钥以供应用使用，替代默认密钥。某些高资源功能可能需要此设置。</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
+    <value>若要使用默认 API 密钥，请将字段留空并保存。</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
+    <value>高级设置</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SignInIntercetorMsg.Text" xml:space="preserve">
+    <value>登录以保存！</value>
+    <comment>LoginInterceptorDialog</comment>
+  </data>
+  <data name="AppCloseCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="AppCloseConfirm" xml:space="preserve">
+    <value>离开</value>
+  </data>
+  <data name="AppCloseContent" xml:space="preserve">
+    <value>确定要关闭应用吗？</value>
+  </data>
+  <data name="AppCloseTitle" xml:space="preserve">
+    <value>这么快就要走了？</value>
+  </data>
+  <data name="Hidden.Text" xml:space="preserve">
+    <value>已隐藏</value>
+  </data>
+  <data name="HiddenAuthor" xml:space="preserve">
+    <value>已隐藏</value>
+  </data>
+  <data name="notification_api_warning" xml:space="preserve">
+    <value>API 状态提示！</value>
+  </data>
+  <data name="notification_api_warning_content" xml:space="preserve">
+    <value>Imgur API 当前性能下降，部分功能可能出现异常。</value>
+  </data>
+  <data name="notification_open_account" xml:space="preserve">
+    <value>打开 Imgur 用户主页？</value>
+  </data>
+  <data name="notification_open_album" xml:space="preserve">
+    <value>打开相册</value>
+  </data>
+  <data name="notification_open_image" xml:space="preserve">
+    <value>打开图片？</value>
+  </data>
+  <data name="notification_open_tag" xml:space="preserve">
+    <value>打开标签？</value>
+  </data>
   <data name="CopyToClipboard.Content" xml:space="preserve">
-    <value>Salin ke Papanklip</value>
+    <value>复制到剪贴板</value>
   </data>
   <data name="notification_open_upload" xml:space="preserve">
-    <value>Buka unggahan Anda?</value>
+    <value>是否打开您的上传内容？</value>
   </data>
   <data name="OpenSettingsMsg.Content" xml:space="preserve">
-    <value>Buka Pengaturan</value>
+    <value>打开设置</value>
   </data>
   <data name="UploadInterceptorApiKeyInfoAfter" xml:space="preserve">
-    <value>, dan atur URL pengalihan dengan nilai di atas. Kemudian atur kunci Api kustom di Pengaturan.</value>
+    <value>，并将重定向 URL 设置为上方的值。然后在设置中配置自定义 API 密钥。</value>
   </data>
   <data name="UploadInterceptorApiKeyInfoBefore" xml:space="preserve">
-    <value>Buat Kunci API kustom Anda di </value>
+    <value>在以下位置创建您的自定义 API 密钥：</value>
   </data>
   <data name="ClipboardButton.Content" xml:space="preserve">
-    <value>Salin ke Papanklip</value>
+    <value>复制到剪贴板</value>
   </data>
   <data name="DescBox.PlaceholderText" xml:space="preserve">
-    <value>Tambahkan deskripsi</value>
+    <value>添加描述</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="FileDrag.Text" xml:space="preserve">
-    <value>Seret dan Lepaskan File</value>
+    <value>拖放文件到此处</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="FileSelection.Text" xml:space="preserve">
-    <value>Pilih Foto/Video</value>
+    <value>选择照片/视频</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="NameBox.PlaceholderText" xml:space="preserve">
-    <value>Beri kiriman Anda judul yang unik...</value>
+    <value>给您的帖子起个独特的标题...</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="Or.Text" xml:space="preserve">
-    <value>atau</value>
+    <value>或</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="PrivateUpload.Content" xml:space="preserve">
-    <value>Privat</value>
+    <value>私密</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="UploadInterceptorSettings.Text" xml:space="preserve">
-    <value>Buka Pengaturan</value>
+    <value>打开设置</value>
   </data>
   <data name="ShareTarget.SignInRequired.Title" xml:space="preserve">
-    <value>Masuk diperlukan</value>
+    <value>需要登录</value>
   </data>
   <data name="ShareTarget.SignInRequired.Subtitle" xml:space="preserve">
-    <value>Buka Imgur untuk Windows dan masuk terlebih dahulu.</value>
+    <value>请先打开 Windows 版 Imgur 并登录。</value>
   </data>
   <data name="ShareTarget.Uploading.Text" xml:space="preserve">
-    <value>Mengunggah ke Imgur...</value>
+    <value>正在上传到 Imgur...</value>
   </data>
   <data name="ShareTarget.UploadCompleted.Text" xml:space="preserve">
-    <value>Unggahan selesai!</value>
+    <value>上传完成！</value>
   </data>
   <data name="ShareTarget.Initializing.Text" xml:space="preserve">
-    <value>Menginisialisasi unggahan...</value>
+    <value>正在初始化上传...</value>
   </data>
   <data name="ShareTarget.ApiBlocked.Title" xml:space="preserve">
-    <value>Layanan diblokir</value>
+    <value>服务被阻止</value>
   </data>
   <data name="ShareTarget.ApiBlocked.Subtitle" xml:space="preserve">
-    <value>Tidak dapat melanjutkan karena kredensial hilang.</value>
+    <value>由于缺少凭据，无法继续。</value>
   </data>
   <data name="UploadCancelledApiKeysMissingDesc" xml:space="preserve">
-    <value>Berbagi dibatalkan, karena kurangnya Kunci Api Kustom!</value>
+    <value>分享已取消，原因是缺少自定义 API 密钥！</value>
   </data>
   <data name="UploadCancelledNotificationTitle" xml:space="preserve">
-    <value>Unggahan Dibatalkan</value>
+    <value>上传已取消</value>
   </data>
   <data name="UploadCompletedDesc" xml:space="preserve">
-    <value>Unggahan konten berhasil, mari kita lihat?</value>
+    <value>内容上传成功，要去看看吗？</value>
   </data>
   <data name="UploadCompletedNotificationTitle" xml:space="preserve">
-    <value>Unggahan Selesai</value>
+    <value>上传完成</value>
   </data>
   <data name="UploadNotificationSpinnerTitle" xml:space="preserve">
-    <value>Mengunggah Konten Baru...</value>
+    <value>正在上传新内容...</value>
   </data>
   <data name="UploadOngoingDesc" xml:space="preserve">
-    <value>Unggahan konten sedang berlangsung...</value>
+    <value>内容上传进行中...</value>
   </data>
   <data name="UploadStartedNotificationTitle" xml:space="preserve">
-    <value>Unggahan Konten</value>
+    <value>内容上传</value>
   </data>
   <data name="ApiRedirectInAppNotificationDesc" xml:space="preserve">
-    <value>Kunci Pengalihan disalin ke papanklip Anda.</value>
+    <value>重定向密钥已复制到剪贴板。</value>
   </data>
   <data name="EmbedInAppNotificationDesc" xml:space="preserve">
-    <value>Konten Semat Disalin ke Papanklip.</value>
+    <value>嵌入内容已复制到剪贴板。</value>
   </data>
   <data name="InterceptorHeader_Comment" xml:space="preserve">
-    <value>Anda akan mengomentari sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>您即将评论一条 Imgur 帖子！</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="notification_comment_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat memposting komentar Anda.</value>
+    <value>发布评论时出现错误。</value>
   </data>
   <data name="notification_comment_success_content" xml:space="preserve">
-    <value>Komentar berhasil diposting.</value>
+    <value>评论发布成功。</value>
   </data>
   <data name="notification_follow_null_content" xml:space="preserve">
-    <value>Tidak dapat mengikuti: informasi pengguna tidak tersedia.</value>
+    <value>无法关注：用户信息不可用。</value>
   </data>
   <data name="notification_follow_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat mencoba mengikuti pengguna ini.</value>
+    <value>关注该用户时出现错误。</value>
   </data>
   <data name="notification_follow_success_content" xml:space="preserve">
-    <value>Pengguna berhasil diikuti.</value>
+    <value>已成功关注用户。</value>
   </data>
   <data name="notification_unfollow_success_content" xml:space="preserve">
-    <value>Anda berhenti mengikuti pengguna.</value>
+    <value>您已取消关注该用户。</value>
   </data>
   <data name="notification_copy_comment_success_content" xml:space="preserve">
-    <value>Teks komentar disalin ke papan klip.</value>
+    <value>评论文本已复制到剪贴板。</value>
   </data>
   <data name="notification_copy_permalink_success_content" xml:space="preserve">
-    <value>Tautan permanen disalin ke papan klip.</value>
+    <value>永久链接已复制到剪贴板。</value>
   </data>
   <data name="notification_favourite_success_content" xml:space="preserve">
-    <value>Ditambahkan ke favorit.</value>
+    <value>已添加到收藏夹。</value>
   </data>
   <data name="notification_favourite_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat menambahkan ke favorit. Coba lagi.</value>
+    <value>收藏时出现错误，请重试。</value>
   </data>
   <data name="notification_vote_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat voting. Coba lagi.</value>
-  </data>
-  <data name="CopyImageLink.Text" xml:space="preserve">
-    <value>Salin Tautan Gambar</value>
+    <value>投票时出现错误，请重试。</value>
   </data>
   <data name="notification_copy_image_link_success_content" xml:space="preserve">
-    <value>Tautan gambar disalin ke papan klip.</value>
+    <value>图片链接已复制到剪贴板。</value>
   </data>
   <data name="notification_download_success_content" xml:space="preserve">
-    <value>File berhasil diunduh.</value>
+    <value>文件下载成功。</value>
   </data>
   <data name="notification_download_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat mengunduh file. Coba lagi.</value>
+    <value>下载文件时出现错误，请重试。</value>
   </data>
   <data name="EmptySectionTitle.Text" xml:space="preserve">
-    <value>Belum ada apa pun di sini.</value>
+    <value>暂无内容。</value>
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
-    <value>Bagian ini tidak memiliki apa pun untuk ditampilkan.</value>
+    <value>该部分目前没有任何内容可显示。</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
-    <value>KOMENTAR BARU</value>
+    <value>最新评论</value>
   </data>
   <data name="Reply.Content" xml:space="preserve">
-    <value>Balas</value>
+    <value>回复</value>
   </data>
   <data name="ShowComments.Content" xml:space="preserve">
-    <value>LIHAT SEMUA KOMENTAR</value>
+    <value>查看全部评论</value>
   </data>
   <data name="UploadCancellation.Text" xml:space="preserve">
-    <value>Batal</value>
+    <value>取消</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="UploadConfirmation.Text" xml:space="preserve">
-    <value>Kirim</value>
+    <value>发布</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="CommentingPlaceholder" xml:space="preserve">
-    <value>Berkomentar sebagai {0}</value>
+    <value>以 {0} 身份评论</value>
     <comment>CommentControl</comment>
   </data>
   <data name="CommentDialogTitle.Text" xml:space="preserve">
-    <value>Komentar Postingan</value>
+    <value>评论帖子</value>
     <comment>CommentDialog header title</comment>
   </data>
   <data name="ReplyDialogTitle.Text" xml:space="preserve">
-    <value>Balas Postingan</value>
+    <value>回复帖子</value>
     <comment>ReplyDialog header title</comment>
   </data>
 </root>

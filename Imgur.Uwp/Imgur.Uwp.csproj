@@ -131,6 +131,9 @@
     <Compile Include="Controls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AccountCommentControl.xaml.cs">
+      <DependentUpon>AccountCommentControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\AccountTileControl.xaml.cs">
       <DependentUpon>AccountTileControl.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,7 @@
     <Compile Include="Controls\CommentDialogControl.xaml.cs">
       <DependentUpon>CommentDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EmptyAccountSectionControl.xaml.cs" />
     <Compile Include="Controls\ImageViewElementControl.xaml.cs">
       <DependentUpon>ImageViewElementControl.xaml</DependentUpon>
     </Compile>
@@ -211,9 +215,11 @@
     <Compile Include="Services\AppLifeCycleService.cs" />
     <Compile Include="Services\AuthBroker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
+    <Compile Include="Services\ContentStorageService.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\DispatcherService.cs" />
     <Compile Include="Services\FilePicker.cs" />
+    <Compile Include="Services\FolderDialogService.cs" />
     <Compile Include="Services\LiveTilesService.cs" />
     <Compile Include="Services\LocalSettings.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />
@@ -275,6 +281,8 @@
     <Content Include="Assets\Fonts\Imgur.ttf" />
     <Content Include="Assets\Fonts\segmdl2.ttf" />
     <None Include="Imgur.Uwp_TemporaryKey.pfx" />
+    <PRIResource Include="Strings\es-ES\Resources.resw" />
+    <PRIResource Include="Strings\zh-CN\Resources.resw" />
     <PRIResource Include="Strings\vi-VI\Resources.resw" />
     <PRIResource Include="Strings\id-ID\Resources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
@@ -315,6 +323,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\AccountCommentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\AccountTileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -326,6 +338,10 @@
     <Page Include="Controls\CommentDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EmptyAccountSectionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ImageViewElementControl.xaml">
       <SubType>Designer</SubType>

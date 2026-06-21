@@ -113,19 +113,11 @@ namespace Imgur.ViewModels.Explorer
 
         private void OnCollectionStateChanged(object sender, EventArgs e)
         {
-            Dispatcher.CheckBeginInvokeOnUi(async () =>
+            Dispatcher.CheckBeginInvokeOnUi(() =>
             {
                 try
                 {
-                    if (!Loading && UsersVmCollection.CanLoadMorePages)
-                    {
-                        Loading = true;
-                        var cts = new CancellationTokenSource();
-                        var ct = cts.Token;
-
-                        await UsersVmCollection.LoadNextPageAsync(ct);
-                        OnPropertyChanged(nameof(UsersAvailableToShow));
-                    }
+                    OnPropertyChanged(nameof(UsersAvailableToShow));
                 }
                 catch (Exception ex)
                 {

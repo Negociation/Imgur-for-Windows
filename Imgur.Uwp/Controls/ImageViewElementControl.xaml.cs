@@ -1,5 +1,8 @@
-﻿using Imgur.Models;
+﻿using Imgur.Contracts;
+using Imgur.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -36,7 +39,7 @@ namespace Imgur.Uwp.Controls
             }
         }
 
-        // Dependency Property
+        // Dependency Property — ImageElement
         public Element ImageElement
         {
             get => GetValue(ImageElementProperty) as Element ?? new Element();
@@ -54,6 +57,43 @@ namespace Imgur.Uwp.Controls
         {
             var control = d as ImageViewElementControl;
             control?.ResizeImageControl(control, null);
+        }
+
+        // Dependency Property — DownloadCommand (ligado externamente via binding ao MediaViewModel)
+        public ICommand DownloadCommand
+        {
+            get => (ICommand)GetValue(DownloadCommandProperty);
+            set => SetValue(DownloadCommandProperty, value);
+        }
+
+        public static readonly DependencyProperty DownloadCommandProperty =
+            DependencyProperty.Register(
+                "DownloadCommand",
+                typeof(ICommand),
+                typeof(ImageViewElementControl),
+                new PropertyMetadata(null));
+
+        //***************************************************************
+        // Context Menu Handlers
+        //***************************************************************
+
+        private void CopyImageLink_Click(object sender, RoutedEventArgs e)
+        {
+            var link = ImageElement?.Link;
+            if (string.IsNullOrEmpty(link)) return;
+
+            App.Services.GetRequiredService<IClipboardService>().SetText(link);
+
+            App.Services.GetRequiredService<IAppNotificationService>().AddNotification(
+                new NotificationViewModel
+                {
+                    Message = "notification_copy_image_link_success_content"
+                });
+        }
+
+        private void DownloadImage_Click(object sender, RoutedEventArgs e)
+        {
+            DownloadCommand?.Execute(ImageElement?.Link);
         }
     }
 }

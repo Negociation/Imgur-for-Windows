@@ -258,10 +258,16 @@
 
         <!-- COMMAND BAR FLYOUT FOR MEDIATILE -->
         <winui:CommandBarFlyout  Placement="Left" x:Name="CommandBarFlyout1">
-            <AppBarButton Label="Save"  ToolTipService.ToolTip="Save" Command="{Binding Favourite}">
-                <AppBarButton.Icon>
-                    <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontSize="20" Glyph="&#xEB51;" />
-                </AppBarButton.Icon>
+            <AppBarButton Label="Save" ToolTipService.ToolTip="Save" Command="{Binding Favourite}">
+                <AppBarButton.Content>
+                    <Grid>
+                        <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontSize="20" Glyph="&#xEB51;"
+                                  Visibility="{Binding IsFavorited, Converter={StaticResource BoolNegationConverter}}" />
+                        <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontSize="20" Glyph="&#xEB52;"
+                                  Foreground="#1bb76e"
+                                  Visibility="{Binding IsFavorited, Converter={StaticResource BoolVisibilityConverter}}" />
+                    </Grid>
+                </AppBarButton.Content>
             </AppBarButton>
             <AppBarButton Label="Share to..." ToolTipService.ToolTip="Share the content" Command="{Binding InvokeShareDialog}" >
                 <AppBarButton.Icon>

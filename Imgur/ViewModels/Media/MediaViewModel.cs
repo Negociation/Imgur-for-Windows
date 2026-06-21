@@ -1,7 +1,9 @@
 ﻿using Imgur.Services;
 using Imgur.Contracts;
 using Imgur.Helpers;
+using Imgur.Api.Services.Contracts;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Imgur.Models;
@@ -212,6 +214,12 @@ namespace Imgur.ViewModels.Media
         //-- Service para Comentários
         private readonly CommentsService _commentService;
 
+        //-- Service para salvar conteúdo em disco
+        private readonly IContentStorageService _contentStorageService;
+
+        //-- Service para picker de pasta
+        private readonly IFolderDialogService _folderDialogService;
+
         //***************************************************************
         // Constructors e Initializers
         //***************************************************************
@@ -231,7 +239,9 @@ namespace Imgur.ViewModels.Media
             GalleryService galleryService,
             AccountService accountService,
             UserMediaActionsService mediaActionsService,
-            CommentsService commentService
+            CommentsService commentService,
+            IContentStorageService contentStorageService,
+            IFolderDialogService folderDialogService
             ): base(dialogService, appNotification, userContext)
         {
             _currentMedia = m;
@@ -245,6 +255,8 @@ namespace Imgur.ViewModels.Media
             _shareService = shareService;
             _mediaActionsService = mediaActionsService;
             _commentService = commentService;
+            _contentStorageService = contentStorageService;
+            _folderDialogService = folderDialogService;
         }
 
         //-- Initialize
@@ -511,6 +523,50 @@ namespace Imgur.ViewModels.Media
             }
         }
 
+        //-- Command para Download de Elemento de Mídia (recebe URL como parâmetro)
+        private ICommand _downloadElementCommand;
+        public ICommand DownloadElementCommand
+        {
+            get
+            {
+                if (_downloadElementCommand == null)
+                {
+                    _downloadElementCommand = new RelayCommand<string>(async (url) =>
+                    {
+                        if (string.IsNullOrEmpty(url)) return;
+
+                        try
+                        {
+                            var folderToken = await _folderDialogService.PickFolderAsync();
+                            if (folderToken == null) return; // utilizador cancelou o picker
+
+                            // Infere o nome do ficheiro a partir da URL
+                            var uri = new Uri(url);
+                            var fileName = Path.GetFileName(uri.LocalPath);
+                            if (string.IsNullOrWhiteSpace(fileName))
+                                fileName = $"download_{DateTime.Now:yyyyMMdd_HHmmss}";
+
+                            await _contentStorageService.SaveAsync(uri, folderToken, fileName);
+
+                            _appNotification.AddNotification(new NotificationViewModel
+                            {
+                                Message = "notification_download_success_content"
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[MediaVM] DownloadElementCommand erro: {ex.Message}");
+                            _appNotification.AddNotification(new NotificationViewModel
+                            {
+                                Message = "notification_download_error_content"
+                            });
+                        }
+                    });
+                }
+                return _downloadElementCommand;
+            }
+        }
+
         //-- Command para Favoritar Midia
         private ICommand _favourite;
         public ICommand Favourite
@@ -536,6 +592,19 @@ namespace Imgur.ViewModels.Media
                         {
                             CurrentMedia.Favorite = previous;
                             OnPropertyChanged(nameof(IsFavorited));
+
+                            _appNotification.AddNotification(new NotificationViewModel
+                            {
+                                Message = "notification_favourite_error_content"
+                            });
+                        }
+                        else if (CurrentMedia.Favorite)
+                        {
+                            // Notifica apenas ao favoritar — ao desfavoritar não exibe nada
+                            _appNotification.AddNotification(new NotificationViewModel
+                            {
+                                Message = "notification_favourite_success_content"
+                            });
                         }
                     });
                 }
@@ -587,6 +656,11 @@ namespace Imgur.ViewModels.Media
                             CurrentMedia.Vote = previous;
                             OnPropertyChanged(nameof(IsUpvoted));
                             OnPropertyChanged(nameof(IsDownvoted));
+
+                            _appNotification.AddNotification(new NotificationViewModel
+                            {
+                                Message = "notification_vote_error_content"
+                            });
                         }
                         else
                         {
@@ -640,7 +714,7 @@ namespace Imgur.ViewModels.Media
 
                                 foreach (var comment in _allComments.Take(5))
 
-                                    Comments.Add(_commentVmFactory.GetCommentViewModel(CurrentMedia.Id ,comment));
+                                    Comments.Add(_commentVmFactory.GetMediaCommentViewModel(CurrentMedia.Id ,comment));
 
                                 HasComments = Comments.Count > 0;
                                 HasMoreComments = _allComments.Count > 5;
@@ -683,7 +757,7 @@ namespace Imgur.ViewModels.Media
                             await Task.Delay(300);
 
                             foreach (var comment in _allComments.Skip(5))
-                                Comments.Add(_commentVmFactory.GetCommentViewModel(CurrentMedia.Id, comment));
+                                Comments.Add(_commentVmFactory.GetMediaCommentViewModel(CurrentMedia.Id, comment));
 
                             HasMoreComments = false;
 

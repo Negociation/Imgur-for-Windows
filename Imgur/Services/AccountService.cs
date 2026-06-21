@@ -16,15 +16,17 @@ namespace Imgur.Services
     public class AccountService
     {
 
-        private ILocalSettings _localSettings;
-        private IAccountService _apiService;
-        private AccountMapper _accountMapper;
-        private GalleryMapper _galleryMapper;
-        private CommentMapper _commentMapper;
+        private readonly ILocalSettings _localSettings;
+        private readonly IAccountService _apiService;
+        private readonly IUserContext _userContext;
+        private readonly AccountMapper _accountMapper;
+        private readonly GalleryMapper _galleryMapper;
+        private readonly CommentMapper _commentMapper;
 
         public AccountService(
            ILocalSettings localSettings,
            IAccountService apiService,
+           IUserContext userContext,
            AccountMapper accountMapper,
            GalleryMapper galleryMapper,
            CommentMapper commentMapper
@@ -35,18 +37,43 @@ namespace Imgur.Services
             _accountMapper = accountMapper;
             _galleryMapper = galleryMapper;
             _commentMapper = commentMapper;
+            _userContext = userContext;
         }
 
         public async Task<Result<UserAccount>> GetAccountById(string id)
         {
-            var retrievedAccount = await _apiService.GetAccountAsync(id);
+            ApiResponse<AccountResponse> accountResponse;
 
-            if (!retrievedAccount.Success)
+            if (_userContext.IsAuthenticated)
             {
-                return Result<UserAccount>.Failure(retrievedAccount.Status.ToString(), ErrorType.Server);
+                accountResponse = await _apiService.GetFollowStatusAsync(id);
+            }
+            else
+            {
+                accountResponse = await _apiService.GetAccountAsync(id);
             }
 
-            return Result<UserAccount>.Success(this._accountMapper.ToUserAccount(retrievedAccount.Data));
+            if (!accountResponse.Success)
+            {
+                return Result<UserAccount>.Failure(
+                    accountResponse.Status.ToString(),
+                    ErrorType.Server);
+            }
+
+            var account = _accountMapper.ToUserAccount(
+                accountResponse.Data,
+                accountResponse.Data.user_follow?.status
+            );
+
+            return Result<UserAccount>.Success(account);
+        }
+
+        public async Task<Result<bool>> GetFollowStatusAsync(string username)
+        {
+            var response = await _apiService.GetFollowStatusAsync(username);
+            if (!response.Success)
+                return Result<bool>.Failure(response.Status.ToString(), ErrorType.Server);
+            return Result<bool>.Success(true);
         }
 
         public async Task<Result<IReadOnlyList<UserAccount>>> SearchAccounts(string query, int page = 0)
@@ -91,5 +118,20 @@ namespace Imgur.Services
             return Result<List<Media>>.Success(_galleryMapper.ToMediaList(response.Data));
         }
 
+        public async Task<Result<bool>> FollowUserAsync(string username)
+        {
+            var response = await _apiService.FollowUserAsync(username);
+            if (!response.Success)
+                return Result<bool>.Failure(response.Status.ToString(), ErrorType.Server);
+            return Result<bool>.Success(true);
+        }
+
+        public async Task<Result<bool>> UnfollowUserAsync(string username)
+        {
+            var response = await _apiService.UnfollowUserAsync(username);
+            if (!response.Success)
+                return Result<bool>.Failure(response.Status.ToString(), ErrorType.Server);
+            return Result<bool>.Success(true);
+        }
     }
 }

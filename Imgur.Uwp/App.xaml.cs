@@ -268,6 +268,8 @@ namespace Imgur.Uwp
                 .AddSingleton<IClipboardService, ClipboardService>()
                 .AddSingleton<IAppNotificationService, AppNotificationService>()
                 .AddSingleton<IShareService, ShareService>()
+                .AddSingleton<IContentStorageService, ContentStorageService>()
+                .AddSingleton<IFolderDialogService, FolderDialogService>()
                 .AddSingleton<ILiveTilesService, LiveTilesService>()
                 .AddSingleton<IDialogService, DialogService>()
                 .AddSingleton<ITokenService, TokenService>()

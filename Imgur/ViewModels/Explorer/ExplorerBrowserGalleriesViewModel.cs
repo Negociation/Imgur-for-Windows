@@ -111,19 +111,11 @@ namespace Imgur.ViewModels.Explorer
 
         private void OnCollectionStateChanged(object sender, EventArgs e)
         {
-            Dispatcher.CheckBeginInvokeOnUi(async () =>
+            Dispatcher.CheckBeginInvokeOnUi(() =>
             {
                 try
                 {
-                    if (!Loading && GalleryMediaVmCollection.CanLoadMorePages)
-                    {
-                        Loading = true;
-                        var cts = new CancellationTokenSource();
-                        var ct = cts.Token;
-
-                        await GalleryMediaVmCollection.LoadNextPageAsync(ct);
-                        OnPropertyChanged(nameof(GalleriesAvailableToShow));
-                    }
+                    OnPropertyChanged(nameof(GalleriesAvailableToShow));
                 } catch (Exception ex) {
                     Debug.WriteLine("Erro LoadMore: " + ex.Message);
                 }

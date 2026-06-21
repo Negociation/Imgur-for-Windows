@@ -332,7 +332,9 @@ namespace Imgur.ViewModels.Explorer
                                      .ToList();
                     },
                     60,
-                    10);
+                    10,
+                    false
+                    );
 
                 // Escuta mudanças de estado (fim de bloco / fim de carga) p/ ligar o botão
                 RetrievedMediaVmCollection.StateChanged += OnCollectionStateChanged;
@@ -360,7 +362,6 @@ namespace Imgur.ViewModels.Explorer
         //-- Atualiza a visibilidade do botão "Load More" sempre que a coleção muda de estado.
         private void OnCollectionStateChanged(object sender, EventArgs e)
         {
-            // Garante execução na UI thread (o binding é atualizado aqui)
             _dispatcher.CheckBeginInvokeOnUi(() =>
             {
                 CanLoadMore = RetrievedMediaVmCollection != null

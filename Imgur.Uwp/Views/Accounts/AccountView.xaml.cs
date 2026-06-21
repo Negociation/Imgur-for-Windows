@@ -48,6 +48,8 @@ namespace Imgur.Uwp.Views.Accounts
             ApplyMobileLayout();
 
             UpdateThumbailsState();
+
+            UpdateCommentStyle(Window.Current.Bounds.Width);
         }
 
         private void LoadDesignAdapters()
@@ -99,5 +101,56 @@ namespace Imgur.Uwp.Views.Accounts
             }
         }
 
+        // ── Scroll ────────────────────────────────────────────
+
+        private void MainScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            var sv = (ScrollViewer)sender;
+            bool canScroll = sv.VerticalOffset > 0;
+            if (ViewModel != null && canScroll != ViewModel.CanScrollToTop)
+                ViewModel.CanScrollToTop = canScroll;
+
+            App.Services.GetRequiredService<INavigator>()
+                        .ReportScrollOffset(sv.VerticalOffset);
+        }
+
+        private void NavigateToTop_Click(object sender, RoutedEventArgs e)
+        {
+            MainScrollViewer?.ChangeView(0, 0, null);
+        }
+
+        // ── Pivot ─────────────────────────────────────────────
+
+        private void AccountPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var idx = AccountPivot.SelectedIndex;
+            BottomBarPosts.Visibility     = idx == 0 ? Visibility.Visible : Visibility.Collapsed;
+            BottomBarFavorites.Visibility = idx == 1 ? Visibility.Visible : Visibility.Collapsed;
+            BottomBarComments.Visibility  = idx == 2 ? Visibility.Visible : Visibility.Collapsed;
+
+            // Volta ao topo ao trocar de aba
+            MainScrollViewer?.ChangeView(0, 0, null, true);
+            if (ViewModel != null)
+                ViewModel.CanScrollToTop = false;
+        }
+
+        private void AccountViewPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateCommentStyle(e.NewSize.Width);
+        }
+
+        private void UpdateCommentStyle(double width)
+        {
+            if (width >= 800)
+            {
+                CommentsRepeaterControl.ItemContainerStyle =
+                    (Style)Resources["CommentDesktopStyle"];
+            }
+            else
+            {
+                CommentsRepeaterControl.ItemContainerStyle =
+                    (Style)Resources["CommentMobileStyle"];
+            }
+        }
     }
 }

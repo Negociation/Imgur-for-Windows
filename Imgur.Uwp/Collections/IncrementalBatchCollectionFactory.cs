@@ -9,7 +9,7 @@ namespace Imgur.Uwp.Collections
     {
         public IIncrementalCollection<T> Create<T>(
             Func<int, CancellationToken, Task<IReadOnlyList<T>>> fetchPage,
-            int pageSize = 60, int batchSize = 10)
-            => new IncrementalBatchCollection<T>(fetchPage, pageSize, batchSize);
+            int pageSize = 60, int batchSize = 10, bool autoTriggerNextPage = true)
+            => new IncrementalBatchCollection<T>(fetchPage, pageSize, batchSize, autoTriggerNextPage );
     }
 }

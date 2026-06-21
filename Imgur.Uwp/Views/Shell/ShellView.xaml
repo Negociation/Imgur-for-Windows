@@ -497,6 +497,11 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
+                        <Grid x:Name="AcrylicBarFullScrenBase" BorderBrush="Black" Visibility="Collapsed" BorderThickness="0" Grid.Column="3" Grid.RowSpan="2" Height="35" Width="140" HorizontalAlignment="Right" VerticalAlignment="Top" >
+                            <Grid Background="Black" Opacity="0.5">
+                                
+                            </Grid>
+                        </Grid>
                         <StackPanel x:Name="HeaderCompactContent" Orientation="Horizontal" Padding="15,10,0,0" Height="48" Grid.ColumnSpan="3" Visibility="Collapsed" >
                             <Image Height="24"  Source="ms-appx:///Assets/App/logo_transparent.png" VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
                             <Image Height="20"  Margin="4,0,0,0"  Source="ms-appx:///Assets/App/sign_transparent.png"  VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
@@ -504,6 +509,7 @@
                                 <TranslateTransform x:Name="HeaderTranslate"/>
                             </StackPanel.RenderTransform>
                         </StackPanel>
+
                         <toolkit:DropShadowPanel  Grid.Column="0" Opacity="1" Grid.ColumnSpan="2" BlurRadius="20" OffsetX="0" OffsetY="0" ShadowOpacity="1" Color="#01b96b" HorizontalContentAlignment="Stretch" x:Name="SearchBox" Visibility="Collapsed" HorizontalAlignment="Left"   Margin="15,15,30,10">
                             <AutoSuggestBox x:Uid="ShellSearchBox"  Style="{StaticResource RoundedAutoSuggestBoxStyle}"  x:Name="AutoSuggestSearchBox" QuerySubmitted="SearchBox_QuerySubmitted"  QueryIcon="Find" BorderBrush="#1b1c1d" Windows10version1809:CornerRadius="15" BorderThickness="2" FocusVisualSecondaryBrush="BlueViolet" IsTabStop="False"  Background="#1b1c1d" VerticalAlignment="Top" />
                         </toolkit:DropShadowPanel>

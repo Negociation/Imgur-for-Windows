@@ -36,6 +36,13 @@ namespace Imgur.Uwp.Services
 
         public event EventHandler<bool> FullScreenModeChanged;
 
+        public event EventHandler<double> ScrollOffsetChanged;
+
+        public void ReportScrollOffset(double offset)
+        {
+            ScrollOffsetChanged?.Invoke(this, offset);
+        }
+
         /// <inheritdoc/>
         public void GoBack(string sourcePage = null)
         {
@@ -71,6 +78,36 @@ namespace Imgur.Uwp.Services
                 {
                     f.Tag = "explorerSearch";
                     setFullScreenMode(false);
+                }
+                else if (f.Content.GetType() == typeof(ExplorerBrowserTagsView))
+                {
+                    f.Tag = "explorerBrowserTags";
+                    setFullScreenMode(false);
+                }
+                else if (f.Content.GetType() == typeof(ExplorerBrowserUsersView))
+                {
+                    f.Tag = "explorerBrowserUsers";
+                    setFullScreenMode(false);
+                }
+                else if (f.Content.GetType() == typeof(ExplorerBrowserGalleriesView))
+                {
+                    f.Tag = "explorerBrowserGalleries";
+                    setFullScreenMode(false);
+                }
+                else if (f.Content.GetType() == typeof(TagsView))
+                {
+                    f.Tag = "tags";
+                    setFullScreenMode(false);
+                }
+                else if (f.Content.GetType() == typeof(TagView))
+                {
+                    f.Tag = "tag";
+                    setFullScreenMode(true);
+                }
+                else if (f.Content.GetType() == typeof(AccountView))
+                {
+                    f.Tag = "accountView";
+                    setFullScreenMode(true);
                 }
                 else if (f.Content.GetType() == typeof(SettingsView))
                 {

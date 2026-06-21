@@ -28,8 +28,9 @@ namespace Imgur.Factories
             var mediaVmFactory = _serviceProvider.GetRequiredService<IMediaVmFactory>();
             var commentVmFactory = _serviceProvider.GetRequiredService<ICommentVmFactory>();
             var settingsService = _serviceProvider.GetRequiredService<ILocalSettings>();
+            var appNotification = _serviceProvider.GetRequiredService<IAppNotificationService>();
 
-            AccountViewModel vm = new AccountViewModel(m, userContext, dialogService, navigatorService, settingsService, collectionFactory, accountService, mediaVmFactory, commentVmFactory);
+            AccountViewModel vm = new AccountViewModel(m, userContext, dialogService, navigatorService, settingsService, collectionFactory, accountService, mediaVmFactory, commentVmFactory, appNotification);
             return vm;
         }
     }

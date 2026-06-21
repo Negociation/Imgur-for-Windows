@@ -42,7 +42,9 @@ namespace Imgur.ViewModels.Shell
         private readonly IAppNotificationService _notification;
         private readonly IUserContext _userContext;
         private readonly IDialogService _dialogService;
-        private ILocalSettings _localSettings;
+        private readonly ILocalSettings _localSettings;
+        private readonly IAccountVmFactory _accountVmFactory;
+
 
         private readonly IExplorerSearchVmFactory _explorerSearchVmFactory;
 
@@ -53,7 +55,8 @@ namespace Imgur.ViewModels.Shell
             IDialogService dialogService,
             IExplorerSearchVmFactory explorerSearchVmFactory,
             IUserContext userContext,
-            ILocalSettings localSettings
+            ILocalSettings localSettings,
+            IAccountVmFactory accountVmFactory
             )
         {
             _navigator = Navigator;
@@ -62,6 +65,8 @@ namespace Imgur.ViewModels.Shell
             _userContext = userContext;
             _explorerSearchVmFactory = explorerSearchVmFactory;
             _localSettings = localSettings;
+            _accountVmFactory = accountVmFactory;
+
             _userContext.OnAuthenticationChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(IsAuthenticated));
@@ -162,8 +167,14 @@ namespace Imgur.ViewModels.Shell
                     {
                         CurrentPageIndex = -1;
                         OnPropertyChanged(nameof(CurrentPageIndex));
+                        if (IsAuthenticated)
+                        {
+                            var vm = this._accountVmFactory.GetAccountViewModel(_userContext.CurrentUser);
+                            _navigator.Navigate("accountView", vm);
+                        }
 
-                        
+                    
+
                     });
                 }
                 return _openOwnAccountCommand;

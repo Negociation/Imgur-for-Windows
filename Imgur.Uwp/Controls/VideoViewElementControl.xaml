@@ -18,7 +18,7 @@
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Rectangle.Fill>
         </Rectangle>
-        <MediaPlayerElement x:Name="Player" Source="{Binding MediaElement.Link,ElementName=ElementControl,Converter={StaticResource StringToURIConverter},Mode=OneTime}" Stretch="Uniform" AutoPlay="False" HorizontalAlignment="Stretch" />
+        <MediaPlayerElement x:Name="Player" Stretch="Uniform" AutoPlay="False" HorizontalAlignment="Stretch" />
         <Grid x:Name="PlayerInteractionCommandsOverlay" Visibility="Collapsed" HorizontalAlignment="Stretch" Opacity="0.3" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.25*" />

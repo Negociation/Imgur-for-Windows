@@ -10,6 +10,7 @@ namespace Imgur.Models
         public string ImageId { get; set; }
         public string Body { get; set; }
         public string Author { get; set; }
+        public string Cover { get; set; }
         public string AuthorAvatar { get; set; }
         public long AuthorId { get; set; }
         public long DateTime { get; set; }

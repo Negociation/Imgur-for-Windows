@@ -1,64 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -118,605 +59,605 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppBarCopy.Label" xml:space="preserve">
-    <value>Salin ke papanklip</value>
+    <value>Copiar al portapapeles</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarCopy.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Salin tautan ke papanklip</value>
+    <value>Copiar la URL al portapapeles</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarDownload.Label" xml:space="preserve">
-    <value>Unduh</value>
+    <value>Descargar</value>
     <comment>AppBar</comment>
   </data>
   <data name="ImageDownload.Text" xml:space="preserve">
-    <value>Unduh</value>
+    <value>Descargar</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarDownload.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Unduh konten</value>
+    <value>Descargar el contenido</value>
     <comment>AppBar</comment>
   </data>
+  <data name="CopyImageLink.Text" xml:space="preserve">
+    <value>Copiar enlace de imagen</value>
+  </data>
   <data name="AppBarEmbed.Label" xml:space="preserve">
-    <value>Semat</value>
+    <value>Incrustar</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarEmbed.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Sematkan konten</value>
+    <value>Incrustar el contenido</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarFavouriteButton.Label" xml:space="preserve">
-    <value>Tambahkan ke favorit</value>
+    <value>Añadir a favoritos</value>
   </data>
   <data name="AppBarOpen.Label" xml:space="preserve">
-    <value>Buka Album</value>
+    <value>Abrir galería</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarOpen.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Jelajahi Konten Album</value>
+    <value>Explorar el contenido de la galería</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarShare.Label" xml:space="preserve">
-    <value>Bagikan ke...</value>
+    <value>Compartir con...</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBarShare.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Bagikan konten</value>
+    <value>Compartir el contenido</value>
     <comment>AppBar</comment>
   </data>
   <data name="AppBranch.Text" xml:space="preserve">
-    <value>Cabang</value>
+    <value>Rama</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppDesc.Text" xml:space="preserve">
-    <value>Sebuah Klien Platform Windows Universal Nativ untuk Komunitas Imgur.</value>
+    <value>Un cliente nativo de Plataforma Universal de Windows para la comunidad de Imgur.</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppTitle.Text" xml:space="preserve">
-    <value>Imgur untuk Windows</value>
+    <value>Imgur para Windows</value>
     <comment>AboutControl</comment>
   </data>
   <data name="AppVersion.Text" xml:space="preserve">
-    <value>Versi</value>
+    <value>Versión</value>
     <comment>AboutControl</comment>
   </data>
   <data name="category_hot" xml:space="preserve">
-    <value>Paling Viral</value>
-    <comment>Enum -&gt; Sections</comment>
+    <value>Más viral</value>
+    <comment>Enum -> Sections</comment>
   </data>
   <data name="category_top" xml:space="preserve">
-    <value>Skor tertinggi</value>
-    <comment>Enum -&gt; Sections</comment>
+    <value>Mayor puntuación</value>
+    <comment>Enum -> Sections</comment>
   </data>
   <data name="category_user" xml:space="preserve">
-    <value>Dikirim Pengguna</value>
-    <comment>Enum -&gt; Sections</comment>
+    <value>Enviado por usuarios</value>
+    <comment>Enum -> Sections</comment>
   </data>
   <data name="Connect.Text" xml:space="preserve">
-    <value>Terhubung</value>
-    <comment>ShellView -&gt; NavigationViewItem </comment>
+    <value>Conectar</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="DaysElapsedFormat" xml:space="preserve">
-    <value>{0} hari</value>
+    <value>hace {0} días</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="Explorer.Text" xml:space="preserve">
-    <value>Jelajah konten baru!</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>¡Explora contenido nuevo!</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="HoursElapsedFormat" xml:space="preserve">
-    <value>{0} jam</value>
+    <value>hace {0} horas</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="MinutesElapsedFormat" xml:space="preserve">
-    <value>{0} menit</value>
+    <value>hace {0} minutos</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Gambar, #tags, @users oh my!</value>
-    <comment>ShellView -&gt; AutoSugestBox</comment>
+    <value>Imágenes, #etiquetas, @usuarios ¡y más!</value>
+    <comment>ShellView -> AutoSuggestBox</comment>
   </data>
   <data name="SecondsElapsedFormat" xml:space="preserve">
-    <value>{0} detik</value>
+    <value>hace {0} segundos</value>
     <comment>Converter Timestamp</comment>
   </data>
   <data name="Settings.Text" xml:space="preserve">
-    <value>Pengaturan</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>Configuración</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="SettingsAutoPlay.Header" xml:space="preserve">
-    <value>Putar-Otomatis Thumbnails</value>
+    <value>Reproducción automática de miniaturas</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsAutoPlay.Text" xml:space="preserve">
-    <value>Nyalakan Putar Otomatis thumbnails.</value>
+    <value>Activar la reproducción automática de miniaturas.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsData.Header" xml:space="preserve">
-    <value> Kontrol Data</value>
+    <value>Control de datos</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsData.Text" xml:space="preserve">
-    <value>Beritahukan ketika menggunakan data seluler .</value>
+    <value>Notificar al usar datos móviles.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Header" xml:space="preserve">
-    <value>Nyakakan Live Tiles</value>
+    <value>Usar iconos dinámicos</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Text" xml:space="preserve">
-    <value>Tampilkan Live Tiles dengan konten paling viral.</value>
+    <value>Mostrar iconos dinámicos con contenido viral.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsMobileUsage.Header" xml:space="preserve">
-    <value>Batas penggunaan data seluler</value>
+    <value>Limitar el uso de datos móviles</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsMobileUsage.Text" xml:space="preserve">
-    <value>Hanya putar Video Kualitas HD via Wi-Fi.</value>
+    <value>Transmitir vídeos HD solo por Wi-Fi.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsNotification.Header" xml:space="preserve">
-    <value>Ingatkan Pemberitahuan </value>
-    <comment>Settings </comment>
+    <value>Recordar notificaciones</value>
+    <comment>Settings</comment>
   </data>
   <data name="SettingsNotification.Text" xml:space="preserve">
-    <value>Kirimkan pemberitahuan sesekali tentang apa yang terjadi di komunitas imgur.</value>
+    <value>Enviar notificaciones ocasionales sobre la comunidad de Imgur.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
-    <value>Tentang aplikasi ini</value>
+    <value>Acerca de esta app</value>
     <comment>AboutControl</comment>
   </data>
   <data name="SettingsPageAppearanceTitle.Text" xml:space="preserve">
-    <value>Penampilan</value>
+    <value>Apariencia</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageGeneralTitle.Text" xml:space="preserve">
-    <value>Pengaturan Umum</value>
+    <value>Configuración general</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>Pengaturan aplikasi</value>
+    <value>Configuración de la app</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnail.Header" xml:space="preserve">
-    <value>Ukuran Thumbnail</value>
+    <value>Tamaño de miniaturas</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnail.Text" xml:space="preserve">
-    <value>Ukuran album thumbnails.</value>
+    <value>Tamaño de las miniaturas de galerías.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailLarge.Content" xml:space="preserve">
-    <value>Besar</value>
+    <value>Grande</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailMedium.Content" xml:space="preserve">
-    <value>Sedang</value>
+    <value>Mediano</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsThumbnailSmall.Content" xml:space="preserve">
-    <value>Kecil</value>
+    <value>Pequeño</value>
     <comment>Settings</comment>
   </data>
   <data name="ShellSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Gambar, #tags, @users oh my!</value>
+    <value>Imágenes, #etiquetas, @usuarios ¡y más!</value>
     <comment>Shellview</comment>
   </data>
   <data name="SortLabel.Text" xml:space="preserve">
-    <value>Urutkan berdasarkan:</value>
-    <comment>ExplorerView-&gt;Command Bar</comment>
+    <value>ORDENAR POR:</value>
+    <comment>ExplorerView->Command Bar</comment>
   </data>
   <data name="sort_all" xml:space="preserve">
-    <value>Semua waktu</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Todos los tiempos</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_day" xml:space="preserve">
-    <value>Hari inu</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Hoy</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_month" xml:space="preserve">
-    <value>Bulan</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Este mes</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_rising" xml:space="preserve">
-    <value>Kenaikan</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>En ascenso</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_time" xml:space="preserve">
-    <value>Terbaru</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Más reciente</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_top" xml:space="preserve">
-    <value>Terbaik</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Lo mejor</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_viral" xml:space="preserve">
-    <value>Populer</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Popular</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_week" xml:space="preserve">
-    <value>Minggu</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Esta semana</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="sort_year" xml:space="preserve">
-    <value>Tahun</value>
-    <comment>Enum -&gt; Sorts</comment>
+    <value>Este año</value>
+    <comment>Enum -> Sorts</comment>
   </data>
   <data name="Tags.Text" xml:space="preserve">
-    <value>Eksplorasi Tagar</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>Explorar etiquetas</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="Upload.Text" xml:space="preserve">
-    <value>Unggah berkas baru</value>
-    <comment>ShellView -&gt; NavigationViewItem</comment>
+    <value>Subir nuevo archivo</value>
+    <comment>ShellView -> NavigationViewItem</comment>
   </data>
   <data name="Views.Text" xml:space="preserve">
-    <value>Lihat</value>
+    <value>Vistas</value>
   </data>
   <data name="LoadMore.Text" xml:space="preserve">
-    <value>Muat lebih</value>
-  </data>
-  <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Save</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="Save.Text" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="SettingsApiKey.Header" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
-    <comment>Settings</comment>
-  </data>
-  <data name="SettingsApiKey.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
-    <comment>Settings</comment>
-  </data>
-  <data name="SettingsApiKeyButton.Text" xml:space="preserve">
-    <value>Configure</value>
-  </data>
-  <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
-    <value>In order to use the default Api Keys, just leave the fields blank and save it.</value>
-    <comment>CustomApiKeySettingsDialog</comment>
-  </data>
-  <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
-    <value>Advanced Settings</value>
-    <comment>Settings</comment>
-  </data>
-  <data name="SignInIntercetorMsg.Text" xml:space="preserve">
-    <value>Sign in to save it!</value>
-    <comment>LoginInterceptorDialog</comment>
-  </data>
-  <data name="AppCloseCancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="AppCloseConfirm" xml:space="preserve">
-    <value>Leave</value>
-  </data>
-  <data name="AppCloseContent" xml:space="preserve">
-    <value>Are you sure you want to close the app ?</value>
-  </data>
-  <data name="AppCloseTitle" xml:space="preserve">
-    <value>Leaving Already ?</value>
-  </data>
-  <data name="notification_api_warning" xml:space="preserve">
-    <value>Api Status Notice!</value>
-  </data>
-  <data name="notification_api_warning_content" xml:space="preserve">
-    <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
-  </data>
-  <data name="notification_open_account" xml:space="preserve">
-    <value>Open Imgurian Profile ?</value>
-  </data>
-  <data name="notification_open_album" xml:space="preserve">
-    <value>Open Album</value>
-  </data>
-  <data name="notification_open_image" xml:space="preserve">
-    <value>Open Image ?</value>
-  </data>
-  <data name="notification_open_tag" xml:space="preserve">
-    <value>Open Tag ?</value>
-  </data>
-  <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
-    <value>In order to apply the new api settings , the application was restarted.</value>
-  </data>
-  <data name="Hidden.Text" xml:space="preserve">
-    <value>Hidden</value>
-  </data>
-  <data name="HiddenAuthor" xml:space="preserve">
-    <value>Hidden</value>
-  </data>
-  <data name="NotificationTitleRestartMsg" xml:space="preserve">
-    <value>Restart Required!</value>
-  </data>
-  <data name="notification_clipboard_content" xml:space="preserve">
-    <value>Copied to Clipboard</value>
-  </data>
-  <data name="notification_generic" xml:space="preserve">
-    <value>New Notification!</value>
+    <value>Cargar más</value>
   </data>
   <data name="Home.Text" xml:space="preserve">
-    <value>Beranda</value>
+    <value>Inicio</value>
   </data>
   <data name="InterceptorHeader_FollowUser" xml:space="preserve">
-    <value>Anda akan Mengikuti seorang Imgurian!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>¡Estás a punto de seguir a un Imgurian!</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Like" xml:space="preserve">
-    <value>Anda akan menyukai sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>¡Estás a punto de dar me gusta a una publicación de Imgur!</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Upload" xml:space="preserve">
-    <value>Anda akan membuat sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>¡Estás a punto de hacer una publicación en Imgur!</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Vote" xml:space="preserve">
-    <value>Anda akan memberi suara pada sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>¡Estás a punto de votar en una publicación de Imgur!</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="LoginOrRegister.Text" xml:space="preserve">
-    <value>Masuk atau Daftar!</value>
+    <value>¡Inicia sesión o regístrate!</value>
     <comment>LoginInterceptorDialog</comment>
   </data>
   <data name="BestComments.Text" xml:space="preserve">
-    <value>KOMENTAR TERBAIK</value>
+    <value>MEJORES COMENTARIOS</value>
     <comment>MediaView</comment>
   </data>
   <data name="Comment.Text" xml:space="preserve">
-    <value>KOMENTAR</value>
+    <value>COMENTAR</value>
     <comment>MediaView</comment>
   </data>
   <data name="CommentsHeader.Header" xml:space="preserve">
-    <value>Komentar</value>
-    <comment>AccountView -&gt;Pivot</comment>
+    <value>Comentarios</value>
+    <comment>AccountView ->Pivot</comment>
   </data>
   <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
-    <value>Sepertinya belum ada komentar.</value>
+    <value>Parece que aún no hay comentarios.</value>
     <comment>MediaView</comment>
   </data>
   <data name="EmptyCommentsParagraphSecond.Text" xml:space="preserve">
-    <value>JADILAH YANG PERTAMA!</value>
+    <value>¡SÉ EL PRIMERO!</value>
     <comment>MediaView</comment>
   </data>
   <data name="ExpandMore.Text" xml:space="preserve">
-    <value>LIHAT SEMUA</value>
+    <value>VER TODO</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="FavouritesHeader.Header" xml:space="preserve">
-    <value>Favorit</value>
-    <comment>AccountView -&gt;Pivot</comment>
+    <value>Favoritos</value>
+    <comment>AccountView ->Pivot</comment>
   </data>
   <data name="Follow.Text" xml:space="preserve">
-    <value>Ikuti</value>
+    <value>Seguir</value>
   </data>
   <data name="Unfollow.Text" xml:space="preserve">
-    <value>Berhenti Ikuti</value>
+    <value>Dejar de seguir</value>
   </data>
   <data name="GalleriesSection.Text" xml:space="preserve">
-    <value>Galeri</value>
+    <value>Galerías</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="InterceptorHeader_FollowTag" xml:space="preserve">
-    <value>Anda akan Mengikuti sebuah Tag!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>¡Estás a punto de seguir una etiqueta!</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="LoadingMedia.Text" xml:space="preserve">
-    <value>Mendapatkan yang Terpanas!</value>
+    <value>¡Cargando lo mejor!</value>
     <comment>MediaView</comment>
   </data>
+  <data name="notification_clipboard_content" xml:space="preserve">
+    <value>Copiado al portapapeles</value>
+  </data>
+  <data name="notification_generic" xml:space="preserve">
+    <value>¡Nueva notificación!</value>
+  </data>
   <data name="notification_open_gallery" xml:space="preserve">
-    <value>Buka Galeri ?</value>
+    <value>¿Abrir galería?</value>
   </data>
   <data name="Points.Text" xml:space="preserve">
-    <value>Poin</value>
+    <value>Puntos</value>
   </data>
   <data name="Posts.Text" xml:space="preserve">
-    <value>Kiriman</value>
+    <value>Publicaciones</value>
   </data>
   <data name="PostsHeader.Header" xml:space="preserve">
-    <value>Kiriman</value>
-    <comment>AccountView -&gt;Pivot</comment>
+    <value>Publicaciones</value>
+    <comment>AccountView ->Pivot</comment>
   </data>
   <data name="QueryTitle.Text" xml:space="preserve">
-    <value>Kueri Pencarian:</value>
+    <value>Búsqueda:</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="RandomSection.Text" xml:space="preserve">
-    <value>Konten Acak</value>
+    <value>Contenido aleatorio</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="TagsSection.Text" xml:space="preserve">
-    <value>Tagar</value>
+    <value>Etiquetas</value>
     <comment>ExploreSearchView</comment>
   </data>
   <data name="UsersSection.Text" xml:space="preserve">
-    <value>Pengguna</value>
+    <value>Usuarios</value>
     <comment>ExploreSearchView</comment>
   </data>
+  <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
+    <value>Para aplicar la nueva configuración de API, la aplicación fue reiniciada.</value>
+  </data>
+  <data name="NotificationTitleRestartMsg" xml:space="preserve">
+    <value>¡Se requiere reinicio!</value>
+  </data>
+  <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Guardar</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="Save.Text" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="SettingsApiKey.Header" xml:space="preserve">
+    <value>Establecer una clave API personalizada</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKey.Text" xml:space="preserve">
+    <value>Almacena una clave API personalizada para uso de la app en lugar de la predeterminada. Puede ser necesaria para algunas funciones de alto consumo.</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKeyButton.Text" xml:space="preserve">
+    <value>Configurar</value>
+  </data>
+  <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
+    <value>Establecer una clave API personalizada</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
+    <value>Almacena una clave API personalizada para uso de la app en lugar de la predeterminada. Puede ser necesaria para algunas funciones de alto consumo.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
+    <value>Para usar las claves API predeterminadas, deja los campos en blanco y guarda.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
+    <value>Configuración avanzada</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SignInIntercetorMsg.Text" xml:space="preserve">
+    <value>¡Inicia sesión para guardarlo!</value>
+    <comment>LoginInterceptorDialog</comment>
+  </data>
+  <data name="AppCloseCancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="AppCloseConfirm" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="AppCloseContent" xml:space="preserve">
+    <value>¿Seguro que quieres cerrar la app?</value>
+  </data>
+  <data name="AppCloseTitle" xml:space="preserve">
+    <value>¿Ya te vas?</value>
+  </data>
+  <data name="Hidden.Text" xml:space="preserve">
+    <value>Oculto</value>
+  </data>
+  <data name="HiddenAuthor" xml:space="preserve">
+    <value>Oculto</value>
+  </data>
+  <data name="notification_api_warning" xml:space="preserve">
+    <value>¡Aviso de estado de la API!</value>
+  </data>
+  <data name="notification_api_warning_content" xml:space="preserve">
+    <value>La API de Imgur está experimentando un rendimiento degradado. Algunas funciones pueden comportarse de forma inesperada.</value>
+  </data>
+  <data name="notification_open_account" xml:space="preserve">
+    <value>¿Abrir perfil del Imgurian?</value>
+  </data>
+  <data name="notification_open_album" xml:space="preserve">
+    <value>Abrir álbum</value>
+  </data>
+  <data name="notification_open_image" xml:space="preserve">
+    <value>¿Abrir imagen?</value>
+  </data>
+  <data name="notification_open_tag" xml:space="preserve">
+    <value>¿Abrir etiqueta?</value>
+  </data>
   <data name="CopyToClipboard.Content" xml:space="preserve">
-    <value>Salin ke Papanklip</value>
+    <value>Copiar al portapapeles</value>
   </data>
   <data name="notification_open_upload" xml:space="preserve">
-    <value>Buka unggahan Anda?</value>
+    <value>¿Quieres abrir tu contenido subido?</value>
   </data>
   <data name="OpenSettingsMsg.Content" xml:space="preserve">
-    <value>Buka Pengaturan</value>
+    <value>Abrir configuración</value>
   </data>
   <data name="UploadInterceptorApiKeyInfoAfter" xml:space="preserve">
-    <value>, dan atur URL pengalihan dengan nilai di atas. Kemudian atur kunci Api kustom di Pengaturan.</value>
+    <value>, y establece la URL de redirección con el valor indicado arriba. Luego configura las claves API personalizadas en Configuración.</value>
   </data>
   <data name="UploadInterceptorApiKeyInfoBefore" xml:space="preserve">
-    <value>Buat Kunci API kustom Anda di </value>
+    <value>Crea tu clave API personalizada en </value>
   </data>
   <data name="ClipboardButton.Content" xml:space="preserve">
-    <value>Salin ke Papanklip</value>
+    <value>Copiar al portapapeles</value>
   </data>
   <data name="DescBox.PlaceholderText" xml:space="preserve">
-    <value>Tambahkan deskripsi</value>
+    <value>Añade una descripción</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="FileDrag.Text" xml:space="preserve">
-    <value>Seret dan Lepaskan File</value>
+    <value>Arrastra y suelta los archivos aquí</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="FileSelection.Text" xml:space="preserve">
-    <value>Pilih Foto/Video</value>
+    <value>Elegir foto(s)/vídeo(s)</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="NameBox.PlaceholderText" xml:space="preserve">
-    <value>Beri kiriman Anda judul yang unik...</value>
+    <value>Dale un título único a tu publicación...</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="Or.Text" xml:space="preserve">
-    <value>atau</value>
+    <value>o</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="PrivateUpload.Content" xml:space="preserve">
-    <value>Privat</value>
+    <value>Privado</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="UploadInterceptorSettings.Text" xml:space="preserve">
-    <value>Buka Pengaturan</value>
+    <value>Abrir configuración</value>
   </data>
   <data name="ShareTarget.SignInRequired.Title" xml:space="preserve">
-    <value>Masuk diperlukan</value>
+    <value>Se requiere inicio de sesión</value>
   </data>
   <data name="ShareTarget.SignInRequired.Subtitle" xml:space="preserve">
-    <value>Buka Imgur untuk Windows dan masuk terlebih dahulu.</value>
+    <value>Abre Imgur para Windows e inicia sesión primero.</value>
   </data>
   <data name="ShareTarget.Uploading.Text" xml:space="preserve">
-    <value>Mengunggah ke Imgur...</value>
+    <value>Subiendo a Imgur...</value>
   </data>
   <data name="ShareTarget.UploadCompleted.Text" xml:space="preserve">
-    <value>Unggahan selesai!</value>
+    <value>¡Subida completada!</value>
   </data>
   <data name="ShareTarget.Initializing.Text" xml:space="preserve">
-    <value>Menginisialisasi unggahan...</value>
+    <value>Inicializando subida...</value>
   </data>
   <data name="ShareTarget.ApiBlocked.Title" xml:space="preserve">
-    <value>Layanan diblokir</value>
+    <value>Servicio bloqueado</value>
   </data>
   <data name="ShareTarget.ApiBlocked.Subtitle" xml:space="preserve">
-    <value>Tidak dapat melanjutkan karena kredensial hilang.</value>
+    <value>No se puede continuar por falta de credenciales.</value>
   </data>
   <data name="UploadCancelledApiKeysMissingDesc" xml:space="preserve">
-    <value>Berbagi dibatalkan, karena kurangnya Kunci Api Kustom!</value>
+    <value>Compartir cancelado por falta de claves API personalizadas.</value>
   </data>
   <data name="UploadCancelledNotificationTitle" xml:space="preserve">
-    <value>Unggahan Dibatalkan</value>
+    <value>Subida cancelada</value>
   </data>
   <data name="UploadCompletedDesc" xml:space="preserve">
-    <value>Unggahan konten berhasil, mari kita lihat?</value>
+    <value>La subida del contenido se completó con éxito, ¿quieres verlo?</value>
   </data>
   <data name="UploadCompletedNotificationTitle" xml:space="preserve">
-    <value>Unggahan Selesai</value>
+    <value>Subida completada</value>
   </data>
   <data name="UploadNotificationSpinnerTitle" xml:space="preserve">
-    <value>Mengunggah Konten Baru...</value>
+    <value>Subiendo nuevo contenido...</value>
   </data>
   <data name="UploadOngoingDesc" xml:space="preserve">
-    <value>Unggahan konten sedang berlangsung...</value>
+    <value>Subida de contenido en progreso...</value>
   </data>
   <data name="UploadStartedNotificationTitle" xml:space="preserve">
-    <value>Unggahan Konten</value>
+    <value>Subida de contenido</value>
   </data>
   <data name="ApiRedirectInAppNotificationDesc" xml:space="preserve">
-    <value>Kunci Pengalihan disalin ke papanklip Anda.</value>
+    <value>Clave de redirección copiada al portapapeles.</value>
   </data>
   <data name="EmbedInAppNotificationDesc" xml:space="preserve">
-    <value>Konten Semat Disalin ke Papanklip.</value>
+    <value>Contenido incrustado copiado al portapapeles.</value>
   </data>
   <data name="InterceptorHeader_Comment" xml:space="preserve">
-    <value>Anda akan mengomentari sebuah Post Imgur!</value>
-    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+    <value>¡Estás a punto de comentar en una publicación de Imgur!</value>
+    <comment>Enum -> LoginInterceptorEnum</comment>
   </data>
   <data name="notification_comment_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat memposting komentar Anda.</value>
+    <value>Algo salió mal al publicar tu comentario.</value>
   </data>
   <data name="notification_comment_success_content" xml:space="preserve">
-    <value>Komentar berhasil diposting.</value>
+    <value>Comentario publicado con éxito.</value>
   </data>
   <data name="notification_follow_null_content" xml:space="preserve">
-    <value>Tidak dapat mengikuti: informasi pengguna tidak tersedia.</value>
+    <value>No se puede seguir: información del usuario no disponible.</value>
   </data>
   <data name="notification_follow_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat mencoba mengikuti pengguna ini.</value>
+    <value>Algo salió mal al intentar seguir a este usuario.</value>
   </data>
   <data name="notification_follow_success_content" xml:space="preserve">
-    <value>Pengguna berhasil diikuti.</value>
+    <value>Usuario seguido con éxito.</value>
   </data>
   <data name="notification_unfollow_success_content" xml:space="preserve">
-    <value>Anda berhenti mengikuti pengguna.</value>
+    <value>Dejaste de seguir al usuario.</value>
   </data>
   <data name="notification_copy_comment_success_content" xml:space="preserve">
-    <value>Teks komentar disalin ke papan klip.</value>
+    <value>Texto del comentario copiado al portapapeles.</value>
   </data>
   <data name="notification_copy_permalink_success_content" xml:space="preserve">
-    <value>Tautan permanen disalin ke papan klip.</value>
+    <value>Enlace permanente copiado al portapapeles.</value>
   </data>
   <data name="notification_favourite_success_content" xml:space="preserve">
-    <value>Ditambahkan ke favorit.</value>
+    <value>Añadido a favoritos.</value>
   </data>
   <data name="notification_favourite_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat menambahkan ke favorit. Coba lagi.</value>
+    <value>Algo salió mal al añadir a favoritos. Inténtalo de nuevo.</value>
   </data>
   <data name="notification_vote_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat voting. Coba lagi.</value>
-  </data>
-  <data name="CopyImageLink.Text" xml:space="preserve">
-    <value>Salin Tautan Gambar</value>
+    <value>Algo salió mal al votar. Inténtalo de nuevo.</value>
   </data>
   <data name="notification_copy_image_link_success_content" xml:space="preserve">
-    <value>Tautan gambar disalin ke papan klip.</value>
+    <value>Enlace de imagen copiado al portapapeles.</value>
   </data>
   <data name="notification_download_success_content" xml:space="preserve">
-    <value>File berhasil diunduh.</value>
+    <value>Archivo descargado con éxito.</value>
   </data>
   <data name="notification_download_error_content" xml:space="preserve">
-    <value>Terjadi kesalahan saat mengunduh file. Coba lagi.</value>
+    <value>Algo salió mal al descargar el archivo. Inténtalo de nuevo.</value>
   </data>
   <data name="EmptySectionTitle.Text" xml:space="preserve">
-    <value>Belum ada apa pun di sini.</value>
+    <value>Nada aquí todavía.</value>
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
-    <value>Bagian ini tidak memiliki apa pun untuk ditampilkan.</value>
+    <value>Esta sección no tiene nada que mostrar.</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
-    <value>KOMENTAR BARU</value>
+    <value>NUEVOS COMENTARIOS</value>
   </data>
   <data name="Reply.Content" xml:space="preserve">
-    <value>Balas</value>
+    <value>Responder</value>
   </data>
   <data name="ShowComments.Content" xml:space="preserve">
-    <value>LIHAT SEMUA KOMENTAR</value>
+    <value>VER TODOS LOS COMENTARIOS</value>
   </data>
   <data name="UploadCancellation.Text" xml:space="preserve">
-    <value>Batal</value>
+    <value>Cancelar</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="UploadConfirmation.Text" xml:space="preserve">
-    <value>Kirim</value>
+    <value>Publicar</value>
     <comment>UploadDialog</comment>
   </data>
   <data name="CommentingPlaceholder" xml:space="preserve">
-    <value>Berkomentar sebagai {0}</value>
+    <value>Comentando como {0}</value>
     <comment>CommentControl</comment>
   </data>
   <data name="CommentDialogTitle.Text" xml:space="preserve">
-    <value>Komentar Postingan</value>
+    <value>Comentar publicación</value>
     <comment>CommentDialog header title</comment>
   </data>
   <data name="ReplyDialogTitle.Text" xml:space="preserve">
-    <value>Balas Postingan</value>
+    <value>Responder publicación</value>
     <comment>ReplyDialog header title</comment>
   </data>
 </root>

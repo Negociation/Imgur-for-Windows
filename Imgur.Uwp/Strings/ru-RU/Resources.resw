@@ -129,6 +129,10 @@
     <value>Загрузить</value>
     <comment>AppBar</comment>
   </data>
+  <data name="ImageDownload.Text" xml:space="preserve">
+    <value>Загрузить</value>
+    <comment>AppBar</comment>
+  </data>
   <data name="AppBarDownload.ToolTipService.ToolTip" xml:space="preserve">
     <value>Загрузить содержимое</value>
     <comment>AppBar</comment>
@@ -233,6 +237,9 @@
   </data>
   <data name="Follow.Text" xml:space="preserve">
     <value>Follow</value>
+  </data>
+  <data name="Unfollow.Text" xml:space="preserve">
+    <value>Отписаться</value>
   </data>
   <data name="GalleriesSection.Text" xml:space="preserve">
     <value>Galleries</value>
@@ -533,5 +540,182 @@
   </data>
   <data name="notification_open_tag" xml:space="preserve">
     <value>Open Tag ?</value>
+  </data>
+  <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>Скопировать в буфер обмена</value>
+  </data>
+  <data name="notification_open_upload" xml:space="preserve">
+    <value>Открыть загруженное ?</value>
+  </data>
+  <data name="OpenSettingsMsg.Content" xml:space="preserve">
+    <value>Открыть настройки</value>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoAfter" xml:space="preserve">
+    <value>, и установите URL перенаправления со значением выше. Затем установите пользовательские Api ключи в Настройках.</value>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoBefore" xml:space="preserve">
+    <value>Создайте свой собственный API ключ в </value>
+  </data>
+  <data name="ClipboardButton.Content" xml:space="preserve">
+    <value>Скопировать в буфер обмена</value>
+  </data>
+  <data name="DescBox.PlaceholderText" xml:space="preserve">
+    <value>Добавить описание</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileDrag.Text" xml:space="preserve">
+    <value>Перетащите файлы сюда</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileSelection.Text" xml:space="preserve">
+    <value>Выбрать Фото/Видео</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="NameBox.PlaceholderText" xml:space="preserve">
+    <value>Дайте вашему посту уникальный заголовок...</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="Or.Text" xml:space="preserve">
+    <value>или</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="PrivateUpload.Content" xml:space="preserve">
+    <value>Приватное</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadInterceptorSettings.Text" xml:space="preserve">
+    <value>Открыть настройки</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Title" xml:space="preserve">
+    <value>Требуется авторизация</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Subtitle" xml:space="preserve">
+    <value>Сначала откройте Imgur для Windows и войдите.</value>
+  </data>
+  <data name="ShareTarget.Uploading.Text" xml:space="preserve">
+    <value>Загрузка на Imgur...</value>
+  </data>
+  <data name="ShareTarget.UploadCompleted.Text" xml:space="preserve">
+    <value>Загрузка завершена!</value>
+  </data>
+  <data name="ShareTarget.Initializing.Text" xml:space="preserve">
+    <value>Инициализация загрузки...</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Title" xml:space="preserve">
+    <value>Сервис заблокирован</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Subtitle" xml:space="preserve">
+    <value>Невозможно продолжить из-за отсутствия учётных данных.</value>
+  </data>
+  <data name="UploadCancelledApiKeysMissingDesc" xml:space="preserve">
+    <value>Общий доступ отменён из-за отсутствия пользовательских API ключей!</value>
+  </data>
+  <data name="UploadCancelledNotificationTitle" xml:space="preserve">
+    <value>Загрузка отменена</value>
+  </data>
+  <data name="UploadCompletedDesc" xml:space="preserve">
+    <value>Загрузка контента успешна, хотите посмотреть?</value>
+  </data>
+  <data name="UploadCompletedNotificationTitle" xml:space="preserve">
+    <value>Загрузка завершена</value>
+  </data>
+  <data name="UploadNotificationSpinnerTitle" xml:space="preserve">
+    <value>Загрузка нового контента...</value>
+  </data>
+  <data name="UploadOngoingDesc" xml:space="preserve">
+    <value>Загрузка контента в процессе...</value>
+  </data>
+  <data name="UploadStartedNotificationTitle" xml:space="preserve">
+    <value>Загрузка контента</value>
+  </data>
+  <data name="ApiRedirectInAppNotificationDesc" xml:space="preserve">
+    <value>Ключ перенаправления скопирован в буфер обмена.</value>
+  </data>
+  <data name="EmbedInAppNotificationDesc" xml:space="preserve">
+    <value>Вставляемый контент скопирован в буфер обмена.</value>
+  </data>
+  <data name="InterceptorHeader_Comment" xml:space="preserve">
+    <value>Вы собираетесь оставить комментарий на посту Imgur!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="notification_comment_error_content" xml:space="preserve">
+    <value>Во время публикации вашего комментария произошла ошибка.</value>
+  </data>
+  <data name="notification_comment_success_content" xml:space="preserve">
+    <value>Комментарий успешно опубликован.</value>
+  </data>
+  <data name="notification_follow_null_content" xml:space="preserve">
+    <value>Невозможно подписаться: информация о пользователе недоступна.</value>
+  </data>
+  <data name="notification_follow_error_content" xml:space="preserve">
+    <value>Произошла ошибка при попытке подписаться на этого пользователя.</value>
+  </data>
+  <data name="notification_follow_success_content" xml:space="preserve">
+    <value>Вы успешно подписались на пользователя.</value>
+  </data>
+  <data name="notification_unfollow_success_content" xml:space="preserve">
+    <value>Вы отписались от пользователя.</value>
+  </data>
+  <data name="notification_copy_comment_success_content" xml:space="preserve">
+    <value>Текст комментария скопирован в буфер обмена.</value>
+  </data>
+  <data name="notification_copy_permalink_success_content" xml:space="preserve">
+    <value>Постоянная ссылка скопирована в буфер обмена.</value>
+  </data>
+  <data name="notification_favourite_success_content" xml:space="preserve">
+    <value>Добавлено в избранное.</value>
+  </data>
+  <data name="notification_favourite_error_content" xml:space="preserve">
+    <value>Ошибка при добавлении в избранное. Попробуйте ещё раз.</value>
+  </data>
+  <data name="notification_vote_error_content" xml:space="preserve">
+    <value>Ошибка при голосовании. Попробуйте ещё раз.</value>
+  </data>
+  <data name="CopyImageLink.Text" xml:space="preserve">
+    <value>Копировать ссылку на изображение</value>
+  </data>
+  <data name="notification_copy_image_link_success_content" xml:space="preserve">
+    <value>Ссылка на изображение скопирована в буфер обмена.</value>
+  </data>
+  <data name="notification_download_success_content" xml:space="preserve">
+    <value>Файл успешно загружен.</value>
+  </data>
+  <data name="notification_download_error_content" xml:space="preserve">
+    <value>Ошибка при загрузке файла. Попробуйте ещё раз.</value>
+  </data>
+  <data name="EmptySectionTitle.Text" xml:space="preserve">
+    <value>Здесь пока ничего нет.</value>
+  </data>
+  <data name="EmptySectionSubtitle.Text" xml:space="preserve">
+    <value>В этом разделе нечего отображать.</value>
+  </data>
+  <data name="NewComments.Text" xml:space="preserve">
+    <value>НОВЫЕ КОММЕНТАРИИ</value>
+  </data>
+  <data name="Reply.Content" xml:space="preserve">
+    <value>Ответить</value>
+  </data>
+  <data name="ShowComments.Content" xml:space="preserve">
+    <value>ПОСМОТРЕТЬ ВСЕ КОММЕНТАРИИ</value>
+  </data>
+  <data name="UploadCancellation.Text" xml:space="preserve">
+    <value>Отмена</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadConfirmation.Text" xml:space="preserve">
+    <value>Опубликовать</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="CommentingPlaceholder" xml:space="preserve">
+    <value>Комментирую как {0}</value>
+    <comment>CommentControl</comment>
+  </data>
+  <data name="CommentDialogTitle.Text" xml:space="preserve">
+    <value>Комментировать пост</value>
+    <comment>CommentDialog header title</comment>
+  </data>
+  <data name="ReplyDialogTitle.Text" xml:space="preserve">
+    <value>Ответить на пост</value>
+    <comment>ReplyDialog header title</comment>
   </data>
 </root>

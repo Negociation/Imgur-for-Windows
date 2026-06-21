@@ -17,6 +17,8 @@ namespace Imgur.Models
         public int Reputation { get; set; }
         public string ReputationName { get; set; }
 
+        public bool ?IsFollowing { get; set; }
+
         //-- Factory
         public static UserAccount CreateAnonymous()
         {

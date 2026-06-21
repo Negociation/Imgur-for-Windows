@@ -35,7 +35,9 @@
 
         <DataTemplate x:Key="ImageTemplate" x:DataType="models:Element">
             <StackPanel Margin="0,10" MinHeight="100">
-                <controls:ImageViewElementControl ImageElement="{Binding}" />
+                <controls:ImageViewElementControl
+                    ImageElement="{Binding}"
+                    DownloadCommand="{Binding DataContext.DownloadElementCommand, ElementName=MediaViewPage}" />
                 <TextBlock FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap" Margin="10,0,10,0" IsTextSelectionEnabled="True" />
                 <TextBlock FontWeight="SemiBold" Text="{Binding Description}" TextWrapping="Wrap" Margin="10,0,10,5" IsTextSelectionEnabled="True" />
             </StackPanel>
@@ -323,7 +325,7 @@
                                          Foreground="White"
                                          Grid.ColumnSpan="2" />
 
-                            <Grid Grid.Row="2" Margin="0,0,0,0" Visibility="{Binding LoadedSuccessfully}">
+                            <Grid Grid.Row="2" Margin="0,2,0,0" Visibility="{Binding LoadedSuccessfully}">
                                 <Grid DataContext="{Binding UserAccount}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto" />
@@ -335,14 +337,21 @@
                                                      FontWeight="SemiBold"
                                                      Content="{Binding UserAccountInfo.Username, FallbackValue='...'}"
                                                      Foreground="{ThemeResource SystemAccentColor}"
-                                                     Height="20" Padding="6,1" Opacity="0.7" FontSize="12" />
+                                                     Height="20" Padding="4,1" Opacity="0.7" FontSize="12" />
                                     <TextBlock Margin="0,0,0,0" FontSize="12" FontWeight="Bold" Opacity="0.5" x:Uid="Hidden" Visibility="{Binding UserAccountInfo.IsHidden}">Hidden</TextBlock>
-                                    <Button Grid.Column="1" Width="18" Height="18" Padding="0"
+                                    <Button Grid.Column="1" Width="20" Height="20" Padding="0"
                                             Style="{StaticResource CircleButtonStyle}"
                                             Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolNegationConverter}}"
                                             Command="{Binding Path=FollowAuthor}"
-                                            Background="#BCC0C9" Margin="2,0" Opacity="0.4">
-                                        <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="12" Glyph="&#xE948;" Foreground="Black" Margin="0,1,0,0" HorizontalAlignment="Center" />
+                                            HorizontalContentAlignment="Center"
+                                            VerticalContentAlignment="Center"
+                                            Background="#464B57" Margin="2,0">
+                                        <Grid>
+                                            <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="12" Glyph="&#xE948;" Foreground="White" Margin="0,0,0,0" HorizontalAlignment="Center"
+                                                      Visibility="{Binding IsFollowing, Converter={StaticResource BoolNegationConverter}}" />
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="12" FontWeight="ExtraBold" Glyph="&#xE10A;" Margin="-1,0,0,0" Foreground="White" HorizontalAlignment="Center"
+                                                      Visibility="{Binding IsFollowing, Converter={StaticResource BoolVisibilityConverter}}" />
+                                        </Grid>
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -362,11 +371,16 @@
                                           ToolTipService.ToolTip="Add to Favourites"
                                           Label="Add to Favourites"
                                           LabelPosition="Collapsed">
-                                <AppBarButton.Icon>
-                                    <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl3.ttf#Segoe MDL2 Assets"
-                                              Foreground="{Binding IsFavorited, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}"
-                                              FontSize="20" Glyph="&#xEB51;"/>
-                                </AppBarButton.Icon>
+                                <AppBarButton.Content>
+                                    <Grid>
+                                        <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl3.ttf#Segoe MDL2 Assets"
+                                                  FontSize="20" Glyph="&#xEB51;"
+                                                  Visibility="{Binding IsFavorited, Converter={StaticResource BoolNegationConverter}}"/>
+                                        <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl3.ttf#Segoe MDL2 Assets"
+                                                  FontSize="20" Glyph="&#xEB52;" Foreground="#1bb76e"
+                                                  Visibility="{Binding IsFavorited, Converter={StaticResource BoolVisibilityConverter}}"/>
+                                    </Grid>
+                                </AppBarButton.Content>
                             </AppBarButton>
                             <CommandBar.SecondaryCommands>
                                 <AppBarButton x:Uid="AppBarShare" Label="Share to..." ToolTipService.ToolTip="Share the content" FontFamily="Segoe MDL2 Assets" IsEnabled="True" Command="{Binding InvokeShareDialog}">
@@ -663,9 +677,14 @@
                         FocusVisualPrimaryBrush="{StaticResource SystemControlFocusVisualPrimaryBrush}"
                         FocusVisualSecondaryBrush="{StaticResource SystemControlFocusVisualSecondaryBrush}" Padding="-5">
                     <Button.Content>
-                        <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}"
-                                  Foreground="{Binding IsFavorited, Converter={StaticResource BoolToBrushConverter}, ConverterParameter=#1bb76e|#FFFFFF}"
-                                  FontWeight="ExtraBold" FontSize="18" Glyph="&#xEB51;"/>
+                        <Grid>
+                            <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}"
+                                      FontWeight="ExtraBold" FontSize="18" Glyph="&#xEB51;"
+                                      Visibility="{Binding IsFavorited, Converter={StaticResource BoolNegationConverter}}"/>
+                            <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}"
+                                      FontWeight="ExtraBold" FontSize="18" Glyph="&#xEB52;" Foreground="#1bb76e"
+                                      Visibility="{Binding IsFavorited, Converter={StaticResource BoolVisibilityConverter}}"/>
+                        </Grid>
                     </Button.Content>
                 </Button>
 

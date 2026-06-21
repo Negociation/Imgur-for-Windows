@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Shapes;
 
 // O modelo de item de Página em Branco está documentado em https://go.microsoft.com/fwlink/?LinkId=234238
@@ -123,9 +124,105 @@ namespace Imgur.Uwp.Views.Shell
             var navigator = App.Services.GetRequiredService<INavigator>();
             navigator.Frame = MainFrame;
             MainFrame.Navigate(typeof(ExplorerView));
-           
+
+            navigator.ScrollOffsetChanged += Navigator_ScrollOffsetChanged;
+            navigator.FullScreenModeChanged += Navigator_FullScreenModeChanged;
 
             ViewModel.Initialize();
+        }
+
+        private void Navigator_ScrollOffsetChanged(object sender, double offset)
+        {
+            var sysInfo = App.Services.GetRequiredService<ISystemInfoProvider>();
+            bool isDesktop = !sysInfo.IsMobile() && !sysInfo.IsXbox();
+
+            if (offset > 10)
+            {
+                // Barra acrílica apenas no PC
+                if (isDesktop && AcrylicBarFullScrenBase.Visibility == Visibility.Collapsed)
+                {
+                    AcrylicBarFullScrenBase.Opacity = 0;
+                    AcrylicBarFullScrenBase.Visibility = Visibility.Visible;
+
+                    var sbIn = new Storyboard();
+                    var fadeIn = new DoubleAnimation
+                    {
+                        To = 1.0,
+                        Duration = TimeSpan.FromMilliseconds(220),
+                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                    };
+                    Storyboard.SetTarget(fadeIn, AcrylicBarFullScrenBase);
+                    Storyboard.SetTargetProperty(fadeIn, "Opacity");
+                    sbIn.Children.Add(fadeIn);
+                    sbIn.Begin();
+                }
+
+                // Fade-out do header compacto e da search box
+                if (HeaderCompactContent.Opacity > 0)
+                {
+                    var sb = new Storyboard();
+
+                    var fadeHeader = new DoubleAnimation { To = 0.0, Duration = TimeSpan.FromMilliseconds(200) };
+                    Storyboard.SetTarget(fadeHeader, HeaderCompactContent);
+                    Storyboard.SetTargetProperty(fadeHeader, "Opacity");
+
+                    var fadeSearch = new DoubleAnimation { To = 0.0, Duration = TimeSpan.FromMilliseconds(200) };
+                    Storyboard.SetTarget(fadeSearch, SearchBox);
+                    Storyboard.SetTargetProperty(fadeSearch, "Opacity");
+
+                    sb.Children.Add(fadeHeader);
+                    sb.Children.Add(fadeSearch);
+                    sb.Begin();
+                }
+            }
+            else
+            {
+                // Fade-out da barra acrílica ao voltar ao topo (apenas PC)
+                if (isDesktop && AcrylicBarFullScrenBase.Visibility == Visibility.Visible)
+                {
+                    var sbOut = new Storyboard();
+                    var fadeOut = new DoubleAnimation { To = 0.0, Duration = TimeSpan.FromMilliseconds(160) };
+                    Storyboard.SetTarget(fadeOut, AcrylicBarFullScrenBase);
+                    Storyboard.SetTargetProperty(fadeOut, "Opacity");
+                    sbOut.Completed += (s, e) => AcrylicBarFullScrenBase.Visibility = Visibility.Collapsed;
+                    sbOut.Children.Add(fadeOut);
+                    sbOut.Begin();
+                }
+
+                // Restaurar opacidade do header compacto e da search box
+                if (HeaderCompactContent.Opacity < 1)
+                {
+                    var sb = new Storyboard();
+
+                    var fadeHeader = new DoubleAnimation { To = 1.0, Duration = TimeSpan.FromMilliseconds(200) };
+                    Storyboard.SetTarget(fadeHeader, HeaderCompactContent);
+                    Storyboard.SetTargetProperty(fadeHeader, "Opacity");
+
+                    var fadeSearch = new DoubleAnimation { To = 1.0, Duration = TimeSpan.FromMilliseconds(200) };
+                    Storyboard.SetTarget(fadeSearch, SearchBox);
+                    Storyboard.SetTargetProperty(fadeSearch, "Opacity");
+
+                    sb.Children.Add(fadeHeader);
+                    sb.Children.Add(fadeSearch);
+                    sb.Begin();
+                }
+            }
+        }
+
+        private void Navigator_FullScreenModeChanged(object sender, bool isFullScreen)
+        {
+            if (!isFullScreen)
+            {
+                // Ao sair do fullscreen reseta tudo imediatamente
+                var sysInfo = App.Services.GetRequiredService<ISystemInfoProvider>();
+                if (!sysInfo.IsMobile() && !sysInfo.IsXbox())
+                {
+                    AcrylicBarFullScrenBase.Visibility = Visibility.Collapsed;
+                    AcrylicBarFullScrenBase.Opacity = 0;
+                }
+                HeaderCompactContent.Opacity = 1;
+                SearchBox.Opacity = 1;
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

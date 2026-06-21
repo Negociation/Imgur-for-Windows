@@ -80,8 +80,8 @@ namespace Imgur.Api.Services
             }
             catch (JsonSerializationException ex)
             {
-                Debug.WriteLine("Erro na desserialização JSON: " + ex.Message);
-                Debug.WriteLine("Conteúdo do JSON: " + json);
+                Debug.WriteLine($"[{GetType().Name}.GetAsync] Erro na desserialização JSON endpoint:{endpoint} — {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.GetAsync] Conteúdo do JSON: {json}");
 
                 return new ApiResponse<T>
                 {
@@ -92,7 +92,7 @@ namespace Imgur.Api.Services
             }
             catch (HttpRequestException ex)
             {
-                Debug.WriteLine("Erro de rede: " + ex.Message);
+                Debug.WriteLine($"[{GetType().Name}.GetAsync] Erro de rede endpoint:{endpoint} — {ex.Message}");
 
                 return new ApiResponse<T>
                 {
@@ -103,7 +103,7 @@ namespace Imgur.Api.Services
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine("Timeout da requisição: " + ex.Message);
+                Debug.WriteLine($"[{GetType().Name}.GetAsync] Timeout endpoint:{endpoint} — {ex.Message}");
 
                 return new ApiResponse<T>
                 {
@@ -114,8 +114,8 @@ namespace Imgur.Api.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Erro genérico: " + ex.Message);
-                Debug.WriteLine("Conteúdo do JSON: " + json);
+                Debug.WriteLine($"[{GetType().Name}.GetAsync] Erro genérico endpoint:{endpoint} — {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.GetAsync] Conteúdo do JSON: {json}");
 
                 return new ApiResponse<T>
                 {
@@ -156,22 +156,22 @@ namespace Imgur.Api.Services
             }
             catch (JsonSerializationException ex)
             {
-                Debug.WriteLine($"Erro na desserialização JSON: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.PostAsync] Erro na desserialização JSON endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = response != null ? (int)response.StatusCode : 0, Data = default(T) };
             }
             catch (HttpRequestException ex)
             {
-                Debug.WriteLine($"Erro de rede: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.PostAsync] Erro de rede endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Timeout: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.PostAsync] Timeout endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 408, Data = default(T) };
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Erro genérico: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.PostAsync] Erro genérico endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
         }
@@ -205,22 +205,22 @@ namespace Imgur.Api.Services
             }
             catch (JsonSerializationException ex)
             {
-                Debug.WriteLine($"Erro na desserialização JSON: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.DeleteAsync] Erro na desserialização JSON endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = response != null ? (int)response.StatusCode : 0, Data = default(T) };
             }
             catch (HttpRequestException ex)
             {
-                Debug.WriteLine($"Erro de rede: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.DeleteAsync] Erro de rede endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"Timeout: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.DeleteAsync] Timeout endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 408, Data = default(T) };
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Erro genérico: {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.DeleteAsync] Erro genérico endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
         }

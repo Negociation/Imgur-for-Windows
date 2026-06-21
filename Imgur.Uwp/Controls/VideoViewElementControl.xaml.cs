@@ -3,11 +3,14 @@ using Imgur.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media;
+using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -32,6 +35,12 @@ namespace Imgur.Uwp.Controls
         public VideoViewElementControl()
         {
             this.InitializeComponent();
+
+            // Começa sem integração com o SMTC. Assim players recém-criados não
+            // registram sessão de mídia (evita vários vídeos respondendo aos botões
+            // de hardware ao mesmo tempo). O MediaPlayerService liga o CommandManager
+            // apenas no player ativo ao dar Play.
+            this.Player.MediaPlayer.CommandManager.IsEnabled = false;
 
             //Get Service
             this._mediaPlayerService = App.Services.GetRequiredService<IMediaPlayerService>();
@@ -170,7 +179,37 @@ namespace Imgur.Uwp.Controls
         }
 
         public static readonly DependencyProperty MediaElementProperty =
-            DependencyProperty.Register("MediaElement", typeof(Element), typeof(VideoViewElementControl), new PropertyMetadata(0));
+            DependencyProperty.Register("MediaElement", typeof(Element), typeof(VideoViewElementControl), new PropertyMetadata(null, OnMediaElementChanged));
+
+        private static void OnMediaElementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is VideoViewElementControl control && e.NewValue is Element element)
+            {
+                control.BuildPlaybackSource(element);
+            }
+        }
+
+        // Monta a fonte como MediaPlaybackItem com display properties. É o que permite
+        // ao SMTC (via CommandManager do player ativo) exibir título/autor na lock screen.
+        private void BuildPlaybackSource(Element element)
+        {
+            if (string.IsNullOrEmpty(element?.Link)) return;
+
+            var source = MediaSource.CreateFromUri(new Uri(element.Link));
+            var item = new MediaPlaybackItem(source);
+
+
+            this.Player.Source = item;
+
+            var props = item.GetDisplayProperties();
+            props.Type = MediaPlaybackType.Music;
+            props.MusicProperties.Title = string.IsNullOrEmpty(element.MediaTitle) ? "Imgur" : element.MediaTitle;
+            props.MusicProperties.Artist = element.MediaAuthor ?? string.Empty;
+
+
+            item.ApplyDisplayProperties(props);
+
+        }
 
 
 

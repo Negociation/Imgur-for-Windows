@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,18 +17,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Imgur.Uwp.Controls
 {
-    public sealed partial class AboutControl : UserControl
+    public sealed partial class AccountCommentControl : UserControl
     {
-        public AboutControl()
+        public AccountCommentControl()
         {
             this.InitializeComponent();
-        }
-
-        private string Version => SystemInformation.ApplicationVersion.ToFormattedString();
-
-        private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

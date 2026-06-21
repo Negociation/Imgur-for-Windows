@@ -129,6 +129,10 @@
     <value>Tải xuống</value>
     <comment>AppBar</comment>
   </data>
+  <data name="ImageDownload.Text" xml:space="preserve">
+    <value>Tải xuống</value>
+    <comment>AppBar</comment>
+  </data>
   <data name="AppBarDownload.ToolTipService.ToolTip" xml:space="preserve">
     <value>Tải nội dung xuống</value>
     <comment>AppBar</comment>
@@ -233,6 +237,9 @@
   </data>
   <data name="Follow.Text" xml:space="preserve">
     <value>Theo dõi</value>
+  </data>
+  <data name="Unfollow.Text" xml:space="preserve">
+    <value>Bỏ theo dõi</value>
   </data>
   <data name="GalleriesSection.Text" xml:space="preserve">
     <value>Trưng bày</value>
@@ -533,5 +540,185 @@
   </data>
   <data name="notification_open_tag" xml:space="preserve">
     <value>Open Tag ?</value>
+  </data>
+  <data name="notification_open_gallery" xml:space="preserve">
+    <value>Mở Trưng bày?</value>
+  </data>
+  <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>Sao chép vào bộ nhớ tạm</value>
+  </data>
+  <data name="notification_open_upload" xml:space="preserve">
+    <value>Bạn có muốn xem bài tải lên không?</value>
+  </data>
+  <data name="OpenSettingsMsg.Content" xml:space="preserve">
+    <value>Mở Cài đặt</value>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoAfter" xml:space="preserve">
+    <value>, và đặt URL chuyển hướng với giá trị ở trên. Sau đó đặt các khóa Api tùy chỉnh trong Cài đặt.</value>
+  </data>
+  <data name="UploadInterceptorApiKeyInfoBefore" xml:space="preserve">
+    <value>Tạo khóa API tùy chỉnh của bạn tại </value>
+  </data>
+  <data name="ClipboardButton.Content" xml:space="preserve">
+    <value>Sao chép vào bộ nhớ tạm</value>
+  </data>
+  <data name="DescBox.PlaceholderText" xml:space="preserve">
+    <value>Thêm mô tả</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileDrag.Text" xml:space="preserve">
+    <value>Kéo và thả tệp</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="FileSelection.Text" xml:space="preserve">
+    <value>Chọn Ảnh/Video</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="NameBox.PlaceholderText" xml:space="preserve">
+    <value>Đặt tiêu đề độc đáo cho bài đăng của bạn...</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="Or.Text" xml:space="preserve">
+    <value>hoặc</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="PrivateUpload.Content" xml:space="preserve">
+    <value>Riêng tư</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadInterceptorSettings.Text" xml:space="preserve">
+    <value>Mở Cài đặt</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Title" xml:space="preserve">
+    <value>Yêu cầu đăng nhập</value>
+  </data>
+  <data name="ShareTarget.SignInRequired.Subtitle" xml:space="preserve">
+    <value>Mở Imgur cho Windows và đăng nhập trước.</value>
+  </data>
+  <data name="ShareTarget.Uploading.Text" xml:space="preserve">
+    <value>Đang tải lên Imgur...</value>
+  </data>
+  <data name="ShareTarget.UploadCompleted.Text" xml:space="preserve">
+    <value>Tải lên hoàn tất!</value>
+  </data>
+  <data name="ShareTarget.Initializing.Text" xml:space="preserve">
+    <value>Đang khởi tạo tải lên...</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Title" xml:space="preserve">
+    <value>Dịch vụ bị chặn</value>
+  </data>
+  <data name="ShareTarget.ApiBlocked.Subtitle" xml:space="preserve">
+    <value>Không thể tiếp tục do thiếu thông tin đăng nhập.</value>
+  </data>
+  <data name="UploadCancelledApiKeysMissingDesc" xml:space="preserve">
+    <value>Chia sẻ đã bị hủy do thiếu Khóa Api Tùy chỉnh!</value>
+  </data>
+  <data name="UploadCancelledNotificationTitle" xml:space="preserve">
+    <value>Tải lên đã hủy</value>
+  </data>
+  <data name="UploadCompletedDesc" xml:space="preserve">
+    <value>Tải lên nội dung thành công, hãy xem thử?</value>
+  </data>
+  <data name="UploadCompletedNotificationTitle" xml:space="preserve">
+    <value>Tải lên hoàn tất</value>
+  </data>
+  <data name="UploadNotificationSpinnerTitle" xml:space="preserve">
+    <value>Đang tải lên nội dung mới...</value>
+  </data>
+  <data name="UploadOngoingDesc" xml:space="preserve">
+    <value>Đang tải lên nội dung...</value>
+  </data>
+  <data name="UploadStartedNotificationTitle" xml:space="preserve">
+    <value>Tải lên nội dung</value>
+  </data>
+  <data name="ApiRedirectInAppNotificationDesc" xml:space="preserve">
+    <value>Khóa chuyển hướng đã sao chép vào bộ nhớ tạm.</value>
+  </data>
+  <data name="EmbedInAppNotificationDesc" xml:space="preserve">
+    <value>Nội dung nhúng đã sao chép vào bộ nhớ tạm.</value>
+  </data>
+  <data name="InterceptorHeader_Comment" xml:space="preserve">
+    <value>Bạn sắp bình luận một bài Imgur!</value>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
+  </data>
+  <data name="notification_comment_error_content" xml:space="preserve">
+    <value>Đã xảy ra sự cố khi đăng bình luận của bạn.</value>
+  </data>
+  <data name="notification_comment_success_content" xml:space="preserve">
+    <value>Bình luận đã được đăng thành công.</value>
+  </data>
+  <data name="notification_follow_null_content" xml:space="preserve">
+    <value>Không thể theo dõi: thông tin người dùng không có sẵn.</value>
+  </data>
+  <data name="notification_follow_error_content" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi cố gắng theo dõi người dùng này.</value>
+  </data>
+  <data name="notification_follow_success_content" xml:space="preserve">
+    <value>Đã theo dõi người dùng thành công.</value>
+  </data>
+  <data name="notification_unfollow_success_content" xml:space="preserve">
+    <value>Bạn đã hủy theo dõi người dùng.</value>
+  </data>
+  <data name="notification_copy_comment_success_content" xml:space="preserve">
+    <value>Văn bản bình luận đã được sao chép vào bộ nhớ tạm.</value>
+  </data>
+  <data name="notification_copy_permalink_success_content" xml:space="preserve">
+    <value>Liên kết cố định đã được sao chép vào bộ nhớ tạm.</value>
+  </data>
+  <data name="notification_favourite_success_content" xml:space="preserve">
+    <value>Đã thêm vào mục yêu thích.</value>
+  </data>
+  <data name="notification_favourite_error_content" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi thêm vào yêu thích. Vui lòng thử lại.</value>
+  </data>
+  <data name="notification_vote_error_content" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi bình chọn. Vui lòng thử lại.</value>
+  </data>
+  <data name="CopyImageLink.Text" xml:space="preserve">
+    <value>Sao chép liên kết hình ảnh</value>
+  </data>
+  <data name="notification_copy_image_link_success_content" xml:space="preserve">
+    <value>Liên kết hình ảnh đã được sao chép vào bộ nhớ tạm.</value>
+  </data>
+  <data name="notification_download_success_content" xml:space="preserve">
+    <value>Tệp đã được tải xuống thành công.</value>
+  </data>
+  <data name="notification_download_error_content" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi tải xuống tệp. Vui lòng thử lại.</value>
+  </data>
+  <data name="EmptySectionTitle.Text" xml:space="preserve">
+    <value>Chưa có gì ở đây.</value>
+  </data>
+  <data name="EmptySectionSubtitle.Text" xml:space="preserve">
+    <value>Phần này không có gì để hiển thị.</value>
+  </data>
+  <data name="NewComments.Text" xml:space="preserve">
+    <value>BÌNH LUẬN MỚI</value>
+  </data>
+  <data name="Reply.Content" xml:space="preserve">
+    <value>Trả lời</value>
+  </data>
+  <data name="ShowComments.Content" xml:space="preserve">
+    <value>XEM TẤT CẢ BÌNH LUẬN</value>
+  </data>
+  <data name="UploadCancellation.Text" xml:space="preserve">
+    <value>Hủy</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="UploadConfirmation.Text" xml:space="preserve">
+    <value>Đăng</value>
+    <comment>UploadDialog</comment>
+  </data>
+  <data name="CommentingPlaceholder" xml:space="preserve">
+    <value>Bình luận với tư cách {0}</value>
+    <comment>CommentControl</comment>
+  </data>
+  <data name="CommentDialogTitle.Text" xml:space="preserve">
+    <value>Bình luận bài đăng</value>
+    <comment>CommentDialog header title</comment>
+  </data>
+  <data name="ReplyDialogTitle.Text" xml:space="preserve">
+    <value>Trả lời bài đăng</value>
+    <comment>ReplyDialog header title</comment>
   </data>
 </root>

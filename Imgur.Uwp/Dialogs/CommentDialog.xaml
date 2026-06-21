@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Foreground="#2fbe7c"
+            <TextBlock x:Uid="CommentDialogTitle" Grid.Column="0" Foreground="#2fbe7c"
                        FontSize="20" VerticalAlignment="Top"
                        Margin="0,3,0,0" Grid.ColumnSpan="2">Comment Post</TextBlock>
             <Button Grid.Column="1" Width="33" BorderThickness="1"
