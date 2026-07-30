@@ -435,19 +435,29 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <toolkit:DropShadowPanel Grid.Column="0" BlurRadius="10" OffsetX="0" ShadowOpacity="0.2" Color="#01b96b" Margin="15,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" OffsetY="1" >
-
-                                    <Grid>
-                                        <Grid Background="{StaticResource SystemControlAcrylicElementBrush}" BorderBrush="#01b96b" BorderThickness="2" Width="28" Height="28" x:Name="UserPictureGrid" CornerRadius="14" Padding="0">
-                                            <FontIcon Grid.RowSpan="2" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="14" Foreground="#01b96b" Margin="0,0,0,0" Glyph="&#xE77B;"/>
+                                <Button Grid.Column="0"
+                                        Padding="0"
+                                        Style="{x:Null}"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Margin="15,0,0,0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding OpenOwnAccountCommand}"
+                                        ToolTipService.ToolTip="{Binding CurrentUser.Username}">
+                                    <toolkit:DropShadowPanel BlurRadius="10" OffsetX="0" ShadowOpacity="0.2" Color="#01b96b" HorizontalAlignment="Center" VerticalAlignment="Center" OffsetY="1">
+                                        <Grid>
+                                            <Grid Background="{StaticResource SystemControlAcrylicElementBrush}" BorderBrush="#01b96b" BorderThickness="2" Width="28" Height="28" x:Name="UserPictureGrid" CornerRadius="14" Padding="0">
+                                                <FontIcon Grid.RowSpan="2" FontFamily="{StaticResource FluentUIGlyphs}" FontSize="14" Foreground="#01b96b" Margin="0,0,0,0" Glyph="&#xE77B;"/>
+                                            </Grid>
+                                            <Ellipse Width="28" Height="28" x:Name="UserPicture">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding CurrentUser.Avatar}" Stretch="UniformToFill"/>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
                                         </Grid>
-                                    <Ellipse Width="28" Height="28" x:Name="UserPicture" >
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding CurrentUser.Avatar}" Stretch="UniformToFill"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
-                                </Grid>
-                                </toolkit:DropShadowPanel>
+                                    </toolkit:DropShadowPanel>
+                                </Button>
 
                                 <HyperlinkButton Grid.Column="1"  FontSize="14" FontWeight="SemiBold" Opacity="0.7" VerticalAlignment="Center" Margin="5,0,0,0" Content="{Binding CurrentUser.Username}" Foreground="White" Command="{Binding OpenOwnAccountCommand}"></HyperlinkButton>
                                 <Button Grid.Column="2"  Style="{x:Null}" Height="40" Padding="0" Width="40" Background="Transparent"  Command="{Binding InvokeLogoutCommand}" BorderBrush="Transparent" Margin="10,0,5,0">

@@ -1,6 +1,7 @@
 ﻿using Imgur.Api.Services.Contracts;
 using Imgur.Contracts;
 using Imgur.Enums;
+using Imgur.Factories;
 using Imgur.Helpers;
 using Imgur.Models;
 using Imgur.ViewModels.Account;
@@ -16,12 +17,6 @@ namespace Imgur.ViewModels.Media
 {
     public class CommentViewModel : CommentableViewModel
     {
-
-        //***************************************************************
-        // View Parameters 
-        //***************************************************************
-
-        //-- ViewStates
         private readonly string _galleryId;
         public bool IsUpvoted => Comment?.Vote == "up";
         public bool IsDownvoted => Comment?.Vote == "down";
@@ -29,10 +24,8 @@ namespace Imgur.ViewModels.Media
         public int ReplyCount => Comment?.ReplyCount ?? 0;
         public bool RepliesVisibility => ShowReplies && HasReplies;
 
-
         private bool _repliesInitialized = false;
-        
-        //-- Current Comment
+
         private Comment _comment;
         public Comment Comment
         {
@@ -40,9 +33,7 @@ namespace Imgur.ViewModels.Media
             set { _comment = value; OnPropertyChanged(nameof(Comment)); }
         }
 
-        //-- Respostas
         private ObservableCollection<CommentViewModel> _replies;
-
         public ObservableCollection<CommentViewModel> Replies
         {
             get => _replies;
@@ -53,7 +44,6 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-        //-- Checking if is voting (async operation)
         private bool _isVoting;
         public bool IsVoting
         {
@@ -61,7 +51,6 @@ namespace Imgur.ViewModels.Media
             set { _isVoting = value; OnPropertyChanged(nameof(IsVoting)); }
         }
 
-        //-- If is showing replies
         private bool _showReplies;
         public bool ShowReplies
         {
@@ -69,26 +58,15 @@ namespace Imgur.ViewModels.Media
             set { _showReplies = value; OnPropertyChanged(nameof(ShowReplies)); }
         }
 
-        //-- Deelegado de notificação de novo comentário
         public Action OnCommentReplied;
-
-        // Delegado de invocação das replies
         public Action OnRepliesRequested { get; set; }
 
-        //***************************************************************
-        // Services 
-        //***************************************************************
-
         private readonly ICommentService _commentService;
-
-        //-- Serviço de Clipboard para ações de cópia
         private readonly IClipboardService _clipboardService;
+        private readonly INavigator _navigator;
+        private readonly IAccountVmFactory _accountVmFactory;
+        private readonly ICommentVmFactory _commentVmFactory;
 
-        //***************************************************************
-        // Constructors e Initializers
-        //***************************************************************
-
-        //-- Constructor
         public CommentViewModel(
             Comment comment,
             ICommentService commentService,
@@ -96,6 +74,9 @@ namespace Imgur.ViewModels.Media
             IAppNotificationService appNotificationService,
             IUserContext userContext,
             IClipboardService clipboardService,
+            INavigator navigator,
+            IAccountVmFactory accountVmFactory,
+            ICommentVmFactory commentVmFactory,
             string galleryId = null
             ) : base(dialogService, appNotificationService, userContext)
         {
@@ -103,9 +84,38 @@ namespace Imgur.ViewModels.Media
             _comment = comment;
             _commentService = commentService;
             _clipboardService = clipboardService;
+            _navigator = navigator;
+            _accountVmFactory = accountVmFactory;
+            _commentVmFactory = commentVmFactory;
         }
 
-        //-- Command para Vote ( Upvote ("up") | Downvote ("down") ) em Comentário
+        private ICommand _openAuthorProfileCommand;
+        public ICommand OpenAuthorProfileCommand
+        {
+            get
+            {
+                if (_openAuthorProfileCommand == null)
+                {
+                    _openAuthorProfileCommand = new RelayCommand(() =>
+                    {
+                        var username = Comment?.Author;
+                        if (string.IsNullOrWhiteSpace(username) ||
+                            string.Equals(username, "Hidden", StringComparison.OrdinalIgnoreCase))
+                            return;
+
+                        var account = new UserAccount
+                        {
+                            Username = username,
+                            Avatar = Comment.AuthorAvatar
+                        };
+                        var vm = _accountVmFactory.GetAccountViewModel(account);
+                        _navigator.Navigate("accountView", vm);
+                    });
+                }
+                return _openAuthorProfileCommand;
+            }
+        }
+
         private ICommand _vote;
         public ICommand Vote
         {
@@ -121,11 +131,9 @@ namespace Imgur.ViewModels.Media
                             return;
                         }
 
-                        // Toggle — se clicar no mesmo voto remove
                         var previous = Comment.Vote;
                         Comment.Vote = Comment.Vote == vote ? null : vote;
 
-                        // Atualiza contadores localmente
                         if (vote == "up")
                         {
                             if (previous == "up") Comment.Ups--;
@@ -142,13 +150,11 @@ namespace Imgur.ViewModels.Media
                         OnPropertyChanged(nameof(IsUpvoted));
                         OnPropertyChanged(nameof(IsDownvoted));
 
-                        // Sincroniza com API
                         var voteValue = Comment.Vote ?? "veto";
                         var result = await _commentService.VoteCommentAsync(Comment.Id, voteValue);
 
                         if (!result.Success)
                         {
-                            // Reverte se falhar
                             Comment.Vote = previous;
                             OnPropertyChanged(nameof(IsUpvoted));
                             OnPropertyChanged(nameof(IsDownvoted));
@@ -159,7 +165,6 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-        //-- Command para carregar e exibir as replies
         private ICommand _toggleRepliesCommand;
         public ICommand ToggleRepliesCommand
         {
@@ -173,25 +178,15 @@ namespace Imgur.ViewModels.Media
 
                         ShowReplies = !ShowReplies;
                         OnPropertyChanged("RepliesVisibility");
-                        // Notifica a View para inicializar o lazy element
                         if (ShowReplies && !_repliesInitialized)
                         {
                             try
                             {
                                 Replies = new ObservableCollection<CommentViewModel>(
-                                Comment.Children.Select(reply =>
-                                    new CommentViewModel(
-                                        
-                                        reply,
-                                        _commentService,
-                                        _dialogService,
-                                        _appNotification,
-                                        _userContext,
-                                        _clipboardService,
-                                        _galleryId
+                                    Comment.Children.Select(reply =>
+                                        _commentVmFactory.GetMediaCommentViewModel(_galleryId, reply)
                                     )
-                                )
-                            );
+                                );
 
                                 _repliesInitialized = true;
                                 OnRepliesRequested?.Invoke();
@@ -224,56 +219,39 @@ namespace Imgur.ViewModels.Media
             return result.Success;
         }
 
-        //***************************************************************
-        // Commands — MoreOptions Context Menu
-        //***************************************************************
-
-        //-- Block User (TODO: implementar API)
         private ICommand _blockUserCommand;
         public ICommand BlockUserCommand
         {
             get
             {
                 if (_blockUserCommand == null)
-                    _blockUserCommand = new RelayCommand(() =>
-                    {
-                        // TODO: bloquear usuário via API
-                    });
+                    _blockUserCommand = new RelayCommand(() => { });
                 return _blockUserCommand;
             }
         }
 
-        //-- Report User (TODO: implementar API)
         private ICommand _reportUserCommand;
         public ICommand ReportUserCommand
         {
             get
             {
                 if (_reportUserCommand == null)
-                    _reportUserCommand = new RelayCommand(() =>
-                    {
-                        // TODO: denunciar usuário via API
-                    });
+                    _reportUserCommand = new RelayCommand(() => { });
                 return _reportUserCommand;
             }
         }
 
-        //-- Share (TODO: abrir diálogo de compartilhamento)
         private ICommand _shareCommand;
         public ICommand ShareCommand
         {
             get
             {
                 if (_shareCommand == null)
-                    _shareCommand = new RelayCommand(() =>
-                    {
-                        // TODO: abrir share dialog
-                    });
+                    _shareCommand = new RelayCommand(() => { });
                 return _shareCommand;
             }
         }
 
-        //-- Copy Comment Text — copia o corpo do comentário para a área de transferência
         private ICommand _copyCommentTextCommand;
         public ICommand CopyCommentTextCommand
         {
@@ -292,7 +270,6 @@ namespace Imgur.ViewModels.Media
             }
         }
 
-        //-- Copy Permalink — copia o permalink do comentário (vazio por enquanto)
         private ICommand _copyPermalinkCommand;
         public ICommand CopyPermalinkCommand
         {
@@ -301,7 +278,6 @@ namespace Imgur.ViewModels.Media
                 if (_copyPermalinkCommand == null)
                     _copyPermalinkCommand = new RelayCommand(() =>
                     {
-                        // TODO: construir URL real do permalink
                         _clipboardService.SetText(string.Empty);
                         _appNotification.AddNotification(new NotificationViewModel
                         {
@@ -310,5 +286,6 @@ namespace Imgur.ViewModels.Media
                     });
                 return _copyPermalinkCommand;
             }
-        }    }
+        }
+    }
 }

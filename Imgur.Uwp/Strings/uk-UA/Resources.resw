@@ -369,6 +369,14 @@
     <value>Іноді надсилати повідомлення про те, що відбувається у спільноті Imgur.</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsAccountNotification.Header" xml:space="preserve">
+    <value>Сповіщення облікового запису</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsAccountNotification.Text" xml:space="preserve">
+    <value>Сповіщати про відповіді та повідомлення в Imgur.</value>
+    <comment>Settings</comment>
+  </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>Про додаток</value>
     <comment>AboutControl</comment>
@@ -688,6 +696,15 @@
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
     <value>У цьому розділі нічого не відображається.</value>
+  </data>
+  <data name="EmptyOwnPostsTitle.Text" xml:space="preserve">
+    <value>Поки немає постів!</value>
+  </data>
+  <data name="EmptyOwnPostsSubtitle.Text" xml:space="preserve">
+    <value>Отримайте цей трофей, створивши свій перший публічний пост!</value>
+  </data>
+  <data name="EmptyOwnPostsNewPost.Content" xml:space="preserve">
+    <value>Новий пост</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>НОВІ КОМЕНТАРІ</value>

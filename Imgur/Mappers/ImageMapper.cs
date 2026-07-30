@@ -22,10 +22,17 @@ namespace Imgur.Mappers
             _localSettings = localSettings;
         }
 
+        public List<Media> ToMediaList(List<ImageResponse> dtoList)
+        {
+            if (dtoList == null)
+                return new List<Media>();
+
+            return dtoList.Select(ToMedia).Where(m => m != null).ToList();
+        }
+
         public Media ToMedia(ImageResponse dto)
         {
             if (dto == null) return null;
-            Debug.WriteLine($"[ImageMapper] {Newtonsoft.Json.JsonConvert.SerializeObject(dto, Newtonsoft.Json.Formatting.Indented)}");
 
             var media = new Media
             {
@@ -43,10 +50,20 @@ namespace Imgur.Mappers
                 IsBasicAlbum = true,
                 Link = dto.Link ?? "",
                 AccountId = dto.AccountUrl,
+                CoverType = dto.Type ?? "",
+                Favorite = dto.Favorite,
                 Elements = new ObservableCollection<Element>(ToElementList(new List<ImageResponse> { dto }, dto.Title, dto.AccountUrl))
             };
 
             media.CoverPlaceholder = GetCoverPlaceholder(dto.Id, dto.Type, dto.Mp4);
+            media.CoverImage = media.CoverPlaceholder;
+            media.CoverUri = media.CoverPlaceholder;
+
+            if (dto.Type == "video/mp4" || !string.IsNullOrEmpty(dto.Mp4))
+            {
+                media.CoverType = "video/mp4";
+                media.CoverVideo = "https://i.imgur.com/" + dto.Id + "_lq.mp4";
+            }
 
             return media;
         }
@@ -98,6 +115,7 @@ namespace Imgur.Mappers
                 Link = dto.Link ?? "",
                 Width = dto.Width,
                 Height = dto.Height,
+                has_sound = dto.HasSound,
                 MediaTitle = (dto.Title ?? mediaTitle) ?? "Imgur",
                 MediaAuthor = (mediaAuthor ?? "--")
             };

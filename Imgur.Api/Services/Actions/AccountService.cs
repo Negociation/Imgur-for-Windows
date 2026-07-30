@@ -3,8 +3,9 @@ using Imgur.Api.Services.Models.Common;
 using Imgur.Api.Services.Models.Response;
 using Imgur.Api.Services.Models.Response.Account;
 using Imgur.Api.Services.Models.Response.Comment;
+using Imgur.Api.Services.Models.Response.Image;
+using Imgur.Api.Services.Models.Response.Notification;
 using Imgur.Api.Services.Models.Response.Suggest;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -43,6 +44,20 @@ namespace Imgur.Api.Services.Actions
             return await GetAsync<List<GalleryItemResponse>>($"account/{username}/submissions/{page}");
         }
 
+        public async Task<ApiResponse<List<ImageResponse>>> GetAccountImagesAsync(
+            string username, int page = 0)
+        {
+            Debug.WriteLine($"[AccountService] GetImages: {username} page:{page}");
+            return await GetAsync<List<ImageResponse>>($"account/{username}/images/{page}");
+        }
+
+        public async Task<ApiResponse<AccountNotificationsData>> GetNotificationsAsync(bool onlyNew = true)
+        {
+            var newParam = onlyNew ? "true" : "false";
+            Debug.WriteLine($"[AccountService] GetNotifications new:{newParam}");
+            return await GetAsync<AccountNotificationsData>($"account/me/notifications?new={newParam}");
+        }
+
         public async Task<ApiResponse<List<AccountResponse>>> AccountSearchAsync(string query, int page = 0)
         {
             //Buscar Sugestões (Max 10 Itens)...
@@ -61,7 +76,6 @@ namespace Imgur.Api.Services.Actions
             successResponse.Data = new List<AccountResponse>();
             successResponse.Success = true;
             successResponse.Status = 200;
-            //Debug.WriteLine(JsonConvert.SerializeObject(suggestTags, Formatting.Indented));
 
             foreach (var user in suggestTags.Data.users)
             {
@@ -69,7 +83,6 @@ namespace Imgur.Api.Services.Actions
 
                 if (!response.Success)
                 {
-                    //skip
                     continue;
                 }
 

@@ -1,60 +1,52 @@
 ﻿using Imgur.Contracts;
 using Imgur.Models;
+using Imgur.Uwp.Models;
+using Imgur.Uwp.Views.Media;
+using Imgur.ViewModels.Media;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// O modelo de item de Controle de Usuário está documentado em https://go.microsoft.com/fwlink/?LinkId=234236
+using Windows.UI.Xaml.Media.Animation;
 
 namespace Imgur.Uwp.Controls
 {
     public sealed partial class VideoViewElementControl : UserControl
     {
+        /// <summary>
+        /// Feature flag POC: true = FullScreenMediaView via RootFrame; false = IsFullWindow atual.
+        /// </summary>
+        private const bool newMode = true;
+
         private IMediaPlayerService _mediaPlayerService;
         private DispatcherTimer playerPosition;
         private DispatcherTimer playerTransportControlsVisibility;
         private readonly INavigator _navigator;
+        private readonly ISystemInfoProvider _systemInfo;
+        private Storyboard _seekFeedbackStoryboard;
 
         public VideoViewElementControl()
         {
             this.InitializeComponent();
 
-            // Começa sem integração com o SMTC. Assim players recém-criados não
-            // registram sessão de mídia (evita vários vídeos respondendo aos botões
-            // de hardware ao mesmo tempo). O MediaPlayerService liga o CommandManager
-            // apenas no player ativo ao dar Play.
             this.Player.MediaPlayer.CommandManager.IsEnabled = false;
 
-            //Get Service
             this._mediaPlayerService = App.Services.GetRequiredService<IMediaPlayerService>();
-            this._mediaPlayerService.SetTimeSpaces(3); //Time for Forward and Backward
+            this._mediaPlayerService.SetTimeSpaces(10);
+            this._systemInfo = App.Services.GetRequiredService<ISystemInfoProvider>();
 
-            //Fix for Creators Update to keep the AspectRatio
             this.SizeChanged += this.ResizeMediaControl;
 
             this.Player.MediaPlayer.MediaOpened += this.MediaLoadedRoutine;
             this.Player.MediaPlayer.MediaEnded += this.MediaEndedRoutine;
             this.Player.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChangedAsync;
 
-
-            //Event Timers
             this.playerPosition = new DispatcherTimer();
             this.playerPosition.Interval = TimeSpan.FromMilliseconds(1000);
             this.playerPosition.Tick += Timer_Tick;
@@ -63,32 +55,29 @@ namespace Imgur.Uwp.Controls
             this.playerTransportControlsVisibility.Tick += TransportControls_Timeout;
 
             Player.RegisterPropertyChangedCallback(
-       MediaPlayerElement.IsFullWindowProperty,
-       OnIsFullWindowChanged);
+                MediaPlayerElement.IsFullWindowProperty,
+                OnIsFullWindowChanged);
 
             this._navigator = App.Services.GetRequiredService<INavigator>();
-
         }
 
-
-        //Events Listeners
         private void OnIsFullWindowChanged(DependencyObject sender, DependencyProperty dp)
         {
             if (Player.IsFullWindow)
             {
-                // Entrou em fullscreen - mostrar overlay
                 PlayerOverlay.Visibility = Visibility.Visible;
             }
             else
             {
-                // Saiu do fullscreen - esconder overlay
                 PlayerOverlay.Visibility = Visibility.Collapsed;
                 Player.AreTransportControlsEnabled = false;
             }
         }
-            private async void MediaLoadedRoutine(MediaPlayer sender, object args)
+
+        private async void MediaLoadedRoutine(MediaPlayer sender, object args)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
                 this.PlayerSlider.Minimum = 0;
                 this.PlayerSlider.Maximum = this.Player.MediaPlayer.PlaybackSession.NaturalDuration.TotalSeconds;
                 this.SetStopStatus();
@@ -109,7 +98,6 @@ namespace Imgur.Uwp.Controls
                     break;
                 case MediaPlaybackState.Buffering:
                     await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => this.SetBufferingStatus());
-
                     break;
                 case MediaPlaybackState.Paused:
                     await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => this.SetPausedStatus());
@@ -117,13 +105,15 @@ namespace Imgur.Uwp.Controls
             }
         }
 
-
-
         private void ResizeMediaControl(object sender, SizeChangedEventArgs e)
         {
-            //Get media size
-            int videoWidth = this.MediaElement. Width;
+            if (IsPlayerHostedExternally || MediaElement == null)
+                return;
+
+            int videoWidth = this.MediaElement.Width;
             int videoHeight = this.MediaElement.Height;
+            if (videoWidth <= 0 || videoHeight <= 0)
+                return;
 
             if (this.ActualWidth < 500)
             {
@@ -137,9 +127,9 @@ namespace Imgur.Uwp.Controls
             }
         }
 
-        //UI Events
         private void SetPlayingStatus()
         {
+            UpdatePositionText();
             this.playerPosition.Start();
             this.PlayerOverlay.Visibility = Visibility.Collapsed;
             this.PlayerInteractionCommandsOverlay.Visibility = Visibility.Visible;
@@ -156,7 +146,6 @@ namespace Imgur.Uwp.Controls
 
         private void SetBufferingStatus()
         {
-
         }
 
         private void SetStopStatus()
@@ -169,9 +158,6 @@ namespace Imgur.Uwp.Controls
             }
         }
 
-
-
-        //Dependencys
         public Element MediaElement
         {
             get { return (Element)GetValue(MediaElementProperty); }
@@ -186,18 +172,16 @@ namespace Imgur.Uwp.Controls
             if (d is VideoViewElementControl control && e.NewValue is Element element)
             {
                 control.BuildPlaybackSource(element);
+                control.MuteBadge.Visibility = element.IsSilentVideo ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
-        // Monta a fonte como MediaPlaybackItem com display properties. É o que permite
-        // ao SMTC (via CommandManager do player ativo) exibir título/autor na lock screen.
         private void BuildPlaybackSource(Element element)
         {
             if (string.IsNullOrEmpty(element?.Link)) return;
 
             var source = MediaSource.CreateFromUri(new Uri(element.Link));
             var item = new MediaPlaybackItem(source);
-
 
             this.Player.Source = item;
 
@@ -206,12 +190,8 @@ namespace Imgur.Uwp.Controls
             props.MusicProperties.Title = string.IsNullOrEmpty(element.MediaTitle) ? "Imgur" : element.MediaTitle;
             props.MusicProperties.Artist = element.MediaAuthor ?? string.Empty;
 
-
             item.ApplyDisplayProperties(props);
-
         }
-
-
 
         private string Position
         {
@@ -219,47 +199,110 @@ namespace Imgur.Uwp.Controls
             set { SetValue(PositionProperty, value); }
         }
 
-
         private static readonly DependencyProperty PositionProperty =
-            DependencyProperty.Register("Position", typeof(string), typeof(VideoViewElementControl), new PropertyMetadata(0));
+            DependencyProperty.Register("Position", typeof(string), typeof(VideoViewElementControl), new PropertyMetadata("00:00"));
 
-
-        //Interaction Events
         private async void NextTapGridArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             await _mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
             this._mediaPlayerService.GoForward();
+            ShowSeekFeedback(forward: true);
         }
 
         private async void BackTapGridArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             await _mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
             this._mediaPlayerService.GoBackward();
+            ShowSeekFeedback(forward: false);
         }
 
         private void NeutralTapGridArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            this.GoToFullScreen();
+            RequestUpvoteOverlay();
         }
 
         private void Player_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            this.PlayerTransportControls.Visibility = Visibility.Visible;
-            this.playerTransportControlsVisibility.Start();
-
+            ShowTransportControls();
         }
 
-
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        private void RootMedia_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            if(await this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement))
+            if (_systemInfo.IsMobile())
+                return;
+
+            if (Player.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing
+                || Player.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Paused)
             {
-                this.SetPlayingStatus();
-                this.PlayerTransportControls.Visibility = Visibility.Visible;
-                this.playerTransportControlsVisibility.Start();
+                ShowTransportControls();
             }
         }
 
+        private void RootMedia_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (_systemInfo.IsMobile())
+                return;
+
+            // Reinicia o timeout para esconder após sair do hover
+            this.playerTransportControlsVisibility.Stop();
+            this.playerTransportControlsVisibility.Start();
+        }
+
+        private void ShowTransportControls()
+        {
+            this.PlayerTransportControls.Visibility = Visibility.Visible;
+            this.playerTransportControlsVisibility.Stop();
+            this.playerTransportControlsVisibility.Start();
+        }
+
+        private void ShowSeekFeedback(bool forward)
+        {
+            var target = forward ? SeekForwardFeedback : SeekBackwardFeedback;
+            var other = forward ? SeekBackwardFeedback : SeekForwardFeedback;
+            other.Opacity = 0;
+
+            _seekFeedbackStoryboard?.Stop();
+
+            var storyboard = new Storyboard();
+            var animation = new DoubleAnimationUsingKeyFrames();
+            animation.KeyFrames.Add(new EasingDoubleKeyFrame
+            {
+                KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                Value = 0
+            });
+            animation.KeyFrames.Add(new EasingDoubleKeyFrame
+            {
+                KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(120)),
+                Value = 1
+            });
+            animation.KeyFrames.Add(new EasingDoubleKeyFrame
+            {
+                KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(820)),
+                Value = 1
+            });
+            animation.KeyFrames.Add(new EasingDoubleKeyFrame
+            {
+                KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1270)),
+                Value = 0
+            });
+
+            Storyboard.SetTarget(animation, target);
+            Storyboard.SetTargetProperty(animation, "Opacity");
+            storyboard.Children.Add(animation);
+
+            _seekFeedbackStoryboard = storyboard;
+            storyboard.Begin();
+        }
+
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (await this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement))
+            {
+                this.SetPlayingStatus();
+                ShowTransportControls();
+                FindParentMediaView()?.NotifyMainPlayerPlaybackStarted();
+            }
+        }
 
         private async void TransportControlPlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -270,27 +313,43 @@ namespace Imgur.Uwp.Controls
             }
             else
             {
-
-               var success =  await this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
-               if (success)
-               {
+                var success = await this._mediaPlayerService.PlayMedia(this.Player, this.MediaElement);
+                if (success)
+                {
                     this.SetPlayingStatus();
-               }
+                    FindParentMediaView()?.NotifyMainPlayerPlaybackStarted();
+                }
             }
         }
-
 
         private void PlayerSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             this.Player.MediaPlayer.PlaybackSession.Position = TimeSpan.FromSeconds(e.NewValue);
         }
 
-
-        //Timers 
         private void Timer_Tick(object sender, object e)
         {
-            this.Position = this.Player.MediaPlayer.PlaybackSession.Position.ToString(@"mm\:ss");
-            this.PlayerSlider.Value = this.Player.MediaPlayer.PlaybackSession.Position.TotalSeconds;
+            UpdatePositionText();
+        }
+
+        private void UpdatePositionText()
+        {
+            try
+            {
+                if (Player?.MediaPlayer?.PlaybackSession == null)
+                {
+                    this.Position = "00:00";
+                    return;
+                }
+
+                var position = Player.MediaPlayer.PlaybackSession.Position;
+                this.Position = position.ToString(@"mm\:ss");
+                this.PlayerSlider.Value = position.TotalSeconds;
+            }
+            catch
+            {
+                this.Position = "00:00";
+            }
         }
 
         private void TransportControls_Timeout(object sender, object e)
@@ -301,15 +360,151 @@ namespace Imgur.Uwp.Controls
 
         private void GoToFullScreen()
         {
-            this._navigator.NavigateMediaToFullScreen();
+            if (newMode)
+            {
+                var session = Player.MediaPlayer.PlaybackSession;
+                var wasPlaying = session.PlaybackState == MediaPlaybackState.Playing;
+                if (wasPlaying)
+                    Player.MediaPlayer.Pause();
+
+                var mediaVm = FindParentMediaView()?.DataContext as MediaViewModel;
+                _navigator.NavigateMediaToFullScreen(new FullScreenMediaPayload
+                {
+                    Element = MediaElement,
+                    Post = mediaVm?.CurrentMedia,
+                    Position = session.Position,
+                    WasPlaying = wasPlaying,
+                    FavoriteChanged = () => mediaVm?.NotifyFavoriteChanged()
+                });
+            }
+            else
+            {
+                Player.IsFullWindow = true;
+                Player.AreTransportControlsEnabled = true;
+            }
         }
 
         private void TransportControlFullScreen_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            GoToFullScreen();
+        }
 
-                Player.IsFullWindow = true;
-                Player.AreTransportControlsEnabled = true;
-            
+        public bool IsActivelyPlaying
+        {
+            get
+            {
+                try
+                {
+                    return Player?.MediaPlayer?.PlaybackSession?.PlaybackState == MediaPlaybackState.Playing;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        public bool IsPlayerHostedExternally { get; private set; }
+
+        private int _playerChildIndex = 3;
+        private double _savedPlayerWidth;
+        private double _savedPlayerHeight;
+
+        /// <summary>
+        /// Reparents the MediaPlayerElement into an external host (in-app compact) without touching SetMediaPlayer.
+        /// Leaves a same-size placeholder so list scroll layout does not jump.
+        /// </summary>
+        public bool MovePlayerToHost(Panel host)
+        {
+            if (host == null || Player == null || IsPlayerHostedExternally)
+                return false;
+
+            try
+            {
+                _savedPlayerWidth = Player.ActualWidth > 0 ? Player.ActualWidth : Player.Width;
+                _savedPlayerHeight = Player.ActualHeight > 0 ? Player.ActualHeight : Player.Height;
+                if (_savedPlayerWidth <= 0 || double.IsNaN(_savedPlayerWidth))
+                    _savedPlayerWidth = ActualWidth > 0 ? ActualWidth : 320;
+                if (_savedPlayerHeight <= 0 || double.IsNaN(_savedPlayerHeight))
+                    _savedPlayerHeight = 180;
+
+                PlayerPlaceholder.Width = _savedPlayerWidth;
+                PlayerPlaceholder.Height = _savedPlayerHeight;
+                PlayerPlaceholder.Visibility = Visibility.Visible;
+                MinHeight = _savedPlayerHeight;
+
+                if (Player.Parent is Panel parent)
+                {
+                    _playerChildIndex = parent.Children.IndexOf(Player);
+                    parent.Children.Remove(Player);
+                }
+
+                Player.Width = double.NaN;
+                Player.Height = double.NaN;
+                Player.HorizontalAlignment = HorizontalAlignment.Stretch;
+                Player.VerticalAlignment = VerticalAlignment.Stretch;
+                host.Children.Insert(0, Player);
+
+                PlayerInteractionCommandsOverlay.Visibility = Visibility.Collapsed;
+                PlayerTransportControls.Visibility = Visibility.Collapsed;
+                IsPlayerHostedExternally = true;
+                return true;
+            }
+            catch (Exception)
+            {
+                PlayerPlaceholder.Visibility = Visibility.Collapsed;
+                MinHeight = 0;
+                return false;
+            }
+        }
+
+        public bool RestorePlayerFromHost()
+        {
+            if (!IsPlayerHostedExternally || Player == null)
+                return false;
+
+            try
+            {
+                if (Player.Parent is Panel host)
+                    host.Children.Remove(Player);
+
+                var index = Math.Max(0, Math.Min(_playerChildIndex, RootMedia.Children.Count));
+                RootMedia.Children.Insert(index, Player);
+
+                if (_savedPlayerWidth > 0 && !double.IsNaN(_savedPlayerWidth))
+                    Player.Width = _savedPlayerWidth;
+                if (_savedPlayerHeight > 0 && !double.IsNaN(_savedPlayerHeight))
+                    Player.Height = _savedPlayerHeight;
+
+                PlayerPlaceholder.Visibility = Visibility.Collapsed;
+                PlayerPlaceholder.Width = double.NaN;
+                PlayerPlaceholder.Height = double.NaN;
+                MinHeight = 0;
+                IsPlayerHostedExternally = false;
+                ResizeMediaControl(this, null);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private void RequestUpvoteOverlay()
+        {
+            FindParentMediaView()?.ShowUpvoteFeedback();
+        }
+
+        private MediaView FindParentMediaView()
+        {
+            DependencyObject current = this;
+            while (current != null)
+            {
+                current = VisualTreeHelper.GetParent(current);
+                if (current is MediaView mediaView)
+                    return mediaView;
+            }
+            return null;
         }
     }
 }

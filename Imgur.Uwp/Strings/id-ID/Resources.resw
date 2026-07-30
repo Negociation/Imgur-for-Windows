@@ -264,6 +264,14 @@
     <value>Kirimkan pemberitahuan sesekali tentang apa yang terjadi di komunitas imgur.</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsAccountNotification.Header" xml:space="preserve">
+    <value>Notifikasi Akun</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsAccountNotification.Text" xml:space="preserve">
+    <value>Beritahu saat ada balasan atau pesan di Imgur.</value>
+    <comment>Settings</comment>
+  </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>Tentang aplikasi ini</value>
     <comment>AboutControl</comment>
@@ -689,6 +697,15 @@
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
     <value>Bagian ini tidak memiliki apa pun untuk ditampilkan.</value>
+  </data>
+  <data name="EmptyOwnPostsTitle.Text" xml:space="preserve">
+    <value>Belum ada postingan!</value>
+  </data>
+  <data name="EmptyOwnPostsSubtitle.Text" xml:space="preserve">
+    <value>Raih trofi ini dengan membuat postingan publik pertamamu!</value>
+  </data>
+  <data name="EmptyOwnPostsNewPost.Content" xml:space="preserve">
+    <value>Postingan Baru</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>KOMENTAR BARU</value>

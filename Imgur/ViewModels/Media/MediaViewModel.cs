@@ -36,6 +36,8 @@ namespace Imgur.ViewModels.Media
         public bool IsDownvoted => CurrentMedia.Vote == "down";
         public bool IsFavorited => CurrentMedia.Favorite;
 
+        public void NotifyFavoriteChanged() => OnPropertyChanged(nameof(IsFavorited));
+
         //-- Current Media to Show
         private Models.Media _currentMedia;
         public Models.Media CurrentMedia
@@ -163,6 +165,17 @@ namespace Imgur.ViewModels.Media
             }
         }
 
+        private bool _isLoadingAuthor;
+        public bool IsLoadingAuthor
+        {
+            get { return _isLoadingAuthor; }
+            set
+            {
+                _isLoadingAuthor = value;
+                OnPropertyChanged(nameof(IsLoadingAuthor));
+            }
+        }
+
         //-- Modo de Filtragem de Comentarios
         private bool _filterCommentsByNew;
         public bool FilterCommentsByNew
@@ -220,6 +233,12 @@ namespace Imgur.ViewModels.Media
         //-- Service para picker de pasta
         private readonly IFolderDialogService _folderDialogService;
 
+        //-- Service de imagem avulsa
+        private readonly ImageService _imageService;
+
+        //-- Service de album básico
+        private readonly AlbumService _albumService;
+
         //***************************************************************
         // Constructors e Initializers
         //***************************************************************
@@ -241,7 +260,9 @@ namespace Imgur.ViewModels.Media
             UserMediaActionsService mediaActionsService,
             CommentsService commentService,
             IContentStorageService contentStorageService,
-            IFolderDialogService folderDialogService
+            IFolderDialogService folderDialogService,
+            ImageService imageService,
+            AlbumService albumService
             ): base(dialogService, appNotification, userContext)
         {
             _currentMedia = m;
@@ -257,6 +278,8 @@ namespace Imgur.ViewModels.Media
             _commentService = commentService;
             _contentStorageService = contentStorageService;
             _folderDialogService = folderDialogService;
+            _imageService = imageService;
+            _albumService = albumService;
         }
 
         //-- Initialize
@@ -271,10 +294,19 @@ namespace Imgur.ViewModels.Media
         {
             try
             {
+                this.UserAccount = null;
+                this.IsLoadingAuthor = true;
                 this.LoadedSuccessfully = true;
                 this.LoadingElementsStatus = true;
 
+                DumpMediaCollectionDebug("InitializeAsync");
+
                 await Task.Delay(1000);
+
+                // Completa Elements (favorites/listagens sem Images) + Favorite/Vote autenticados
+                await RefreshAuthenticatedMediaStateAsync();
+
+                DumpMediaCollectionDebug("AfterEnrich");
 
                 // Carrega comentários junto com o resto
                 if (LoadCommentsCommand.CanExecute(null))
@@ -289,7 +321,191 @@ namespace Imgur.ViewModels.Media
             {
                 this.LoadingElementsStatus = false;
                 this.LoadedSuccessfully = false;
+                this.IsLoadingAuthor = false;
             }
+        }
+
+        /// <summary>
+        /// Debug: Id/Link/Cover + cada Element.Link da collection (útil p/ favorites mapping).
+        /// </summary>
+        private void DumpMediaCollectionDebug(string context)
+        {
+            try
+            {
+                var m = CurrentMedia;
+                if (m == null)
+                {
+                    Debug.WriteLine($"[MediaVM:{context}] CurrentMedia=null");
+                    return;
+                }
+
+                Debug.WriteLine(
+                    $"[MediaVM:{context}] Id={m.Id} IsAlbum={m.IsAlbum} ImagesCount={m.ImagesCount} " +
+                    $"Elements={(m.Elements?.Count ?? 0)} Link='{m.Link}' CoverLink='{m.CoverLink}' " +
+                    $"CoverImage='{m.CoverImage}' CoverUri='{m.CoverUri}' CoverType='{m.CoverType}' CoverVideo='{m.CoverVideo}'");
+
+                if (m.Elements == null || m.Elements.Count == 0)
+                {
+                    Debug.WriteLine($"[MediaVM:{context}] Elements VAZIO — provável mapping incompleto (favorites album sem Images?)");
+                    return;
+                }
+
+                for (int i = 0; i < m.Elements.Count; i++)
+                {
+                    var el = m.Elements[i];
+                    Debug.WriteLine(
+                        $"[MediaVM:{context}] Element[{i}] Type='{el?.Type}' Link='{el?.Link}' " +
+                        $"W={el?.Width} H={el?.Height} Title='{el?.Title}'");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[MediaVM:{context}] DumpMediaCollectionDebug: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Busca album/image completo quando Elements veio vazio (ex.: favorites)
+        /// e corrige Favorite/Vote relativos ao usuário atual.
+        /// </summary>
+        private async Task RefreshAuthenticatedMediaStateAsync()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(CurrentMedia?.Id))
+                    return;
+
+                var hashId = CurrentMedia.Id;
+                bool needContent = NeedsElementsHydration();
+                bool needAuth = _userContext.IsAuthenticated;
+
+                if (!needContent && !needAuth)
+                    return;
+
+                if (!CurrentMedia.IsBasicAlbum)
+                {
+                    var albumInfo = await _galleryService.GetGalleryAlbumById(hashId);
+                    if (!albumInfo.IsSuccess)
+                        return;
+
+                    if (needContent)
+                        ApplyMediaContent(albumInfo.Data);
+                    if (needAuth)
+                        ApplyInteractiveMetadata(albumInfo.Data);
+                    return;
+                }
+
+                if (CurrentMedia.IsAlbum)
+                {
+                    var album = await _albumService.GetAlbumById(hashId);
+                    if (!album.IsSuccess)
+                        return;
+
+                    if (needContent)
+                        ApplyMediaContent(album.Data);
+                    if (needAuth)
+                    {
+                        CurrentMedia.Favorite = album.Data.Favorite;
+                        OnPropertyChanged(nameof(IsFavorited));
+                    }
+                    return;
+                }
+
+                var image = await _imageService.GetImageById(hashId);
+                if (!image.IsSuccess)
+                    return;
+
+                if (needContent)
+                    ApplyMediaContent(image.Data);
+                if (needAuth)
+                {
+                    CurrentMedia.Favorite = image.Data.Favorite;
+                    OnPropertyChanged(nameof(IsFavorited));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[MediaVM] RefreshAuthenticatedMediaState: {ex.Message}");
+            }
+        }
+
+        private bool NeedsElementsHydration()
+        {
+            if (CurrentMedia == null)
+                return false;
+
+            if (CurrentMedia.Elements == null || CurrentMedia.Elements.Count == 0)
+                return true;
+
+            // Álbum com Elements sem Link (mapping incompleto)
+            if (CurrentMedia.IsAlbum && CurrentMedia.Elements.Any(e => string.IsNullOrWhiteSpace(e?.Link)))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Copia Elements/capa/link do Media completo para o CurrentMedia aberto na UI.
+        /// </summary>
+        private void ApplyMediaContent(Models.Media source)
+        {
+            if (source == null || CurrentMedia == null)
+                return;
+
+            if (source.Elements != null && source.Elements.Count > 0)
+            {
+                if (CurrentMedia.Elements == null)
+                    CurrentMedia.Elements = new ObservableCollection<Element>();
+                else
+                    CurrentMedia.Elements.Clear();
+
+                foreach (var el in source.Elements)
+                    CurrentMedia.Elements.Add(el);
+            }
+
+            if (source.ImagesCount.HasValue)
+                CurrentMedia.ImagesCount = source.ImagesCount;
+
+            if (!string.IsNullOrWhiteSpace(source.Link))
+                CurrentMedia.Link = source.Link;
+
+            if (!string.IsNullOrWhiteSpace(source.CoverLink))
+                CurrentMedia.CoverLink = source.CoverLink;
+
+            if (!string.IsNullOrWhiteSpace(source.CoverImage))
+                CurrentMedia.CoverImage = source.CoverImage;
+
+            if (!string.IsNullOrWhiteSpace(source.CoverUri))
+                CurrentMedia.CoverUri = source.CoverUri;
+
+            if (!string.IsNullOrWhiteSpace(source.CoverType))
+                CurrentMedia.CoverType = source.CoverType;
+
+            if (!string.IsNullOrWhiteSpace(source.CoverVideo))
+                CurrentMedia.CoverVideo = source.CoverVideo;
+
+            if (!string.IsNullOrWhiteSpace(source.Title))
+                CurrentMedia.Title = source.Title;
+
+            OnPropertyChanged(nameof(IsPartialLoading));
+            OnPropertyChanged(nameof(RemainingItemsCount));
+            OnPropertyChanged(nameof(CurrentMedia));
+        }
+
+        private void ApplyInteractiveMetadata(Models.Media source)
+        {
+            if (source == null) return;
+
+            CurrentMedia.Vote = source.Vote;
+            CurrentMedia.Favorite = source.Favorite;
+            CurrentMedia.Likes = source.Likes;
+            CurrentMedia.Ups = source.Ups;
+            CurrentMedia.Downs = source.Downs;
+            CurrentMedia.CommentCount = source.CommentCount;
+            CurrentMedia.Votes = source.Votes;
+            OnPropertyChanged(nameof(IsFavorited));
+            OnPropertyChanged(nameof(IsUpvoted));
+            OnPropertyChanged(nameof(IsDownvoted));
         }
 
 
@@ -310,7 +526,9 @@ namespace Imgur.ViewModels.Media
                     {
                         try
                         {
-                            this.LoadedSuccessfully = true;
+                            IsLoadingAuthor = true;
+                            UserAccount = null;
+
                             if (!this.CurrentMedia.IsBasicAlbum)
                             {
                                 if (!string.IsNullOrEmpty(this.CurrentMedia.AccountId))
@@ -332,11 +550,18 @@ namespace Imgur.ViewModels.Media
                                 var account = Imgur.Models.UserAccount.CreateAnonymous();
                                 this.UserAccount = this._accountVmFactory.GetAccountViewModel(account);
                             }
+
+                            this.LoadedSuccessfully = true;
                         }
                         catch (Exception ex)
                         {
                             Debug.WriteLine(ex.Message);
                             this.LoadedSuccessfully = false;
+                            this.UserAccount = null;
+                        }
+                        finally
+                        {
+                            IsLoadingAuthor = false;
                         }
                     });
                 }
@@ -368,13 +593,13 @@ namespace Imgur.ViewModels.Media
                                 if (!AlbumInfo.IsSuccess)
                                     throw new Exception("Erro durante a busca dos metadados de album: " + AlbumInfo.Error);
 
-                                CurrentMedia.Vote = AlbumInfo.Data.Vote;
-                                CurrentMedia.Favorite = AlbumInfo.Data.Favorite;
-                                CurrentMedia.Likes = AlbumInfo.Data.Likes;
-                                CurrentMedia.Ups = AlbumInfo.Data.Ups;
-                                CurrentMedia.Downs = AlbumInfo.Data.Downs;
-                                CurrentMedia.CommentCount = AlbumInfo.Data.CommentCount;
-                                CurrentMedia.Votes = AlbumInfo.Data.Votes;
+                                if (NeedsElementsHydration())
+                                    ApplyMediaContent(AlbumInfo.Data);
+                                ApplyInteractiveMetadata(AlbumInfo.Data);
+                            }
+                            else
+                            {
+                                await RefreshAuthenticatedMediaStateAsync();
                             }
                             LoadedSuccessfully = true;
                         }
@@ -629,6 +854,17 @@ namespace Imgur.ViewModels.Media
                         }
 
                         var previous = CurrentMedia.Vote;
+                        var upvoteOnly = false;
+                        if (!string.IsNullOrEmpty(vote) && vote.EndsWith(":only", StringComparison.OrdinalIgnoreCase))
+                        {
+                            upvoteOnly = true;
+                            vote = vote.Substring(0, vote.Length - ":only".Length);
+                        }
+
+                        // Double-tap / upvoteOnly: se já está up, não inverte (não remove o voto)
+                        if (upvoteOnly && vote == "up" && previous == "up")
+                            return;
+
                         CurrentMedia.Vote = CurrentMedia.Vote == vote ? null : vote;
 
                         OnPropertyChanged(nameof(IsUpvoted));

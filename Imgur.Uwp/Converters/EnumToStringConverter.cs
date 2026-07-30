@@ -1,4 +1,5 @@
 ﻿using Imgur.Api.Services.Models.Enum;
+using Imgur.Enums;
 using Imgur.Models;
 using System;
 using Windows.ApplicationModel.Resources;
@@ -27,6 +28,8 @@ namespace Imgur.Uwp.Converters
                         return resourceLoader.GetString($"sort_{sort}");
                     case GalleryWindow sort:
                         return resourceLoader.GetString($"sort_{sort}");
+                    case AccountPostsVisibility visibility:
+                        return visibility.ToString();
                 }
             }
             return value.ToString();

@@ -139,8 +139,20 @@ namespace Imgur.ViewModels.Account
         public bool IsSubmissionsEmpty
         {
             get { return _isSubmissionsEmpty; }
-            private set { _isSubmissionsEmpty = value; OnPropertyChanged(nameof(IsSubmissionsEmpty)); }
+            private set
+            {
+                _isSubmissionsEmpty = value;
+                OnPropertyChanged(nameof(IsSubmissionsEmpty));
+                OnPropertyChanged(nameof(ShowOwnEmptyPosts));
+                OnPropertyChanged(nameof(ShowGenericEmptyPosts));
+            }
         }
+
+        /// <summary>Empty state do próprio perfil (CTA New Post).</summary>
+        public bool ShowOwnEmptyPosts => IsUserOwnPage && IsSubmissionsEmpty;
+
+        /// <summary>Empty state genérico ao ver posts de outro usuário.</summary>
+        public bool ShowGenericEmptyPosts => !IsUserOwnPage && IsSubmissionsEmpty;
 
         private bool _isFavoritesEmpty;
         public bool IsFavoritesEmpty
@@ -185,7 +197,55 @@ namespace Imgur.ViewModels.Account
         //-- Usuario Atual Autenticado
         public bool IsAuthenticated => _userContext.IsAuthenticated;
 
-        public bool IsUserOwnPage => _userContext.CurrentUser.Username == _userAccountInfo.Username;
+        public bool IsUserOwnPage => IsAuthenticated && _userContext.CurrentUser?.Username == _userAccountInfo.Username;
+
+        //-- Filtro Public | Hidden | All (só no próprio perfil)
+        public System.Collections.ObjectModel.ObservableCollection<AccountPostsVisibility> PostsVisibilityOptions { get; } =
+            new System.Collections.ObjectModel.ObservableCollection<AccountPostsVisibility>
+            {
+                AccountPostsVisibility.Public,
+                AccountPostsVisibility.Hidden,
+                AccountPostsVisibility.All
+            };
+
+        private int _selectedPostsVisibilityIndex;
+
+        public int SelectedPostsVisibilityIndex
+        {
+            get { return _selectedPostsVisibilityIndex; }
+            set
+            {
+                if (_selectedPostsVisibilityIndex == value) return;
+                _selectedPostsVisibilityIndex = value;
+                OnPropertyChanged(nameof(SelectedPostsVisibilityIndex));
+                OnPropertyChanged(nameof(SelectedPostsVisibility));
+                OnPropertyChanged(nameof(PostsVisibilityIconGlyph));
+            }
+        }
+
+        public AccountPostsVisibility SelectedPostsVisibility =>
+            IsUserOwnPage && _selectedPostsVisibilityIndex >= 0 && _selectedPostsVisibilityIndex < PostsVisibilityOptions.Count
+                ? PostsVisibilityOptions[_selectedPostsVisibilityIndex]
+                : AccountPostsVisibility.Public;
+
+        /// <summary>
+        /// Public = Contact (avatar), Hidden = RedEye, All = Picture (Segoe MDL2).
+        /// </summary>
+        public string PostsVisibilityIconGlyph
+        {
+            get
+            {
+                switch (SelectedPostsVisibility)
+                {
+                    case AccountPostsVisibility.Hidden:
+                        return "\uE7B3"; // RedEye
+                    case AccountPostsVisibility.All:
+                        return "\uE8B9"; // Picture
+                    default:
+                        return "\uE77B"; // Contact / avatar
+                }
+            }
+        }
 
         //***************************************************************
         // Services 
@@ -254,6 +314,8 @@ namespace Imgur.ViewModels.Account
 
             try{
                OnPropertyChanged("IsUserOwnPage");
+               OnPropertyChanged(nameof(ShowOwnEmptyPosts));
+               OnPropertyChanged(nameof(ShowGenericEmptyPosts));
                Loading = true;
                await Task.WhenAll(
                     FavoritesCollection.LoadNextPageAsync(),
@@ -304,6 +366,23 @@ namespace Imgur.ViewModels.Account
                     if (!result.IsSuccess || result.Data == null)
                         return new List<MediaViewModel>();
 
+                    foreach (var media in result.Data)
+                    {
+                        Debug.WriteLine(
+                            $"[Favorites] page={page} Id={media?.Id} IsAlbum={media?.IsAlbum} " +
+                            $"Elements={media?.Elements?.Count ?? 0} ImagesCount={media?.ImagesCount} " +
+                            $"Link='{media?.Link}' CoverLink='{media?.CoverLink}' CoverImage='{media?.CoverImage}'");
+
+                        if (media?.Elements != null)
+                        {
+                            for (int i = 0; i < media.Elements.Count; i++)
+                            {
+                                var el = media.Elements[i];
+                                Debug.WriteLine($"[Favorites]   Element[{i}] Type='{el?.Type}' Link='{el?.Link}'");
+                            }
+                        }
+                    }
+
                     return result.Data.Select(_mediaVmFactory.GetMediaViewModel).ToList();
                 },
                 pageSize: 30,
@@ -339,6 +418,8 @@ namespace Imgur.ViewModels.Account
                 IsCommentsEmpty = !HasComments;
         }
 
+        private int _hiddenImagesApiPage;
+
         private void BuildSubmissionsCollection()
         {
             if (SubmissionsCollection != null)
@@ -346,23 +427,62 @@ namespace Imgur.ViewModels.Account
 
             CanLoadMoreSubmissions = false;
             IsSubmissionsEmpty = false;
+            _hiddenImagesApiPage = 0;
             var username = UserAccountInfo?.Username;
+            const int apiPageSize = 50;
 
             SubmissionsCollection = _collectionFactory.Create<MediaViewModel>(
                 async (page, ct) =>
                 {
-                    var result = await _accountService.GetAccountSubmissionsAsync(username, page);
-                    if (!result.IsSuccess || result.Data == null)
+                    var visibility = SelectedPostsVisibility;
+
+                    if (visibility == AccountPostsVisibility.Hidden)
+                        return await FetchHiddenPostsBatchAsync(username, apiPageSize);
+
+                    var result = await _accountService.GetAccountPostsAsync(username, visibility, page);
+                    if (!result.IsSuccess || result.Data?.Items == null)
                         return new List<MediaViewModel>();
 
-                    return result.Data.Select(_mediaVmFactory.GetMediaViewModel).ToList();
+                    return result.Data.Items.Select(_mediaVmFactory.GetMediaViewModel).ToList();
                 },
-                pageSize: 60,
+                pageSize: apiPageSize,
                 batchSize: 10,
                 autoTriggerNextPage: false);
 
             SubmissionsCollection.StateChanged += OnSubmissionsStateChanged;
             OnPropertyChanged(nameof(SubmissionsCollection));
+        }
+
+        /// <summary>
+        /// Hidden: agrega páginas da API até encher o batch ou acabar,
+        /// para o filtro !InGallery não matar a paginação cedo.
+        /// </summary>
+        private async Task<List<MediaViewModel>> FetchHiddenPostsBatchAsync(string username, int targetCount)
+        {
+            var batch = new List<MediaViewModel>();
+
+            while (batch.Count < targetCount)
+            {
+                var result = await _accountService.GetAccountPostsAsync(
+                    username,
+                    AccountPostsVisibility.Hidden,
+                    _hiddenImagesApiPage);
+
+                _hiddenImagesApiPage++;
+
+                if (!result.IsSuccess || result.Data == null)
+                    break;
+
+                if (result.Data.Items != null && result.Data.Items.Count > 0)
+                {
+                    batch.AddRange(result.Data.Items.Select(_mediaVmFactory.GetMediaViewModel));
+                }
+
+                if (!result.Data.HasMore)
+                    break;
+            }
+
+            return batch;
         }
 
 
@@ -646,6 +766,31 @@ namespace Imgur.ViewModels.Account
                     });
                 }
                 return _navigateAccountViewCommand;
+            }
+        }
+
+        //-- Command New Post (empty own posts CTA)
+        private ICommand _newPostCommand;
+
+        public ICommand NewPostCommand
+        {
+            get
+            {
+                if (_newPostCommand == null)
+                {
+                    _newPostCommand = new RelayCommand(async () =>
+                    {
+                        try
+                        {
+                            await _dialogService.ShowUploadDialogAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[AccountVM] NewPost: {ex.Message}");
+                        }
+                    });
+                }
+                return _newPostCommand;
             }
         }
 

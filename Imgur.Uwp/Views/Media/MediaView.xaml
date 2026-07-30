@@ -39,7 +39,16 @@
                     ImageElement="{Binding}"
                     DownloadCommand="{Binding DataContext.DownloadElementCommand, ElementName=MediaViewPage}" />
                 <TextBlock FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap" Margin="10,0,10,0" IsTextSelectionEnabled="True" />
-                <TextBlock FontWeight="SemiBold" Text="{Binding Description}" TextWrapping="Wrap" Margin="10,0,10,5" IsTextSelectionEnabled="True" />
+                <controls:LinkedRichTextBlock
+                    Text="{Binding Description}"
+                    RenderImages="False"
+                    RenderVideos="False"
+                    RenderLinks="True"
+                    FontWeight="SemiBold"
+                    Foreground="White"
+                    FontSize="12"
+                    Margin="10,0,10,5"
+                    Visibility="{Binding Description, Converter={StaticResource EmptyStringVisibilityConverter}}" />
             </StackPanel>
         </DataTemplate>
 
@@ -54,7 +63,16 @@
                 </Grid>
                 <StackPanel Grid.Row="1">
                     <TextBlock FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap" Margin="10,0,10,0" IsTextSelectionEnabled="True" />
-                    <TextBlock FontWeight="SemiBold" Text="{Binding Description}" TextWrapping="Wrap" Margin="10,0,10,5" IsTextSelectionEnabled="True" />
+                    <controls:LinkedRichTextBlock
+                        Text="{Binding Description}"
+                        RenderImages="False"
+                        RenderVideos="False"
+                        RenderLinks="True"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        FontSize="12"
+                        Margin="10,0,10,5"
+                        Visibility="{Binding Description, Converter={StaticResource EmptyStringVisibilityConverter}}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -124,6 +142,7 @@
                         <Setter Target="MediaPlacement.MaxHeight" Value="99999" />
                         <Setter Target="MediaPlacement.Margin" Value="5,30,0,10" />
                         <Setter Target="MediaPlacement.CornerRadius" Value="5,0,0,5" />
+                        <Setter Target="RootScrollGrid.Padding" Value="0" />
 
                         <!-- ListView interno rola, sem limite de altura -->
                         <Setter Target="MediaRepeater.(ScrollViewer.VerticalScrollMode)" Value="Auto" />
@@ -174,7 +193,8 @@
                         <Setter Target="ScrollColComments.MaxWidth" Value="400" />
                         <Setter Target="CommentsPlacement.CornerRadius" Value="5" />
                         <Setter Target="CommentsPlacement.Background" Value="#464b57" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="5,0,10,70" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="5,0,10,10" />
+                        <Setter Target="RootScrollGrid.Padding" Value="0,0,0,70" />
                         <Setter Target="DockTitle.FontSize" Value="14" />
                         <Setter Target="DockDyanmicData.FontSize" Value="10" />
                         <Setter Target="LeaveFloatButton.Margin" Value="11,25,0,0" />
@@ -201,7 +221,8 @@
                         <Setter Target="MediaPlacement.Margin" Value="0" />
                         <Setter Target="MediaPlacement.Padding" Value="0,0,0,5" />
                         <Setter Target="RootGrid.Padding" Value="0,0,0,0" />
-                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,0,0,90" />
+                        <Setter Target="CommentsPlacementBorder.Margin" Value="0,0,0,10" />
+                        <Setter Target="RootScrollGrid.Padding" Value="0,0,0,90" />
                         <Setter Target="CommentsPlacement.CornerRadius" Value="0" />
                         <Setter Target="MediaPlacement.CornerRadius" Value="0" />
                         <Setter Target="MediaPlacement.Background" Value="Transparent" />
@@ -326,29 +347,39 @@
                                          Grid.ColumnSpan="2" />
 
                             <Grid Grid.Row="2" Margin="0,2,0,0" Visibility="{Binding LoadedSuccessfully}">
-                                <Grid DataContext="{Binding UserAccount}">
+                                <!-- Loading do autor: três pontos (nunca "Oculto" enquanto carrega) -->
+                                <TextBlock Text="..."
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Opacity="0.7"
+                                           Foreground="{ThemeResource SystemAccentColor}"
+                                           Visibility="{Binding IsLoadingAuthor, Converter={StaticResource BoolVisibilityConverter}}" />
+
+                                <Grid DataContext="{Binding UserAccount}"
+                                      Visibility="{Binding DataContext.IsLoadingAuthor, ElementName=MediaViewPage, Converter={StaticResource InverseBoolVisibilityConverter}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto" />
                                         <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
                                     <HyperlinkButton Margin="-5,0,0,0"
-                                                     Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolNegationConverter}}"
+                                                     Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource InverseBoolVisibilityConverter}}"
                                                      Command="{Binding NavigateAccountViewCommand}"
                                                      FontWeight="SemiBold"
-                                                     Content="{Binding UserAccountInfo.Username, FallbackValue='...'}"
+                                                     Content="{Binding UserAccountInfo.Username}"
                                                      Foreground="{ThemeResource SystemAccentColor}"
                                                      Height="20" Padding="4,1" Opacity="0.7" FontSize="12" />
-                                    <TextBlock Margin="0,0,0,0" FontSize="12" FontWeight="Bold" Opacity="0.5" x:Uid="Hidden" Visibility="{Binding UserAccountInfo.IsHidden}">Hidden</TextBlock>
+                                    <TextBlock Margin="0,0,0,0" FontSize="12" FontWeight="Bold" Opacity="0.5" x:Uid="Hidden"
+                                               Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolVisibilityConverter}}">Hidden</TextBlock>
                                     <Button Grid.Column="1" Width="20" Height="20" Padding="0"
                                             Style="{StaticResource CircleButtonStyle}"
-                                            Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource BoolNegationConverter}}"
+                                            Visibility="{Binding UserAccountInfo.IsHidden, Converter={StaticResource InverseBoolVisibilityConverter}}"
                                             Command="{Binding Path=FollowAuthor}"
                                             HorizontalContentAlignment="Center"
                                             VerticalContentAlignment="Center"
                                             Background="#464B57" Margin="2,0">
                                         <Grid>
                                             <FontIcon FontFamily="{StaticResource FluentUIGlyphs}" FontWeight="ExtraBold" FontSize="12" Glyph="&#xE948;" Foreground="White" Margin="0,0,0,0" HorizontalAlignment="Center"
-                                                      Visibility="{Binding IsFollowing, Converter={StaticResource BoolNegationConverter}}" />
+                                                      Visibility="{Binding IsFollowing, Converter={StaticResource InverseBoolVisibilityConverter}}" />
                                             <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="12" FontWeight="ExtraBold" Glyph="&#xE10A;" Margin="-1,0,0,0" Foreground="White" HorizontalAlignment="Center"
                                                       Visibility="{Binding IsFollowing, Converter={StaticResource BoolVisibilityConverter}}" />
                                         </Grid>
@@ -898,6 +929,82 @@
                 </Button>
             </toolkit:DropShadowPanel>
         </StackPanel>
+
+        <!-- Double-tap upvote feedback overlay -->
+        <Grid x:Name="UpvoteFeedbackOverlay"
+              Grid.ColumnSpan="3"
+              Visibility="Collapsed"
+              Background="#99000000"
+              IsHitTestVisible="False"
+              Canvas.ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <FontIcon x:Name="UpvoteFeedbackIcon"
+                          Glyph="&#xe90b;"
+                          FontFamily="{StaticResource ImgurGlyphs}"
+                          FontSize="72"
+                          Foreground="#1bb76e"
+                          HorizontalAlignment="Center"
+                          RenderTransformOrigin="0.5,0.5">
+                    <FontIcon.RenderTransform>
+                        <ScaleTransform x:Name="UpvoteFeedbackIconScale" ScaleX="0.1" ScaleY="0.1" />
+                    </FontIcon.RenderTransform>
+                </FontIcon>
+                <TextBlock x:Name="UpvoteFeedbackLabel"
+                           Text="Upvoted!"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="#1bb76e"
+                           HorizontalAlignment="Center"
+                           Margin="0,12,0,0"
+                           Opacity="0" />
+            </StackPanel>
+        </Grid>
+
+        <!-- In-app compact player (MyTube-style) while scrolling comments -->
+        <Grid x:Name="CompactPipHost"
+              Grid.ColumnSpan="3"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Bottom"
+              Width="220"
+              Height="124"
+              Margin="0,0,12,72"
+              Visibility="Collapsed"
+              Canvas.ZIndex="90"
+              ManipulationMode="TranslateX,TranslateY"
+              ManipulationStarted="CompactPipHost_ManipulationStarted"
+              ManipulationDelta="CompactPipHost_ManipulationDelta"
+              ManipulationCompleted="CompactPipHost_ManipulationCompleted">
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="CompactPipTransform" />
+            </Grid.RenderTransform>
+            <Border Background="#E6000000"
+                    CornerRadius="0"
+                    BorderBrush="#1bb76e"
+                    BorderThickness="2">
+                <Grid>
+                    <Grid x:Name="CompactPipSurface" />
+                    <Rectangle Fill="Transparent"
+                               Tapped="CompactPipMedia_Tapped" />
+                    <Border x:Name="CompactPipCloseButton"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0"
+                            Width="44"
+                            Height="34"
+                            Background="#66000000"
+                            ManipulationMode="None"
+                            Tapped="CompactPipClose_Tapped"
+                            ToolTipService.ToolTip="Close">
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"
+                                  FontSize="14"
+                                  Foreground="White"
+                                  Glyph="&#xE711;"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
 
     </Grid>
 </Page>

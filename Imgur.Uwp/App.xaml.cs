@@ -71,7 +71,13 @@ namespace Imgur.Uwp
 
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            await ActivateAsync(e.PrelaunchActivated);
+            await ActivateAsync(e.PrelaunchActivated, e.PreviousExecutionState);
+        }
+
+        private string getPfn()
+        {
+            var pfn = Package.Current.Id.FamilyName;
+            return Windows.Security.Authentication.Web.WebAuthenticationBroker.GetCurrentApplicationCallbackUri().ToString();
         }
 
         protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs e)
@@ -90,7 +96,7 @@ namespace Imgur.Uwp
                     !string.IsNullOrWhiteSpace(localSettings.Get<string>(LocalSettingsConstants.CustomClientId)) &&
                     !string.IsNullOrWhiteSpace(localSettings.Get<string>(LocalSettingsConstants.CustomClientSecret));
 
-
+                
 
                 //Auth
                 var userContext = _serviceProvider.GetRequiredService<IUserContext>();
@@ -180,11 +186,20 @@ namespace Imgur.Uwp
 
         // ── Inicialização ──────────────────────────────────────
 
-        private async Task ActivateAsync(bool prelaunched)
+        private async Task ActivateAsync(bool prelaunched, ApplicationExecutionState previousState = ApplicationExecutionState.NotRunning)
         {
             var rootFrame = EnsureRootFrame();
 
             AppBounds = ApplicationView.GetForCurrentView().VisibleBounds;
+
+            var navigator = Services.GetRequiredService<INavigator>();
+            navigator.RootFrame = rootFrame;
+
+            // Precisa rodar ANTES do Shell.OnNavigatedTo
+            if (previousState == ApplicationExecutionState.Terminated)
+                await navigator.PrepareNavigationRestoreAsync();
+            else
+                await navigator.ClearNavigationStateAsync();
 
             if (prelaunched == false)
             {
@@ -195,11 +210,16 @@ namespace Imgur.Uwp
                 HardwareButtons.BackPressed += hardwareButtonsBackPressedAsync;
 
                 await UpdateLiveTilesInBackgroundAsync();
+                await LiveTilesService.EnsureBackgroundTaskRegisteredAsync();
+                await RemindNotificationsService.EnsureBackgroundTaskRegisteredAsync();
+                await Imgur.Uwp.Services.AccountNotificationsService.EnsureBackgroundTaskRegisteredAsync();
             }
 
             this.FocusVisualKind = FocusVisualKind.Reveal;
 
-            Services.GetRequiredService<INavigator>().RootFrame = rootFrame;
+            var localSettings = Services.GetRequiredService<ILocalSettings>();
+            localSettings.Set<string>(LocalSettingsConstants.AppRedirectCallback, this.getPfn());
+            Debug.WriteLine("PFN:" + localSettings.Get<string>("AppRedirectCallback"));
         }
 
         // ── Helpers de Inicialização ───────────────────────────
@@ -271,6 +291,8 @@ namespace Imgur.Uwp
                 .AddSingleton<IContentStorageService, ContentStorageService>()
                 .AddSingleton<IFolderDialogService, FolderDialogService>()
                 .AddSingleton<ILiveTilesService, LiveTilesService>()
+                .AddSingleton<IRemindNotificationsService, RemindNotificationsService>()
+                .AddSingleton<IAccountNotificationsService, Imgur.Uwp.Services.AccountNotificationsService>()
                 .AddSingleton<IDialogService, DialogService>()
                 .AddSingleton<ITokenService, TokenService>()
                 .AddSingleton<IImgurApiCredentialsProvider, ImgurApiCredentialsProvider>()
@@ -490,9 +512,8 @@ namespace Imgur.Uwp
                 HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
                 // Para monitoramento do clipboard (evita trabalho em background)
                 Services.GetRequiredService<IClipboardService>().StopMonitoring();
-                // Libera player atual (source/surface)
-               // Services.GetRequiredService<IMediaPlayerService>().StopMedia(null);
-                // opcional: pequeno yield para completar teardown visual
+                // Persiste árvore de navegação para restore após terminate
+                await Services.GetRequiredService<INavigator>().SaveNavigationStateAsync();
                 await Task.Yield();
             }
             finally

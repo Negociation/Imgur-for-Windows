@@ -10,6 +10,8 @@
     xmlns:controls="using:Imgur.Uwp.Controls"
     xmlns:mediavm="using:Imgur.ViewModels.Media"
     xmlns:commentvm="using:Imgur.ViewModels.Account"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     SizeChanged="AccountViewPage_SizeChanged"
     mc:Ignorable="d">
 
@@ -248,48 +250,140 @@
                         <!-- Submissions -->
                         <PivotItem x:Uid="PostsHeader" Header="Posts">
                             <Grid MinHeight="200" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
-                                <controls:EmptyAccountSectionControl Visibility="{Binding IsSubmissionsEmpty, Converter={StaticResource BoolVisibilityConverter}}" />
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
 
-                                <toolkit:AdaptiveGridView
-                                    x:Name="PostsContentRepeaterControl"
-                                    Margin="0,10,0,0"
-                                    IncrementalLoadingTrigger="Edge"
-                                    IncrementalLoadingThreshold="0.1"
-                                    ItemsSource="{Binding SubmissionsCollection, Mode=OneWay}"
-                                    IsItemClickEnabled="True"
-                                    DataFetchSize="1"
-                                    SelectionMode="None"
-                                    DesiredWidth="250"
-                                    ItemHeight="200">
-                                    <toolkit:AdaptiveGridView.ItemContainerStyle>
-                                        <Style TargetType="GridViewItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                            <Setter Property="Margin" Value="0"/>
-                                            <Setter Property="Padding" Value="0"/>
-                                        </Style>
-                                    </toolkit:AdaptiveGridView.ItemContainerStyle>
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Orientation="Horizontal"
+                                    Margin="0,10,12,0"
+                                    HorizontalAlignment="Left"
+                                    Visibility="{Binding IsUserOwnPage, Converter={StaticResource BoolVisibilityConverter}}">
+                                    <Border Background="#1f2023" CornerRadius="18" Opacity="0.9" Padding="8,0,4,0" MinHeight="36">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <FontIcon
+                                                FontFamily="{StaticResource SegoeMDLGlyphs}"
+                                                Glyph="{Binding PostsVisibilityIconGlyph}"
+                                                FontSize="14"
+                                                FontWeight="ExtraBold"
+                                                Foreground="White"
+                                                VerticalAlignment="Center"
+                                                Margin="2,0,0,0"/>
+                                            <ComboBox
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                BorderThickness="0"
+                                                MaxHeight="36"
+                                                MinHeight="36"
+                                                VerticalAlignment="Center"
+                                                ItemsSource="{Binding PostsVisibilityOptions}"
+                                                SelectedIndex="{Binding SelectedPostsVisibilityIndex, Mode=TwoWay}"
+                                                ToolTipService.ToolTip="Posts visibility">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter}}" FontWeight="SemiBold" Opacity="0.7"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                                <Interactivity:Interaction.Behaviors>
+                                                    <Core:EventTriggerBehavior EventName="SelectionChanged">
+                                                        <Core:InvokeCommandAction Command="{Binding ReloadSubmissionsCommand}" />
+                                                    </Core:EventTriggerBehavior>
+                                                </Interactivity:Interaction.Behaviors>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
 
-                                    <toolkit:AdaptiveGridView.ItemTemplate>
-                                        <DataTemplate x:DataType="mediavm:MediaViewModel">
-                                            <controls:MediaTileControl ViewModel="{Binding}" />
-                                        </DataTemplate>
-                                    </toolkit:AdaptiveGridView.ItemTemplate>
+                                <Grid Grid.Row="1">
+                                    <!-- Empty: próprio perfil -->
+                                    <StackPanel
+                                        Visibility="{Binding ShowOwnEmptyPosts, Converter={StaticResource BoolVisibilityConverter}}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Padding="20,30">
+                                        <Image
+                                            Source="ms-appx:///Assets/App/trophies/first_post.png"
+                                            MaxWidth="200"
+                                            Opacity="0.9"
+                                            HorizontalAlignment="Center" />
+                                        <TextBlock
+                                            x:Uid="EmptyOwnPostsTitle"
+                                            HorizontalAlignment="Center"
+                                            FontSize="14"
+                                            FontWeight="Bold"
+                                            Foreground="White"
+                                            Opacity="0.7"
+                                            TextAlignment="Center"
+                                            Margin="0,8,0,0"
+                                            Text="No Posts Yet!" />
+                                        <TextBlock
+                                            x:Uid="EmptyOwnPostsSubtitle"
+                                            HorizontalAlignment="Center"
+                                            FontSize="12"
+                                            FontWeight="Normal"
+                                            Foreground="White"
+                                            Opacity="0.45"
+                                            TextAlignment="Center"
+                                            TextWrapping="Wrap"
+                                            MaxWidth="280"
+                                            Margin="0,6,0,0"
+                                            Text="Earn this trophy by creating your first public post!" />
+                                        <Button
+                                            x:Uid="EmptyOwnPostsNewPost"
+                                            Style="{StaticResource DefaultButtonStyle}"
+                                            Command="{Binding NewPostCommand}"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,16,0,0"
+                                            Content="New Post" />
+                                    </StackPanel>
 
-                                    <toolkit:AdaptiveGridView.Footer>
-                                        <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
-                                            <Button HorizontalAlignment="Center"
-                                                    Visibility="{Binding ShowLoadMoreSubmissionsButton, Converter={StaticResource BoolVisibilityConverter}}"
-                                                    VerticalAlignment="Top"
-                                                    Command="{Binding LoadMoreSubmissionsCommand}"
-                                                    Style="{StaticResource AppRoundedButtonStyle}">
-                                                <TextBlock x:Uid="LoadMore"></TextBlock>
-                                            </Button>
-                                            <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="50,15"
-                                                         Visibility="{Binding IsLoadingNewPage, Converter={StaticResource BoolVisibilityConverter}}" />
-                                        </Grid>
-                                    </toolkit:AdaptiveGridView.Footer>
-                                </toolkit:AdaptiveGridView>
+                                    <!-- Empty: perfil de outro usuário -->
+                                    <controls:EmptyAccountSectionControl Visibility="{Binding ShowGenericEmptyPosts, Converter={StaticResource BoolVisibilityConverter}}" />
+
+                                    <toolkit:AdaptiveGridView
+                                        x:Name="PostsContentRepeaterControl"
+                                        Margin="0,10,0,0"
+                                        IncrementalLoadingTrigger="Edge"
+                                        IncrementalLoadingThreshold="0.1"
+                                        ItemsSource="{Binding SubmissionsCollection, Mode=OneWay}"
+                                        IsItemClickEnabled="True"
+                                        DataFetchSize="1"
+                                        SelectionMode="None"
+                                        DesiredWidth="250"
+                                        ItemHeight="200"
+                                        Visibility="{Binding IsSubmissionsEmpty, Converter={StaticResource BoolNegationConverter}}">
+                                        <toolkit:AdaptiveGridView.ItemContainerStyle>
+                                            <Style TargetType="GridViewItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                                <Setter Property="Margin" Value="0"/>
+                                                <Setter Property="Padding" Value="0"/>
+                                            </Style>
+                                        </toolkit:AdaptiveGridView.ItemContainerStyle>
+
+                                        <toolkit:AdaptiveGridView.ItemTemplate>
+                                            <DataTemplate x:DataType="mediavm:MediaViewModel">
+                                                <controls:MediaTileControl ViewModel="{Binding}" />
+                                            </DataTemplate>
+                                        </toolkit:AdaptiveGridView.ItemTemplate>
+
+                                        <toolkit:AdaptiveGridView.Footer>
+                                            <Grid HorizontalAlignment="Stretch" Margin="0,15,0,15">
+                                                <Button HorizontalAlignment="Center"
+                                                        Visibility="{Binding ShowLoadMoreSubmissionsButton, Converter={StaticResource BoolVisibilityConverter}}"
+                                                        VerticalAlignment="Top"
+                                                        Command="{Binding LoadMoreSubmissionsCommand}"
+                                                        Style="{StaticResource AppRoundedButtonStyle}">
+                                                    <TextBlock x:Uid="LoadMore"></TextBlock>
+                                                </Button>
+                                                <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" Margin="50,15"
+                                                             Visibility="{Binding IsLoadingNewPage, Converter={StaticResource BoolVisibilityConverter}}" />
+                                            </Grid>
+                                        </toolkit:AdaptiveGridView.Footer>
+                                    </toolkit:AdaptiveGridView>
+                                </Grid>
                             </Grid>
                         </PivotItem>
 

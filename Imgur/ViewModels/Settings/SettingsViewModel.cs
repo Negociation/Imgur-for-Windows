@@ -12,6 +12,8 @@ namespace Imgur.ViewModels.Settings
         private ILocalSettings _localSettings;
         private INavigator _navigator;
         private ILiveTilesService _liveTilesService;
+        private IRemindNotificationsService _remindNotificationsService;
+        private IAccountNotificationsService _accountNotificationsService;
         private IDialogService _dialogService;
         private IAppLifeCycleService _appLifecycle;
         private readonly IUserContext _userContext;
@@ -20,6 +22,8 @@ namespace Imgur.ViewModels.Settings
             ILocalSettings localSettings,
             INavigator navigator,
             ILiveTilesService liveTilesService,
+            IRemindNotificationsService remindNotificationsService,
+            IAccountNotificationsService accountNotificationsService,
             IDialogService dialogService,
             IAppLifeCycleService appLifecycle,
             IUserContext userContext
@@ -28,6 +32,8 @@ namespace Imgur.ViewModels.Settings
             _localSettings = localSettings;
             _navigator = navigator;
             _liveTilesService = liveTilesService;
+            _remindNotificationsService = remindNotificationsService;
+            _accountNotificationsService = accountNotificationsService;
             _dialogService = dialogService;
             _appLifecycle = appLifecycle;
             _userContext = userContext;
@@ -37,7 +43,21 @@ namespace Imgur.ViewModels.Settings
         public bool RemindNotificationsEnabled
         {
             get => _localSettings.Get<bool>(LocalSettingsConstants.RemindNotifications);
-            set => _localSettings.Set(LocalSettingsConstants.RemindNotifications, value);
+            set
+            {
+                _localSettings.Set(LocalSettingsConstants.RemindNotifications, value);
+                _ = _remindNotificationsService.OnRemindNotificationsConfigChangedAsync();
+            }
+        }
+
+        public bool AccountNotificationsEnabled
+        {
+            get => _localSettings.Get<bool>(LocalSettingsConstants.AccountNotifications);
+            set
+            {
+                _localSettings.Set(LocalSettingsConstants.AccountNotifications, value);
+                _ = _accountNotificationsService.OnAccountNotificationsConfigChangedAsync();
+            }
         }
 
         public bool DataNotificationsEnabled

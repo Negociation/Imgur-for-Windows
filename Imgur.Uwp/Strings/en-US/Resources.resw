@@ -267,6 +267,14 @@
     <value>Send notifications sometimes about what's going on imgur community.</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsAccountNotification.Header" xml:space="preserve">
+    <value>Account Notifications</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsAccountNotification.Text" xml:space="preserve">
+    <value>Notify when you get replies or messages on Imgur.</value>
+    <comment>Settings</comment>
+  </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>About this App</value>
     <comment>AboutControl</comment>
@@ -689,6 +697,15 @@
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
     <value>This section doesn't have anything to show.</value>
+  </data>
+  <data name="EmptyOwnPostsTitle.Text" xml:space="preserve">
+    <value>No Posts Yet!</value>
+  </data>
+  <data name="EmptyOwnPostsSubtitle.Text" xml:space="preserve">
+    <value>Earn this trophy by creating your first public post!</value>
+  </data>
+  <data name="EmptyOwnPostsNewPost.Content" xml:space="preserve">
+    <value>New Post</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>NEW COMMENTS</value>

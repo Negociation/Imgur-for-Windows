@@ -1,27 +1,26 @@
 ﻿using Imgur.Api.Services.Contracts;
 using Imgur.Api.Services.Models.Common;
 using Imgur.Api.Services.Models.Response.Account;
+using Imgur.Api.Services.Models.Response.Image;
 using Imgur.Contracts;
 using Imgur.Enums;
 using Imgur.Mappers;
 using Imgur.Models;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Imgur.Services
 {
     public class AccountService
     {
-
         private readonly ILocalSettings _localSettings;
         private readonly IAccountService _apiService;
         private readonly IUserContext _userContext;
         private readonly AccountMapper _accountMapper;
         private readonly GalleryMapper _galleryMapper;
         private readonly CommentMapper _commentMapper;
+        private readonly ImageMapper _imageMapper;
 
         public AccountService(
            ILocalSettings localSettings,
@@ -29,7 +28,8 @@ namespace Imgur.Services
            IUserContext userContext,
            AccountMapper accountMapper,
            GalleryMapper galleryMapper,
-           CommentMapper commentMapper
+           CommentMapper commentMapper,
+           ImageMapper imageMapper
            )
         {
             _localSettings = localSettings;
@@ -37,6 +37,7 @@ namespace Imgur.Services
             _accountMapper = accountMapper;
             _galleryMapper = galleryMapper;
             _commentMapper = commentMapper;
+            _imageMapper = imageMapper;
             _userContext = userContext;
         }
 
@@ -78,13 +79,11 @@ namespace Imgur.Services
 
         public async Task<Result<IReadOnlyList<UserAccount>>> SearchAccounts(string query, int page = 0)
         {
-            ApiResponse<List<AccountResponse>> items = null;
-            items = await _apiService.AccountSearchAsync(query, page);
+            var items = await _apiService.AccountSearchAsync(query, page);
 
             if (!items.Success)
             {
                 return Result<IReadOnlyList<UserAccount>>.Failure(items.Status.ToString(), ErrorType.Server);
-
             }
 
             var tagListMapped = _accountMapper.ToUserAccountList(items.Data);
@@ -116,6 +115,47 @@ namespace Imgur.Services
                 return Result<List<Media>>.Failure(response.Status.ToString(), ErrorType.Server);
 
             return Result<List<Media>>.Success(_galleryMapper.ToMediaList(response.Data));
+        }
+
+        /// <summary>
+        /// Public = submissions; Hidden = images !InGallery; All = account images.
+        /// HasMore baseado no tamanho da página bruta da API (50), não no filtro Hidden.
+        /// </summary>
+        public async Task<Result<AccountPostsPage>> GetAccountPostsAsync(
+            string username,
+            AccountPostsVisibility visibility,
+            int page = 0)
+        {
+            const int apiPageSize = 50;
+
+            if (visibility == AccountPostsVisibility.Public)
+            {
+                var response = await _apiService.GetAccountSubmissionsAsync(username, page);
+                if (!response.Success)
+                    return Result<AccountPostsPage>.Failure(response.Status.ToString(), ErrorType.Server);
+
+                var items = _galleryMapper.ToMediaList(response.Data);
+                return Result<AccountPostsPage>.Success(new AccountPostsPage
+                {
+                    Items = items ?? new List<Media>(),
+                    HasMore = (response.Data?.Count ?? 0) >= apiPageSize
+                });
+            }
+
+            var imagesResponse = await _apiService.GetAccountImagesAsync(username, page);
+            if (!imagesResponse.Success)
+                return Result<AccountPostsPage>.Failure(imagesResponse.Status.ToString(), ErrorType.Server);
+
+            var raw = imagesResponse.Data ?? new List<ImageResponse>();
+            var data = visibility == AccountPostsVisibility.Hidden
+                ? raw.Where(i => !i.InGallery).ToList()
+                : raw;
+
+            return Result<AccountPostsPage>.Success(new AccountPostsPage
+            {
+                Items = _imageMapper.ToMediaList(data),
+                HasMore = raw.Count >= apiPageSize
+            });
         }
 
         public async Task<Result<bool>> FollowUserAsync(string username)

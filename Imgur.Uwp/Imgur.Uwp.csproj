@@ -128,6 +128,7 @@
     </Compile>
     <Compile Include="Collections\IncrementalBatchCollection.cs" />
     <Compile Include="Collections\IncrementalBatchCollectionFactory.cs" />
+    <Compile Include="Helpers\CommentRenderer.cs" />
     <Compile Include="Controls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
@@ -140,6 +141,7 @@
     <Compile Include="Controls\CommentControl.xaml.cs">
       <DependentUpon>CommentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LinkedRichTextBlock.cs" />
     <Compile Include="Controls\CommentDialogControl.xaml.cs">
       <DependentUpon>CommentDialogControl.xaml</DependentUpon>
     </Compile>
@@ -211,7 +213,9 @@
     <Compile Include="Dialogs\UploadInterceptorDialog.xaml.cs">
       <DependentUpon>UploadInterceptorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CompatibleImageLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AccountNotificationsService.cs" />
     <Compile Include="Services\AppLifeCycleService.cs" />
     <Compile Include="Services\AuthBroker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
@@ -221,6 +225,7 @@
     <Compile Include="Services\FilePicker.cs" />
     <Compile Include="Services\FolderDialogService.cs" />
     <Compile Include="Services\LiveTilesService.cs" />
+    <Compile Include="Services\RemindNotificationsService.cs" />
     <Compile Include="Services\LocalSettings.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />
     <Compile Include="Services\Navigator.cs" />
@@ -252,6 +257,10 @@
     <Compile Include="Views\Media\MediaView.xaml.cs">
       <DependentUpon>MediaView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Media\FullScreenMediaView.xaml.cs">
+      <DependentUpon>FullScreenMediaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FullScreenMediaPayload.cs" />
     <Compile Include="Views\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -277,6 +286,7 @@
     </AppxManifest>
     <Content Include="Assets\App\observatory.png" />
     <Content Include="Assets\App\purr.png" />
+    <Content Include="Assets\App\trophies\first_post.png" />
     <Content Include="Assets\Fonts\fluentui.ttf" />
     <Content Include="Assets\Fonts\Imgur.ttf" />
     <Content Include="Assets\Fonts\segmdl2.ttf" />
@@ -443,6 +453,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Media\FullScreenMediaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Settings\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -516,6 +530,10 @@
     <ProjectReference Include="..\Imgur\Imgur.csproj">
       <Project>{f9e23a95-7ce0-4c62-93c5-5997c24a0f43}</Project>
       <Name>Imgur</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imgur.Background\Imgur.Background.csproj">
+      <Project>{cf6a82d4-f954-4e47-95c0-b9e4e8af6a6e}</Project>
+      <Name>Imgur.Background</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

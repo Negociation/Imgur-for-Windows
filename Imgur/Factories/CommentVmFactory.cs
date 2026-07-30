@@ -1,9 +1,9 @@
 ﻿using Imgur.Api.Services.Contracts;
 using Imgur.Contracts;
+using Imgur.Factories;
 using Imgur.Models;
-using Imgur.ViewModels.Account;
 using Imgur.ViewModels.Media;
-using Microsoft.Extensions.DependencyInjection; // necessário para GetRequiredService
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Imgur.Factories
@@ -20,24 +20,35 @@ namespace Imgur.Factories
 
         public CommentViewModel GetCommentViewModel(Comment comment)
         {
-            var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
-            var userContext = _serviceProvider.GetRequiredService<IUserContext>();
-            var commentService = _serviceProvider.GetRequiredService<ICommentService>();
-            var appNotificationService = _serviceProvider.GetRequiredService<IAppNotificationService>();
-            var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
-
-            return new CommentViewModel(comment, commentService, dialogService, appNotificationService, userContext, clipboardService);
+            return Create(comment, galleryId: null);
         }
 
         public CommentViewModel GetMediaCommentViewModel(string galleryId, Comment comment)
+        {
+            return Create(comment, galleryId);
+        }
+
+        private CommentViewModel Create(Comment comment, string galleryId)
         {
             var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
             var userContext = _serviceProvider.GetRequiredService<IUserContext>();
             var commentService = _serviceProvider.GetRequiredService<ICommentService>();
             var appNotificationService = _serviceProvider.GetRequiredService<IAppNotificationService>();
             var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
+            var navigator = _serviceProvider.GetRequiredService<INavigator>();
+            var accountVmFactory = _serviceProvider.GetRequiredService<IAccountVmFactory>();
 
-            return new CommentViewModel(comment, commentService, dialogService, appNotificationService, userContext, clipboardService, galleryId);
+            return new CommentViewModel(
+                comment,
+                commentService,
+                dialogService,
+                appNotificationService,
+                userContext,
+                clipboardService,
+                navigator,
+                accountVmFactory,
+                this,
+                galleryId);
         }
     }
 }

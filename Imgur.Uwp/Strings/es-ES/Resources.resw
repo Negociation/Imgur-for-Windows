@@ -208,6 +208,14 @@
     <value>Enviar notificaciones ocasionales sobre la comunidad de Imgur.</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsAccountNotification.Header" xml:space="preserve">
+    <value>Notificaciones de cuenta</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsAccountNotification.Text" xml:space="preserve">
+    <value>Avisar cuando recibas respuestas o mensajes en Imgur.</value>
+    <comment>Settings</comment>
+  </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>Acerca de esta app</value>
     <comment>AboutControl</comment>
@@ -630,6 +638,15 @@
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
     <value>Esta sección no tiene nada que mostrar.</value>
+  </data>
+  <data name="EmptyOwnPostsTitle.Text" xml:space="preserve">
+    <value>¡Aún no hay posts!</value>
+  </data>
+  <data name="EmptyOwnPostsSubtitle.Text" xml:space="preserve">
+    <value>¡Gana este trofeo creando tu primer post público!</value>
+  </data>
+  <data name="EmptyOwnPostsNewPost.Content" xml:space="preserve">
+    <value>Nuevo Post</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>NUEVOS COMENTARIOS</value>

@@ -1,200 +1,112 @@
-﻿using Imgur.Api.Services.Models.Enum;
-using Imgur.Constants;
+﻿using Imgur.Constants;
 using Imgur.Contracts;
-using Imgur.Models;
-using Imgur.Services;
-using Microsoft.Toolkit.Uwp.Notifications;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.UI.Notifications;
+using Windows.ApplicationModel.Background;
+using Windows.Foundation;
 
 namespace Imgur.Uwp.Services
 {
+    /// <summary>
+    /// Adapter DI: ILiveTilesService → Imgur.Background.LiveTilesService
+    /// + registro/unregister da Background Task (30 min).
+    /// </summary>
     public class LiveTilesService : ILiveTilesService
     {
+        public const string TaskName = "ImgurLiveTileUpdate";
+        public const string TaskEntryPoint = "Imgur.Background.LiveTileBackgroundTask";
+        private const uint IntervalMinutes = 30;
 
-        private ILocalSettings _localSettings;
+        private readonly Imgur.Background.LiveTilesService _backgroundService = new Imgur.Background.LiveTilesService();
 
-        private GalleryService _apiService;
-
-        public LiveTilesService(ILocalSettings localSettings, GalleryService galleryService)
+        public Task UpdateLiveTilesAsync()
         {
-            _localSettings = localSettings;
-            _apiService = galleryService;
-        }
-
-        public async Task UpdateLiveTilesAsync()
-        {
-            if (!_localSettings.Get<bool>(LocalSettingsConstants.LiveTiles))
-            {
-                Debug.WriteLine("Tiles desativadas por padrão");
-                ClearAllTiles();
-                return;
-            }
-
-            try
-            {
-                // Busca o conteúdo do explorer
-                var explorerContent = await _apiService.GetExplorerMedia(GallerySection.Hot, GallerySort.Viral);
-
-                if (!explorerContent.IsSuccess)
-                {
-                    Debug.WriteLine("Erro na Busca");
-                    return;
-                }
-
-                // Pega os 3 primeiros itens
-                var topThreeItems = explorerContent.Data.Take(3).ToList();
-
-                Debug.WriteLine("Atualizando Live Tiles");
-
-                // Atualiza os tiles (Medium e Wide)
-                await UpdateMediumAndWideTiles(topThreeItems);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Erro ao atualizar Live Tiles: {ex.Message}");
-            }
-        }
-
-
-        private void ClearAllTiles()
-        {
-            var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();
-            tileUpdater.Clear();
-        }
-
-        private async Task UpdateMediumAndWideTiles(List<Media> items)
-        {
-            var tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();
-
-            // Limpa notificações antigas
-            tileUpdater.Clear();
-
-            // Habilita fila de notificações (permite rotação)
-            tileUpdater.EnableNotificationQueue(true);
-
-            foreach (var item in items)
-            {
-                string localImagePath = await DownloadImageForTileAsync(item.CoverPlaceholder);
-
-                var tileContent = new TileContent()
-                {
-                    Visual = new TileVisual()
-                    {
-                        TileMedium = new TileBinding()
-                        {
-                            Content = new TileBindingContentAdaptive()
-                            {
-                                Children =
-                        {
-                            new AdaptiveText()
-                            {
-                                Text = item.Title ?? "Explorar",
-                                HintStyle = AdaptiveTextStyle.Body,
-                                HintWrap = true,
-                                HintMaxLines = int.MaxValue
-                            },
-                            new AdaptiveImage()
-                            {
-                                Source = localImagePath ?? "ms-appx:///Assets/DefaultTile.png",
-                                HintRemoveMargin = true,
-                                HintCrop = AdaptiveImageCrop.Default
-                            }
-                        }
-                            }
-                        },
-                        TileWide = new TileBinding()
-                        {
-                            Content = new TileBindingContentAdaptive()
-                            {
-                                Children =
-                        {
-                            new AdaptiveText()
-                            {
-                                Text = item.Title ?? "Explorar",
-                                HintStyle = AdaptiveTextStyle.Body,
-                                HintWrap = true
-                            },
-                            new AdaptiveImage()
-                            {
-                                Source = localImagePath ?? "ms-appx:///Assets/DefaultTile.png",
-                                HintRemoveMargin = true,
-                                HintCrop = AdaptiveImageCrop.Default
-                            }
-                        }
-                            }
-                        }
-                    }
-                };
-
-                var notification = new TileNotification(tileContent.GetXml());
-                tileUpdater.Update(notification);
-            }
-        }
-
-        private async Task<string> DownloadImageForTileAsync(string imageUrl)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(imageUrl))
-                {
-                    return "ms-appx:///Assets/DefaultTile.png";
-                }
-
-                // Cria um nome único para o arquivo baseado na URL
-                string fileName = $"tile_{GetHashString(imageUrl)}.png";
-
-                // Pasta local temporária para tiles
-                var localFolder = ApplicationData.Current.LocalFolder;
-                var tileFolder = await localFolder.CreateFolderAsync("TileImages", CreationCollisionOption.OpenIfExists);
-
-                // Verifica se a imagem já foi baixada
-                var existingFile = await tileFolder.TryGetItemAsync(fileName) as StorageFile;
-                if (existingFile != null)
-                {
-                    return $"ms-appdata:///local/TileImages/{fileName}";
-                }
-
-                // Baixa a imagem
-                using (var httpClient = new HttpClient())
-                {
-                    var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
-
-                    // Salva localmente
-                    var file = await tileFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-                    await FileIO.WriteBytesAsync(file, imageBytes);
-
-                    return $"ms-appdata:///local/TileImages/{fileName}";
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Erro ao baixar imagem para tile: {ex.Message}");
-                return "ms-appx:///Assets/DefaultTile.png";
-            }
-        }
-
-        private string GetHashString(string text)
-        {
-            // Cria um hash simples da URL para nome do arquivo
-            using (var sha = System.Security.Cryptography.SHA256.Create())
-            {
-                var hash = sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(text));
-                return BitConverter.ToString(hash).Replace("-", "").Substring(0, 16);
-            }
+            return _backgroundService.UpdateLiveTilesAsync().AsTask();
         }
 
         public async Task OnLiveTilesConfigChangedAsync()
         {
             await UpdateLiveTilesAsync();
+            await SyncBackgroundTaskRegistrationAsync();
         }
 
+        public static async Task EnsureBackgroundTaskRegisteredAsync()
+        {
+            try
+            {
+                var localSettings = App.Services?.GetService(typeof(ILocalSettings)) as ILocalSettings;
+                if (localSettings != null && !localSettings.Get<bool>(LocalSettingsConstants.LiveTiles))
+                {
+                    UnregisterBackgroundTask();
+                    return;
+                }
+
+                var access = await BackgroundExecutionManager.RequestAccessAsync();
+                if (access == BackgroundAccessStatus.DeniedByUser ||
+                    access == BackgroundAccessStatus.DeniedBySystemPolicy)
+                {
+                    DebugWrite($"Live Tile BT access denied: {access}");
+                    return;
+                }
+
+                // Já registrada
+                foreach (var entry in BackgroundTaskRegistration.AllTasks)
+                {
+                    if (entry.Value.Name == TaskName)
+                        return;
+                }
+
+                var builder = new BackgroundTaskBuilder
+                {
+                    Name = TaskName,
+                    TaskEntryPoint = TaskEntryPoint
+                };
+                builder.SetTrigger(new TimeTrigger(IntervalMinutes, false));
+                builder.Register();
+            }
+            catch (Exception ex)
+            {
+                DebugWrite($"Falha ao registrar Live Tile BT: {ex.Message}");
+            }
+        }
+
+        public static void UnregisterBackgroundTask()
+        {
+            try
+            {
+                UnregisterExisting();
+            }
+            catch (Exception ex)
+            {
+                DebugWrite($"Falha ao unregister Live Tile BT: {ex.Message}");
+            }
+        }
+
+        private async Task SyncBackgroundTaskRegistrationAsync()
+        {
+            var localSettings = App.Services.GetService(typeof(ILocalSettings)) as ILocalSettings;
+            bool enabled = localSettings != null && localSettings.Get<bool>(LocalSettingsConstants.LiveTiles);
+
+            if (enabled)
+                await EnsureBackgroundTaskRegisteredAsync();
+            else
+                UnregisterBackgroundTask();
+        }
+
+        private static void UnregisterExisting()
+        {
+            foreach (var entry in BackgroundTaskRegistration.AllTasks)
+            {
+                if (entry.Value.Name == TaskName)
+                {
+                    entry.Value.Unregister(true);
+                }
+            }
+        }
+
+        private static void DebugWrite(string message)
+        {
+            System.Diagnostics.Debug.WriteLine(message);
+        }
     }
 }

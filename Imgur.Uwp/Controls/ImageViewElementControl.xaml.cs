@@ -1,10 +1,12 @@
 ﻿using Imgur.Contracts;
 using Imgur.Models;
+using Imgur.Uwp.Views.Media;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 namespace Imgur.Uwp.Controls
 {
@@ -94,6 +96,23 @@ namespace Imgur.Uwp.Controls
         private void DownloadImage_Click(object sender, RoutedEventArgs e)
         {
             DownloadCommand?.Execute(ImageElement?.Link);
+        }
+
+        private void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            FindParentMediaView()?.ShowUpvoteFeedback();
+        }
+
+        private MediaView FindParentMediaView()
+        {
+            DependencyObject current = this;
+            while (current != null)
+            {
+                current = VisualTreeHelper.GetParent(current);
+                if (current is MediaView mediaView)
+                    return mediaView;
+            }
+            return null;
         }
     }
 }

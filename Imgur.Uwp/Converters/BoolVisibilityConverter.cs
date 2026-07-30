@@ -15,7 +15,9 @@ namespace Imgur.Uwp.Converters
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (bool)value ? Visibility.Visible : Visibility.Collapsed ;
+            if (value is bool flag)
+                return flag ? Visibility.Visible : Visibility.Collapsed;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

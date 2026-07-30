@@ -117,6 +117,10 @@ namespace Imgur.Mappers
                 media.Elements.Add(_imageMapper.StandaloneGalleryToElement(dto));
             }
 
+            Debug.WriteLine(
+                $"[GalleryMapper] Id={media.Id} is_album={dto.is_album} images_api={(dto.Images?.Count ?? 0)} " +
+                $"Elements={media.Elements.Count} Link='{media.Link}' Cover='{media.CoverLink}' " +
+                $"dto.type='{dto.type}' dto.Link='{dto.Link}'");
 
             return media;
         }

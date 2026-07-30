@@ -208,6 +208,14 @@
     <value>偶尔发送关于 Imgur 社区动态的通知。</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsAccountNotification.Header" xml:space="preserve">
+    <value>账户通知</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsAccountNotification.Text" xml:space="preserve">
+    <value>在收到 Imgur 回复或私信时通知你。</value>
+    <comment>Settings</comment>
+  </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>关于此应用</value>
     <comment>AboutControl</comment>
@@ -630,6 +638,15 @@
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
     <value>该部分目前没有任何内容可显示。</value>
+  </data>
+  <data name="EmptyOwnPostsTitle.Text" xml:space="preserve">
+    <value>还没有帖子！</value>
+  </data>
+  <data name="EmptyOwnPostsSubtitle.Text" xml:space="preserve">
+    <value>创建你的第一个公开帖子来赢得这个奖杯吧！</value>
+  </data>
+  <data name="EmptyOwnPostsNewPost.Content" xml:space="preserve">
+    <value>发新帖</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>最新评论</value>

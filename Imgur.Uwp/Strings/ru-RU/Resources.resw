@@ -369,6 +369,14 @@
     <value>Иногда присылать уведомления о том, что происходит в сообществе Imgur.</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsAccountNotification.Header" xml:space="preserve">
+    <value>Уведомления аккаунта</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsAccountNotification.Text" xml:space="preserve">
+    <value>Уведомлять о ответах и сообщениях в Imgur.</value>
+    <comment>Settings</comment>
+  </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>О приложении</value>
     <comment>AboutControl</comment>
@@ -688,6 +696,15 @@
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
     <value>В этом разделе нечего отображать.</value>
+  </data>
+  <data name="EmptyOwnPostsTitle.Text" xml:space="preserve">
+    <value>Пока нет постов!</value>
+  </data>
+  <data name="EmptyOwnPostsSubtitle.Text" xml:space="preserve">
+    <value>Получите этот трофей, создав свой первый публичный пост!</value>
+  </data>
+  <data name="EmptyOwnPostsNewPost.Content" xml:space="preserve">
+    <value>Новый пост</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>НОВЫЕ КОММЕНТАРИИ</value>

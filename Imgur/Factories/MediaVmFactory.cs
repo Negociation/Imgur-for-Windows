@@ -38,6 +38,8 @@ namespace Imgur.Factories
             var commentsService = _serviceProvider.GetRequiredService<CommentsService>();
             var contentStorageService = _serviceProvider.GetRequiredService<IContentStorageService>();
             var folderDialogService = _serviceProvider.GetRequiredService<IFolderDialogService>();
+            var imageService = _serviceProvider.GetRequiredService<ImageService>();
+            var albumService = _serviceProvider.GetRequiredService<AlbumService>();
 
             var vm = new MediaViewModel(
                 media,
@@ -55,7 +57,9 @@ namespace Imgur.Factories
                 mediaActionsService,
                 commentsService,
                 contentStorageService,
-                folderDialogService
+                folderDialogService,
+                imageService,
+                albumService
                 );
 
             vm.Initialize();

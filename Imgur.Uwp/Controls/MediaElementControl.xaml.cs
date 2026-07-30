@@ -29,6 +29,9 @@ namespace Imgur.Uwp.Controls
 
         private void MediaElementControl_Loaded(object sender, RoutedEventArgs e)
         {
+            // Relê a setting: ao navegar p/ Settings o Unloaded desinscreve SettingSet,
+            // então o toggle pode ter mudado sem este control ter recebido o evento.
+            this.AutoPlay = _localSettings.Get<bool>(LocalSettingsConstants.AutoPlay);
             HookSettingsEvent();
             RestoreVisualSources();
         }

@@ -39,6 +39,8 @@ namespace Imgur.Uwp.Views.Shell
         {
             this.LoadDesignAdapters();
             this.InitializeComponent();
+            // Como o Ambie: manter Shell vivo no RootFrame ao ir/voltar do fullscreen
+            this.NavigationCacheMode = NavigationCacheMode.Required;
             this.DataContext = App.Services.GetRequiredService<ShellViewModel>();
             Loaded += Page_Loaded;
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
@@ -123,8 +125,17 @@ namespace Imgur.Uwp.Views.Shell
         {
             var navigator = App.Services.GetRequiredService<INavigator>();
             navigator.Frame = MainFrame;
-            MainFrame.Navigate(typeof(ExplorerView));
 
+            // Só inicializa/restaura na primeira entrada. Voltar do fullscreen (RootFrame)
+            // não pode resetar o MainFrame para Explorer.
+            if (e.NavigationMode == NavigationMode.New && MainFrame.Content == null)
+            {
+                if (!navigator.TryRestoreNavigationState())
+                    MainFrame.Navigate(typeof(ExplorerView));
+            }
+
+            navigator.ScrollOffsetChanged -= Navigator_ScrollOffsetChanged;
+            navigator.FullScreenModeChanged -= Navigator_FullScreenModeChanged;
             navigator.ScrollOffsetChanged += Navigator_ScrollOffsetChanged;
             navigator.FullScreenModeChanged += Navigator_FullScreenModeChanged;
 

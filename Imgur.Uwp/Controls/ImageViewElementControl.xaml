@@ -46,6 +46,7 @@
             Source="{Binding ImageElement.Link, ElementName=ImageViewElement, Converter={StaticResource DecodeImageConverter}, ConverterParameter=800}" 
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Stretch="Uniform" />
+            Stretch="Uniform"
+            DoubleTapped="Image_DoubleTapped" />
     </Grid>
 </UserControl>

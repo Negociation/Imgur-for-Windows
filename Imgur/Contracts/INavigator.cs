@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Imgur.Contracts
 {
@@ -29,7 +30,10 @@ namespace Imgur.Contracts
         /// </summary>
         object Frame { get; set; }
 
-
+        /// <summary>
+        /// True when the app was terminated and a navigation journal should be restored into MainFrame.
+        /// </summary>
+        bool PendingNavigationRestore { get; set; }
 
         /// <summary>
         /// Navigates to a frame Page inside the Shell.
@@ -57,7 +61,27 @@ namespace Imgur.Contracts
         void GoBack(string sourcePage = null);
 
 
-        void NavigateMediaToFullScreen();
+        void NavigateMediaToFullScreen(object payload = null);
+
+        /// <summary>
+        /// Persists the inner frame back stack so it can be restored after terminate.
+        /// </summary>
+        Task SaveNavigationStateAsync();
+
+        /// <summary>
+        /// Checks local journal and sets <see cref="PendingNavigationRestore"/> when Terminated.
+        /// </summary>
+        Task PrepareNavigationRestoreAsync();
+
+        /// <summary>
+        /// Drops any persisted navigation journal (fresh launch / closed by user).
+        /// </summary>
+        Task ClearNavigationStateAsync();
+
+        /// <summary>
+        /// Restores the inner frame from the last saved journal. Returns false if nothing was restored.
+        /// </summary>
+        bool TryRestoreNavigationState();
 
     }
 }

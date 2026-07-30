@@ -369,6 +369,14 @@
     <value>Thỉnh thoảng gửi thông báo về thay đổi trong cộng đồng Imgur.</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsAccountNotification.Header" xml:space="preserve">
+    <value>Thông báo tài khoản</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="SettingsAccountNotification.Text" xml:space="preserve">
+    <value>Thông báo khi có phản hồi hoặc tin nhắn trên Imgur.</value>
+    <comment>Settings</comment>
+  </data>
   <data name="SettingsPageAboutTitle.Text" xml:space="preserve">
     <value>Về ứng dụng này</value>
     <comment>AboutControl</comment>
@@ -691,6 +699,15 @@
   </data>
   <data name="EmptySectionSubtitle.Text" xml:space="preserve">
     <value>Phần này không có gì để hiển thị.</value>
+  </data>
+  <data name="EmptyOwnPostsTitle.Text" xml:space="preserve">
+    <value>Chưa có bài đăng!</value>
+  </data>
+  <data name="EmptyOwnPostsSubtitle.Text" xml:space="preserve">
+    <value>Nhận danh hiệu này bằng cách tạo bài đăng công khai đầu tiên của bạn!</value>
+  </data>
+  <data name="EmptyOwnPostsNewPost.Content" xml:space="preserve">
+    <value>Bài mới</value>
   </data>
   <data name="NewComments.Text" xml:space="preserve">
     <value>BÌNH LUẬN MỚI</value>

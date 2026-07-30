@@ -14,6 +14,9 @@ namespace Imgur.Models
 
         public bool? has_sound { get; set; }
 
+        /// <summary>True when Imgur reports the clip has no audio track.</summary>
+        public bool IsSilentVideo => has_sound == false;
+
         public int Width { get; set; }
 
         public int Height { get; set; }
