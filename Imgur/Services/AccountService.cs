@@ -43,16 +43,9 @@ namespace Imgur.Services
 
         public async Task<Result<UserAccount>> GetAccountById(string id)
         {
-            ApiResponse<AccountResponse> accountResponse;
-
-            if (_userContext.IsAuthenticated)
-            {
-                accountResponse = await _apiService.GetFollowStatusAsync(id);
-            }
-            else
-            {
-                accountResponse = await _apiService.GetAccountAsync(id);
-            }
+            // Sempre busca a conta completa (cover, reputation, etc.).
+            // GetFollowStatusAsync é outro endpoint e não devolve o perfil completo.
+            var accountResponse = await _apiService.GetAccountAsync(id);
 
             if (!accountResponse.Success)
             {
@@ -61,12 +54,29 @@ namespace Imgur.Services
                     ErrorType.Server);
             }
 
+            bool? followStatus = accountResponse.Data.user_follow?.status;
+            if (_userContext.IsAuthenticated && followStatus == null)
+            {
+                var followResponse = await _apiService.GetFollowStatusAsync(id);
+                if (followResponse.Success)
+                    followStatus = followResponse.Data?.user_follow?.status;
+            }
+
             var account = _accountMapper.ToUserAccount(
                 accountResponse.Data,
-                accountResponse.Data.user_follow?.status
+                followStatus
             );
 
             return Result<UserAccount>.Success(account);
+        }
+
+        /// <summary>
+        /// Following list — stub: returns empty until API wiring is added.
+        /// </summary>
+        public async Task<Result<List<UserAccount>>> GetAccountFollowingAsync(string username, int page = 0)
+        {
+            await Task.CompletedTask;
+            return Result<List<UserAccount>>.Success(new List<UserAccount>());
         }
 
         public async Task<Result<bool>> GetFollowStatusAsync(string username)

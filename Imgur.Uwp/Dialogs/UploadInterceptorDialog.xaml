@@ -36,7 +36,8 @@
                 <FontIcon  FontWeight="SemiBold"  VerticalAlignment="Center" HorizontalAlignment="Center"  Foreground="#2fbe7c" FontFamily="ms-appx:///Assets/fonts/segmdl2.ttf#Segoe MDL2 Assets"  FontSize="12" Glyph="&#xE8BB;" />
             </Button>
         </Grid>
-        <TextBlock HorizontalAlignment="Left" Grid.Row="1" Margin="0,20,0,0" TextWrapping="Wrap">In order to upload a file, is required to set a custom API Key to avoid breaking general features.</TextBlock>
+        <TextBlock x:Uid="UploadInterceptorIntro" HorizontalAlignment="Left" Grid.Row="1" Margin="0,20,0,0" TextWrapping="Wrap"
+                   Text="In order to upload a file, is required to set a custom API Key to avoid breaking general features."/>
         <Grid  CornerRadius="5" Background="#272A33" Padding="0" VerticalAlignment="Top" Margin="0,10" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

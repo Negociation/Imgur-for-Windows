@@ -29,7 +29,8 @@ namespace Imgur.Uwp.Converters
                     case GalleryWindow sort:
                         return resourceLoader.GetString($"sort_{sort}");
                     case AccountPostsVisibility visibility:
-                        return visibility.ToString();
+                        return resourceLoader.GetString($"posts_visibility_{visibility}")
+                               ?? visibility.ToString();
                 }
             }
             return value.ToString();

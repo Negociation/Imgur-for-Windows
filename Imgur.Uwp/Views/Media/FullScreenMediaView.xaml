@@ -11,153 +11,181 @@
     PointerExited="Root_PointerExited">
 
     <Grid x:Name="Root">
-        <MediaPlayerElement x:Name="Player"
-                            Stretch="Uniform"
-                            AutoPlay="False"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            AreTransportControlsEnabled="False" />
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="PcTitleBarRow" Height="0"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <Grid x:Name="PlayerInteractionCommandsOverlay" Visibility="Visible" HorizontalAlignment="Stretch" Opacity="0.3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.25*" />
-                <ColumnDefinition Width="0.5*" />
-                <ColumnDefinition Width="0.25*" />
-            </Grid.ColumnDefinitions>
-            <Rectangle Fill="Transparent" Grid.Column="0" Tapped="Player_Tapped" DoubleTapped="Back_DoubleTapped" />
-            <Rectangle Fill="Transparent" Grid.Column="1" Tapped="Player_Tapped" />
-            <Rectangle Fill="Transparent" Grid.Column="2" Tapped="Player_Tapped" DoubleTapped="Next_DoubleTapped" />
+        <!-- PC title bar: reserva espaço do botão fechar do Windows -->
+        <Grid x:Name="PcTitleBar"
+              Grid.Row="0"
+              Height="32"
+              Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+              Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="12,0,140,0">
+                <Image Height="22"
+                       VerticalAlignment="Center"
+                       Source="ms-appx:///Assets/App/logo_transparent.png"/>
+                <TextBlock Text="Imgur"
+                           Margin="8,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           Foreground="#1bb76e"/>
+            </StackPanel>
         </Grid>
 
-        <Border x:Name="SeekBackwardFeedback"
-                HorizontalAlignment="Left" VerticalAlignment="Center"
-                Margin="20,0,0,0" Width="88" Height="88" CornerRadius="44"
-                Background="#99000000" Opacity="0" IsHitTestVisible="False">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <FontIcon Glyph="&#xE892;" FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" Margin="0,0,4,0" />
-                <TextBlock Text="-10" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" />
-            </StackPanel>
-        </Border>
-        <Border x:Name="SeekForwardFeedback"
-                HorizontalAlignment="Right" VerticalAlignment="Center"
-                Margin="0,0,20,0" Width="88" Height="88" CornerRadius="44"
-                Background="#99000000" Opacity="0" IsHitTestVisible="False">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="+10" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" Margin="0,0,4,0" />
-                <FontIcon Glyph="&#xE893;" FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" />
-            </StackPanel>
-        </Border>
+        <Grid Grid.Row="1">
+            <MediaPlayerElement x:Name="Player"
+                                Stretch="Uniform"
+                                AutoPlay="False"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                AreTransportControlsEnabled="False" />
 
-        <FontIcon x:Name="MuteBadge"
-                  Glyph="&#xE74F;"
-                  FontFamily="{StaticResource SegoeMDLGlyphs}"
-                  FontSize="18" FontWeight="Bold" Foreground="#1bb76e"
-                  HorizontalAlignment="Right" VerticalAlignment="Top"
-                  Margin="0,16,16,0" Visibility="Collapsed" IsHitTestVisible="False" />
+            <Grid x:Name="PlayerInteractionCommandsOverlay" Visibility="Visible" HorizontalAlignment="Stretch" Opacity="0.3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.25*" />
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="0.25*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle Fill="Transparent" Grid.Column="0" Tapped="Player_Tapped" DoubleTapped="Back_DoubleTapped" />
+                <Rectangle Fill="Transparent" Grid.Column="1" Tapped="Player_Tapped" />
+                <Rectangle Fill="Transparent" Grid.Column="2" Tapped="Player_Tapped" DoubleTapped="Next_DoubleTapped" />
+            </Grid>
 
-        <!-- Header: back sempre visível; título + fundo acrylic só no chrome (tap/hover) -->
-        <Border x:Name="HeaderChrome"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                Background="Transparent"
-                Padding="11,12,16,12">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Button x:Name="LeaveFloatButton"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource CircleButtonStyle}"
-                        Width="34" Height="34"
-                        Background="Transparent"
-                        BorderBrush="White"
-                        Opacity="0.9"
-                        Click="CloseButton_Click"
-                        ToolTipService.ToolTip="Back">
-                    <FontIcon FontSize="14" FontWeight="Normal"
-                              HorizontalAlignment="Center" VerticalAlignment="Center"
-                              FontFamily="{StaticResource FluentUIGlyphs}"
-                              Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
-                </Button>
-
-                <StackPanel x:Name="TitleInfoPanel"
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Center"
-                            Visibility="Collapsed"
-                            MaxWidth="520">
-                    <TextBlock x:Name="DockTitle"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="White"
-                               TextTrimming="CharacterEllipsis"
-                               TextWrapping="NoWrap"
-                               MaxLines="1" />
-                    <TextBlock x:Name="DockMeta"
-                               FontSize="12"
-                               Foreground="#B8BCC5"
-                               Margin="0,2,0,0">
-                        <Run x:Name="DockViewsRun" />
-                        <Run x:Uid="Views" Text=" Views" />
-                        <Run Text=" • " />
-                        <Run x:Name="DockTimeRun" />
-                    </TextBlock>
+            <Border x:Name="SeekBackwardFeedback"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Margin="20,0,0,0" Width="88" Height="88" CornerRadius="44"
+                    Background="#99000000" Opacity="0" IsHitTestVisible="False">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE892;" FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" Margin="0,0,4,0" />
+                    <TextBlock Text="-10" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" />
                 </StackPanel>
-            </StackPanel>
-        </Border>
+            </Border>
+            <Border x:Name="SeekForwardFeedback"
+                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                    Margin="0,0,20,0" Width="88" Height="88" CornerRadius="44"
+                    Background="#99000000" Opacity="0" IsHitTestVisible="False">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="+10" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" Margin="0,0,4,0" />
+                    <FontIcon Glyph="&#xE893;" FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="22" FontWeight="Bold" Foreground="#1bb76e" />
+                </StackPanel>
+            </Border>
 
-        <!-- Bottom bar custom + overflow (•••) -->
-        <Grid x:Name="PlayerTransportControls"
-              Opacity="0.9"
-              Background="{StaticResource SystemControlAcrylicWindowBrush}"
-              Height="48"
-              VerticalAlignment="Bottom"
-              Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="50" Width="auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Column="0">
-                <AppBarButton x:Name="TransportControlPlay" Margin="5,0" MaxWidth="40" Tapped="TransportControlPlay_Tapped">
+            <FontIcon x:Name="MuteBadge"
+                      Glyph="&#xE74F;"
+                      FontFamily="{StaticResource SegoeMDLGlyphs}"
+                      FontSize="18" FontWeight="Bold" Foreground="#1bb76e"
+                      HorizontalAlignment="Right" VerticalAlignment="Top"
+                      Margin="0,16,16,0" Visibility="Collapsed" IsHitTestVisible="False" />
+
+            <!-- Header: back sempre visível; título + fundo acrylic só no chrome (tap/hover) -->
+            <Border x:Name="HeaderChrome"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch"
+                    Background="Transparent"
+                    Padding="11,12,16,12">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="LeaveFloatButton"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource CircleButtonStyle}"
+                            Width="34" Height="34"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            Opacity="0.9"
+                            Click="CloseButton_Click"
+                            ToolTipService.ToolTip="Back">
+                        <FontIcon FontSize="14" FontWeight="Normal"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  FontFamily="{StaticResource FluentUIGlyphs}"
+                                  Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
+                    </Button>
+
+                    <StackPanel x:Name="TitleInfoPanel"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed"
+                                MaxWidth="520">
+                        <TextBlock x:Name="DockTitle"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   MaxLines="1" />
+                        <TextBlock x:Name="DockMeta"
+                                   FontSize="12"
+                                   Foreground="#B8BCC5"
+                                   Margin="0,2,0,0">
+                            <Run x:Name="DockViewsRun" />
+                            <Run x:Uid="Views" Text=" Views" />
+                            <Run Text=" • " />
+                            <Run x:Name="DockTimeRun" />
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Bottom bar custom + overflow (•••) -->
+            <Grid x:Name="PlayerTransportControls"
+                  Opacity="0.9"
+                  Background="{StaticResource SystemControlAcrylicWindowBrush}"
+                  Height="48"
+                  VerticalAlignment="Bottom"
+                  Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="50" Width="auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Column="0">
+                    <AppBarButton x:Name="TransportControlPlay" Margin="5,0" MaxWidth="40" Tapped="TransportControlPlay_Tapped">
+                        <AppBarButton.Content>
+                            <Grid>
+                                <FontIcon x:Name="canPlayIcon" Visibility="Collapsed" FontSize="20" FontWeight="ExtraBold" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" Glyph="&#xE768;"/>
+                                <FontIcon x:Name="canPauseIcon" Visibility="Visible" FontSize="20" FontWeight="ExtraBold" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" Glyph="&#xE769;"/>
+                            </Grid>
+                        </AppBarButton.Content>
+                    </AppBarButton>
+                    <TextBlock x:Name="PositionText" VerticalAlignment="Center" Foreground="#1bb76e" Text="00:00" />
+                </StackPanel>
+                <Slider x:Name="PlayerSlider" Grid.Column="1" VerticalAlignment="Center"
+                        Background="White" Foreground="#1cb872" Opacity="0.8"
+                        HorizontalAlignment="Stretch" StepFrequency="1"
+                        ValueChanged="PlayerSlider_ValueChanged" Margin="10,0" />
+                <AppBarButton Grid.Column="2"
+                              Margin="0,0,5,0"
+                              MaxWidth="40"
+                              LabelPosition="Collapsed"
+                              ToolTipService.ToolTip="More">
                     <AppBarButton.Content>
-                        <Grid>
-                            <FontIcon x:Name="canPlayIcon" Visibility="Collapsed" FontSize="20" FontWeight="ExtraBold" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" Glyph="&#xE768;"/>
-                            <FontIcon x:Name="canPauseIcon" Visibility="Visible" FontSize="20" FontWeight="ExtraBold" FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" Glyph="&#xE769;"/>
-                        </Grid>
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="18" Foreground="White" Glyph="&#xE712;" />
                     </AppBarButton.Content>
+                    <AppBarButton.Flyout>
+                        <MenuFlyout Placement="Top">
+                            <MenuFlyoutItem x:Uid="MenuCopyToClipboard" Text="Copy to Clipboard" Click="Copy_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl2.ttf#Segoe MDL2 Assets" Glyph="&#xE8C8;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Uid="MenuShareTo" Text="Share to..." Click="Share_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl2.ttf#Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Name="FavoriteMenuItem" x:Uid="MenuAddToFavourites" Text="Add to Favourites" Click="Favorite_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl3.ttf#Segoe MDL2 Assets" Glyph="&#xEB51;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
                 </AppBarButton>
-                <TextBlock x:Name="PositionText" VerticalAlignment="Center" Foreground="#1bb76e" Text="00:00" />
-            </StackPanel>
-            <Slider x:Name="PlayerSlider" Grid.Column="1" VerticalAlignment="Center"
-                    Background="White" Foreground="#1cb872" Opacity="0.8"
-                    HorizontalAlignment="Stretch" StepFrequency="1"
-                    ValueChanged="PlayerSlider_ValueChanged" Margin="10,0" />
-            <AppBarButton Grid.Column="2"
-                          Margin="0,0,5,0"
-                          MaxWidth="40"
-                          LabelPosition="Collapsed"
-                          ToolTipService.ToolTip="More">
-                <AppBarButton.Content>
-                    <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="18" Foreground="White" Glyph="&#xE712;" />
-                </AppBarButton.Content>
-                <AppBarButton.Flyout>
-                    <MenuFlyout Placement="Top">
-                        <MenuFlyoutItem Text="Copy to Clipboard" Click="Copy_Click">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl2.ttf#Segoe MDL2 Assets" Glyph="&#xE8C8;"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="Share to..." Click="Share_Click">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl2.ttf#Segoe MDL2 Assets" Glyph="&#xE72D;"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Name="FavoriteMenuItem" Text="Add to Favourites" Click="Favorite_Click">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="ms-appx:///Assets/Fonts/segmdl3.ttf#Segoe MDL2 Assets" Glyph="&#xEB51;"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                    </MenuFlyout>
-                </AppBarButton.Flyout>
-            </AppBarButton>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

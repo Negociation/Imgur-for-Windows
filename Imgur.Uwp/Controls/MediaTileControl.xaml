@@ -41,6 +41,17 @@
                     </Border>
                 </Grid>
 
+                <!-- Seen: só sobre a imagem, não sobre o texto do footer -->
+                <Grid Grid.Row="0"
+                      Background="#99000000"
+                      Visibility="{Binding IsSeen, Converter={StaticResource BoolVisibilityConverter}}"
+                      IsHitTestVisible="False">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE7B3;" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                        <TextBlock x:Uid="MediaSeenLabel" Text="Seen" Margin="8,0,0,0" FontSize="14" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
                 <StackPanel x:Name="mediaInfoContainer" Orientation="Horizontal" VerticalAlignment="Top" Opacity="0.9" HorizontalAlignment="Right" Margin="15" Grid.Row="0">
                     <Grid x:Name="AlbumCountContainer" HorizontalAlignment="Right"  Margin="5,0,0,0" Background="#2e3035" Padding="5,0,5,0" Height="22" CornerRadius="3"  Visibility="{Binding IsAlbum}">
                         <Grid.ColumnDefinitions>
@@ -127,6 +138,17 @@
                         </Border>
                     </Grid>
                 </Grid>
+
+                <Grid Grid.Row="0"
+                      Background="#99000000"
+                      Visibility="{Binding IsSeen, Converter={StaticResource BoolVisibilityConverter}}"
+                      IsHitTestVisible="False">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE7B3;" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                        <TextBlock x:Uid="MediaSeenLabel" Text="Seen" Margin="8,0,0,0" FontSize="14" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
                 <StackPanel x:Name="mediaInfoContainer" Orientation="Horizontal" VerticalAlignment="Top" Opacity="0.9" HorizontalAlignment="Right" Margin="15" Grid.Row="0">
                     <Grid x:Name="GifCountContainer" HorizontalAlignment="Right"  Margin="0,0,0,0" Background="#2e3035" Padding="5,0,5,0" Height="22"  CornerRadius="3">
                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Text="GIF" FontSize="10" FontWeight="Black"></TextBlock>
@@ -198,6 +220,17 @@
                 <Grid x:Name="mediaContainer" Grid.RowSpan="2">
                     <controls:MediaElementControl VideoSource="{Binding CoverVideo,Mode=OneWay}" ImageSource="{Binding CoverImage, Mode= OneWay}" VideoSourcePlaceholder="{Binding CoverPlaceholder,Mode=OneWay}" />
                 </Grid>
+
+                <Grid Grid.Row="0"
+                      Background="#99000000"
+                      Visibility="{Binding IsSeen, Converter={StaticResource BoolVisibilityConverter}}"
+                      IsHitTestVisible="False">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE7B3;" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                        <TextBlock x:Uid="MediaSeenLabel" Text="Seen" Margin="8,0,0,0" FontSize="14" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
                 <StackPanel x:Name="mediaInfoContainer" Orientation="Horizontal" VerticalAlignment="Top" Opacity="0.9" HorizontalAlignment="Right" Margin="15" Grid.Row="0">
                     <Grid  x:Name="VideoCountContainer" HorizontalAlignment="Right"  Margin="1,0,0,0" Background="#2e3035" Padding="5,0,5,0" Height="22" CornerRadius="3">
                         <FontIcon Margin="0,0,0,0" FontFamily="{StaticResource FluentUIGlyphs}"  FontWeight="Black" FontSize="16" Glyph="&#xE714;"/>

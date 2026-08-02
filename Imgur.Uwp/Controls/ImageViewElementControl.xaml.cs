@@ -75,6 +75,20 @@ namespace Imgur.Uwp.Controls
                 typeof(ImageViewElementControl),
                 new PropertyMetadata(null));
 
+        // Dependency Property — OpenFullScreenCommand (MediaViewModel.OpenElementFullScreenCommand)
+        public ICommand OpenFullScreenCommand
+        {
+            get => (ICommand)GetValue(OpenFullScreenCommandProperty);
+            set => SetValue(OpenFullScreenCommandProperty, value);
+        }
+
+        public static readonly DependencyProperty OpenFullScreenCommandProperty =
+            DependencyProperty.Register(
+                "OpenFullScreenCommand",
+                typeof(ICommand),
+                typeof(ImageViewElementControl),
+                new PropertyMetadata(null));
+
         //***************************************************************
         // Context Menu Handlers
         //***************************************************************

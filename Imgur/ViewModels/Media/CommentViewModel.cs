@@ -4,6 +4,7 @@ using Imgur.Enums;
 using Imgur.Factories;
 using Imgur.Helpers;
 using Imgur.Models;
+using Imgur.Services;
 using Imgur.ViewModels.Account;
 using Imgur.ViewModels.Base;
 using System;
@@ -61,11 +62,17 @@ namespace Imgur.ViewModels.Media
         public Action OnCommentReplied;
         public Action OnRepliesRequested { get; set; }
 
+        /// <summary>
+        /// Clique em #N no corpo do comentário. Índice 0-based (N-1).
+        /// </summary>
+        public Action<int> OpenAlbumPosition { get; set; }
+
         private readonly ICommentService _commentService;
         private readonly IClipboardService _clipboardService;
         private readonly INavigator _navigator;
         private readonly IAccountVmFactory _accountVmFactory;
         private readonly ICommentVmFactory _commentVmFactory;
+        private readonly AccountService _accountService;
 
         public CommentViewModel(
             Comment comment,
@@ -77,6 +84,7 @@ namespace Imgur.ViewModels.Media
             INavigator navigator,
             IAccountVmFactory accountVmFactory,
             ICommentVmFactory commentVmFactory,
+            AccountService accountService,
             string galleryId = null
             ) : base(dialogService, appNotificationService, userContext)
         {
@@ -87,6 +95,7 @@ namespace Imgur.ViewModels.Media
             _navigator = navigator;
             _accountVmFactory = accountVmFactory;
             _commentVmFactory = commentVmFactory;
+            _accountService = accountService;
         }
 
         private ICommand _openAuthorProfileCommand;
@@ -96,18 +105,30 @@ namespace Imgur.ViewModels.Media
             {
                 if (_openAuthorProfileCommand == null)
                 {
-                    _openAuthorProfileCommand = new RelayCommand(() =>
+                    _openAuthorProfileCommand = new RelayCommand(async () =>
                     {
                         var username = Comment?.Author;
                         if (string.IsNullOrWhiteSpace(username) ||
                             string.Equals(username, "Hidden", StringComparison.OrdinalIgnoreCase))
                             return;
 
-                        var account = new UserAccount
+                        UserAccount account;
+                        var result = await _accountService.GetAccountById(username);
+                        if (result.IsSuccess && result.Data != null)
                         {
-                            Username = username,
-                            Avatar = Comment.AuthorAvatar
-                        };
+                            account = result.Data;
+                            if (string.IsNullOrWhiteSpace(account.Avatar))
+                                account.Avatar = Comment.AuthorAvatar;
+                        }
+                        else
+                        {
+                            account = new UserAccount
+                            {
+                                Username = username,
+                                Avatar = Comment.AuthorAvatar
+                            };
+                        }
+
                         var vm = _accountVmFactory.GetAccountViewModel(account);
                         _navigator.Navigate("accountView", vm);
                     });
@@ -184,8 +205,11 @@ namespace Imgur.ViewModels.Media
                             {
                                 Replies = new ObservableCollection<CommentViewModel>(
                                     Comment.Children.Select(reply =>
-                                        _commentVmFactory.GetMediaCommentViewModel(_galleryId, reply)
-                                    )
+                                    {
+                                        var replyVm = _commentVmFactory.GetMediaCommentViewModel(_galleryId, reply);
+                                        replyVm.OpenAlbumPosition = OpenAlbumPosition;
+                                        return replyVm;
+                                    })
                                 );
 
                                 _repliesInitialized = true;

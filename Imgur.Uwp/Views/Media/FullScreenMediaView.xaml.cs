@@ -3,6 +3,7 @@ using Imgur.Enums;
 using Imgur.Models;
 using Imgur.Services;
 using Imgur.Uwp.Converters;
+using Imgur.Uwp.Helpers;
 using Imgur.Uwp.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -25,6 +26,7 @@ namespace Imgur.Uwp.Views.Media
         private FullScreenMediaPayload _payload;
         private readonly DispatcherTimer _positionTimer;
         private readonly DispatcherTimer _chromeTimer;
+        private InAppNotificationPresenter _notificationPresenter;
         private Storyboard _seekFeedbackStoryboard;
         private const int SeekSeconds = 10;
         private readonly TimestampToElapsedTimeConverter _timeConverter = new TimestampToElapsedTimeConverter();
@@ -32,6 +34,7 @@ namespace Imgur.Uwp.Views.Media
         public FullScreenMediaView()
         {
             this.InitializeComponent();
+            _notificationPresenter = new InAppNotificationPresenter(Root);
 
             _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000) };
             _positionTimer.Tick += (s, e) =>
@@ -52,7 +55,9 @@ namespace Imgur.Uwp.Views.Media
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            _notificationPresenter?.Attach();
             App.Services.GetRequiredService<IShareService>().Initialize();
+            SetupPcTitleBar();
 
             _payload = e.Parameter as FullScreenMediaPayload;
             if (_payload?.Element == null || string.IsNullOrEmpty(_payload.Element.Link))
@@ -67,6 +72,22 @@ namespace Imgur.Uwp.Views.Media
             Player.MediaPlayer.CommandManager.IsEnabled = true;
             Player.MediaPlayer.MediaOpened += OnMediaOpened;
             Player.MediaPlayer.PlaybackSession.PlaybackStateChanged += OnPlaybackStateChanged;
+        }
+
+        private void SetupPcTitleBar()
+        {
+            var sys = App.Services.GetRequiredService<ISystemInfoProvider>();
+            var isPc = !sys.IsMobile() && !sys.IsXbox();
+            if (!isPc)
+            {
+                PcTitleBar.Visibility = Visibility.Collapsed;
+                PcTitleBarRow.Height = new GridLength(0);
+                return;
+            }
+
+            PcTitleBar.Visibility = Visibility.Visible;
+            PcTitleBarRow.Height = new GridLength(32);
+            Window.Current.SetTitleBar(PcTitleBar);
         }
 
         private void BindPostInfo(MediaModel post)
@@ -87,8 +108,14 @@ namespace Imgur.Uwp.Views.Media
 
         private void UpdateFavoriteMenuLabel(bool isFavorite)
         {
-            FavoriteMenuItem.Text = isFavorite ? "Remove from Favourites" : "Add to Favourites";
+            var loader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            FavoriteMenuItem.Text = isFavorite
+                ? (NonEmpty(loader.GetString("MenuRemoveFromFavourites/Text")) ?? "Remove from Favourites")
+                : (NonEmpty(loader.GetString("MenuAddToFavourites/Text")) ?? "Add to Favourites");
         }
+
+        private static string NonEmpty(string value) =>
+            string.IsNullOrWhiteSpace(value) ? null : value;
 
         private void OnMediaOpened(MediaPlayer sender, object args)
         {
@@ -124,6 +151,8 @@ namespace Imgur.Uwp.Views.Media
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            _notificationPresenter?.Detach();
+
             if (Player?.MediaPlayer != null)
             {
                 Player.MediaPlayer.MediaOpened -= OnMediaOpened;

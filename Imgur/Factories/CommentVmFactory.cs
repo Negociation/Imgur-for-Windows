@@ -2,6 +2,7 @@
 using Imgur.Contracts;
 using Imgur.Factories;
 using Imgur.Models;
+using Imgur.Services;
 using Imgur.ViewModels.Media;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -37,6 +38,7 @@ namespace Imgur.Factories
             var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
             var navigator = _serviceProvider.GetRequiredService<INavigator>();
             var accountVmFactory = _serviceProvider.GetRequiredService<IAccountVmFactory>();
+            var accountService = _serviceProvider.GetRequiredService<AccountService>();
 
             return new CommentViewModel(
                 comment,
@@ -48,6 +50,7 @@ namespace Imgur.Factories
                 navigator,
                 accountVmFactory,
                 this,
+                accountService,
                 galleryId);
         }
     }

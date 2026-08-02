@@ -35,6 +35,15 @@ namespace Imgur.Models
         public string CoverPlaceholder { get; set; }
 
         public bool CoverLoaded { get; set; }
+
+        private bool _isSeen;
+        /// <summary>True se já foi aberto nesta conta (ou anónimo) — histórico local.</summary>
+        public bool IsSeen
+        {
+            get => _isSeen;
+            set { _isSeen = value; OnPropertyChanged(nameof(IsSeen)); }
+        }
+
         public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

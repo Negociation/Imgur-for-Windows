@@ -239,6 +239,9 @@ namespace Imgur.ViewModels.Media
         //-- Service de album básico
         private readonly AlbumService _albumService;
 
+        //-- Histórico local de visualizações
+        private readonly IViewHistoryStore _viewHistoryStore;
+
         //***************************************************************
         // Constructors e Initializers
         //***************************************************************
@@ -262,7 +265,8 @@ namespace Imgur.ViewModels.Media
             IContentStorageService contentStorageService,
             IFolderDialogService folderDialogService,
             ImageService imageService,
-            AlbumService albumService
+            AlbumService albumService,
+            IViewHistoryStore viewHistoryStore
             ): base(dialogService, appNotification, userContext)
         {
             _currentMedia = m;
@@ -280,6 +284,7 @@ namespace Imgur.ViewModels.Media
             _folderDialogService = folderDialogService;
             _imageService = imageService;
             _albumService = albumService;
+            _viewHistoryStore = viewHistoryStore;
         }
 
         //-- Initialize
@@ -287,6 +292,51 @@ namespace Imgur.ViewModels.Media
         {
             this.LoadedSuccessfully = true;
             this.LoadingElementsStatus = false;
+            _ = RefreshSeenStateAsync();
+        }
+
+        private async Task RefreshSeenStateAsync()
+        {
+            try
+            {
+                if (CurrentMedia == null || string.IsNullOrWhiteSpace(CurrentMedia.Id) || _viewHistoryStore == null)
+                    return;
+
+                var seen = await _viewHistoryStore.HasBeenViewedAsync(CurrentMedia.Id, GetViewHistoryAccountKey());
+                _dispatcher.CheckBeginInvokeOnUi(() =>
+                {
+                    if (CurrentMedia != null)
+                        CurrentMedia.IsSeen = seen;
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[MediaVM] RefreshSeenStateAsync: {ex.Message}");
+            }
+        }
+
+        private async Task RecordFirstViewIfNeededAsync()
+        {
+            try
+            {
+                if (CurrentMedia == null || string.IsNullOrWhiteSpace(CurrentMedia.Id) || _viewHistoryStore == null)
+                    return;
+
+                await _viewHistoryStore.TryRecordFirstViewAsync(CurrentMedia.Id, GetViewHistoryAccountKey());
+                CurrentMedia.IsSeen = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[MediaVM] RecordFirstViewIfNeededAsync: {ex.Message}");
+            }
+        }
+
+        private string GetViewHistoryAccountKey()
+        {
+            if (_userContext != null && _userContext.IsAuthenticated)
+                return _userContext.CurrentUser?.Username ?? string.Empty;
+
+            return string.Empty;
         }
 
         //-- Initialize when Page is opened
@@ -307,6 +357,8 @@ namespace Imgur.ViewModels.Media
                 await RefreshAuthenticatedMediaStateAsync();
 
                 DumpMediaCollectionDebug("AfterEnrich");
+
+                await RecordFirstViewIfNeededAsync();
 
                 // Carrega comentários junto com o resto
                 if (LoadCommentsCommand.CanExecute(null))
@@ -628,31 +680,65 @@ namespace Imgur.ViewModels.Media
                 {
                     _loadRemaningItensCommand = new RelayCommand(async () =>
                     {
-                        IsAppendingMediaData = true;
-
                         await Task.Delay(1000);
-
-                        var hashId = this.CurrentMedia.Id;
-                        var albumInfo = await _galleryService.GetGalleryAlbumById(hashId);
-
-                        if (!albumInfo.IsSuccess)
-                        {
-                            IsAppendingMediaData = false;
-                            throw new Exception("Erro durante o carregamento dos elementos extras do album: " + albumInfo.Error);
-                        }
-
-                        IsAppendingMediaData = false;
-
-                        if (albumInfo?.Data.Elements == null || albumInfo.Data.Elements.Count <= 3)
-                            return;
-
-                        for (int i = 3; i < albumInfo.Data.Elements.Count; i++)
-                            CurrentMedia.Elements.Add(albumInfo.Data.Elements[i]);
-
-                        OnPropertyChanged(nameof(IsPartialLoading));
+                        var ok = await EnsureRemainingAlbumElementsAsync();
+                        if (!ok)
+                            throw new Exception("Erro durante o carregamento dos elementos extras do album.");
                     });
                 }
                 return _loadRemaningItensCommand;
+            }
+        }
+
+        /// <summary>
+        /// Completa <see cref="Media.Elements"/> quando o álbum veio só com os primeiros itens.
+        /// </summary>
+        private async Task<bool> EnsureRemainingAlbumElementsAsync()
+        {
+            if (CurrentMedia == null || !CurrentMedia.IsAlbum)
+                return true;
+
+            if (!IsPartialLoading)
+                return true;
+
+            if (IsAppendingMediaData)
+            {
+                // Já há um load em curso (botão "carregar mais") — espera terminar.
+                while (IsAppendingMediaData)
+                    await Task.Delay(100);
+
+                return !IsPartialLoading || (CurrentMedia.Elements?.Count ?? 0) > 0;
+            }
+
+            IsAppendingMediaData = true;
+            try
+            {
+                var albumInfo = await _galleryService.GetGalleryAlbumById(CurrentMedia.Id);
+                if (!albumInfo.IsSuccess || albumInfo.Data?.Elements == null)
+                    return false;
+
+                if (CurrentMedia.Elements == null)
+                    CurrentMedia.Elements = new ObservableCollection<Element>();
+
+                var already = CurrentMedia.Elements.Count;
+                for (int i = already; i < albumInfo.Data.Elements.Count; i++)
+                    CurrentMedia.Elements.Add(albumInfo.Data.Elements[i]);
+
+                if (albumInfo.Data.ImagesCount.HasValue)
+                    CurrentMedia.ImagesCount = albumInfo.Data.ImagesCount;
+
+                OnPropertyChanged(nameof(IsPartialLoading));
+                OnPropertyChanged(nameof(RemainingItemsCount));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[MediaVM] EnsureRemainingAlbumElementsAsync: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                IsAppendingMediaData = false;
             }
         }
 
@@ -789,6 +875,18 @@ namespace Imgur.ViewModels.Media
                     });
                 }
                 return _downloadElementCommand;
+            }
+        }
+
+        //-- Command para abrir elemento (imagem/vídeo) em fullscreen
+        private ICommand _openElementFullScreenCommand;
+        public ICommand OpenElementFullScreenCommand
+        {
+            get
+            {
+                if (_openElementFullScreenCommand == null)
+                    _openElementFullScreenCommand = new RelayCommand<Element>(OpenElementFullScreen);
+                return _openElementFullScreenCommand;
             }
         }
 
@@ -949,8 +1047,7 @@ namespace Imgur.ViewModels.Media
                                 Comments.Clear();
 
                                 foreach (var comment in _allComments.Take(5))
-
-                                    Comments.Add(_commentVmFactory.GetMediaCommentViewModel(CurrentMedia.Id ,comment));
+                                    Comments.Add(CreateCommentViewModel(comment));
 
                                 HasComments = Comments.Count > 0;
                                 HasMoreComments = _allComments.Count > 5;
@@ -993,7 +1090,7 @@ namespace Imgur.ViewModels.Media
                             await Task.Delay(300);
 
                             foreach (var comment in _allComments.Skip(5))
-                                Comments.Add(_commentVmFactory.GetMediaCommentViewModel(CurrentMedia.Id, comment));
+                                Comments.Add(CreateCommentViewModel(comment));
 
                             HasMoreComments = false;
 
@@ -1074,6 +1171,51 @@ namespace Imgur.ViewModels.Media
             }
 
             return result.IsSuccess;
+        }
+
+        private CommentViewModel CreateCommentViewModel(Comment comment)
+        {
+            var vm = _commentVmFactory.GetMediaCommentViewModel(CurrentMedia.Id, comment);
+            vm.OpenAlbumPosition = OpenAlbumElementAtIndex;
+            return vm;
+        }
+
+        /// <summary>
+        /// Abre o elemento do álbum no índice 0-based (a partir de #N nos comentários).
+        /// Se o álbum estiver parcialmente carregado e o índice ainda não existir, carrega o resto e tenta de novo.
+        /// Ignora se o índice estiver fora de <see cref="Media.ImagesCount"/>.
+        /// </summary>
+        private async void OpenAlbumElementAtIndex(int zeroBasedIndex)
+        {
+            if (CurrentMedia?.Elements == null || zeroBasedIndex < 0)
+                return;
+
+            if (zeroBasedIndex >= CurrentMedia.Elements.Count)
+            {
+                var totalKnown = CurrentMedia.ImagesCount ?? CurrentMedia.Elements.Count;
+                if (!CurrentMedia.IsAlbum || zeroBasedIndex >= totalKnown)
+                    return;
+
+                var loaded = await EnsureRemainingAlbumElementsAsync();
+                if (!loaded || zeroBasedIndex >= CurrentMedia.Elements.Count)
+                    return;
+            }
+
+            OpenElementFullScreen(CurrentMedia.Elements[zeroBasedIndex]);
+        }
+
+        private void OpenElementFullScreen(Element element)
+        {
+            if (element == null || string.IsNullOrEmpty(element.Link))
+                return;
+
+            _navigator.NavigateElementToFullScreen(new FullScreenElementArgs
+            {
+                Element = element,
+                Post = CurrentMedia,
+                AuthorUsername = UserAccount?.UserAccountInfo?.Username,
+                FavoriteChanged = NotifyFavoriteChanged
+            });
         }
     }
 }

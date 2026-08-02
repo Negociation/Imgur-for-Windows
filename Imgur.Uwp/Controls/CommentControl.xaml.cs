@@ -17,10 +17,16 @@ namespace Imgur.Uwp.Controls
 
         private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
-            CommentRenderer.Render(caption, ViewModel?.Comment?.Body);
-
             if (ViewModel == null)
+            {
+                CommentRenderer.Render(caption, null);
                 return;
+            }
+
+            CommentRenderer.Render(
+                caption,
+                ViewModel.Comment?.Body,
+                onAlbumPositionClick: ViewModel.OpenAlbumPosition);
 
             ViewModel.OnRepliesRequested = () =>
             {

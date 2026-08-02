@@ -66,23 +66,41 @@ namespace Imgur.Uwp.Views.Accounts
             if (App.Services.GetRequiredService<ISystemInfoProvider>().IsMobile() ||
                 App.Services.GetRequiredService<ISystemInfoProvider>().IsXbox())
             {
-                // Aguarda a página estar renderizada
                 await Task.Delay(100);
-
-                if (Window.Current.Bounds.Width >= 800)
-                {
-                    VisualStateManager.GoToState(this, "LeaveButtonMobileInlineState", false);
-                }
+                ApplyMobileCompactSettingsAlign(Window.Current.Bounds.Width);
+                ApplyLeaveButtonMobileState(Window.Current.Bounds.Width);
             }
         }
 
         private async void MobileWindow_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            if (e.Size.Width >= 800)
-            {
-                await Task.Delay(100);
+            await Task.Delay(100);
+            ApplyMobileCompactSettingsAlign(e.Size.Width);
+            ApplyLeaveButtonMobileState(e.Size.Width);
+        }
+
+        /// <summary>
+        /// LeaveButtonMobileInlineState: 800–1099.
+        /// LeaveButtonContinuumWideState: ≥1100 (top PC 50 − 20 = 30).
+        /// </summary>
+        private void ApplyLeaveButtonMobileState(double width)
+        {
+            if (width >= 800 && width < 1100)
                 VisualStateManager.GoToState(this, "LeaveButtonMobileInlineState", false);
-            }
+            else if (width >= 1100)
+                VisualStateManager.GoToState(this, "LeaveButtonContinuumWideState", false);
+            else
+                VisualStateManager.GoToState(this, "LeaveButtonDefault", false);
+        }
+
+        /// <summary>
+        /// CompactInline (500–800): no mobile/continuum alinha settings ao voltar.
+        /// No PC essa faixa mantém Top 42 via AdaptiveTrigger.
+        /// </summary>
+        private void ApplyMobileCompactSettingsAlign(double width)
+        {
+            if (width >= 500 && width < 800)
+                AccountSettingsButton.Margin = new Thickness(0, 17, 12, 0);
         }
 
         private void UpdateThumbailsState()

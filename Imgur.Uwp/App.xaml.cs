@@ -65,6 +65,7 @@ namespace Imgur.Uwp
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
+            var _ = Google.Protobuf.ByteString.Empty;
         }
 
         // ── Entry Points ───────────────────────────────────────
@@ -101,6 +102,7 @@ namespace Imgur.Uwp
                 //Auth
                 var userContext = _serviceProvider.GetRequiredService<IUserContext>();
                 await userContext.InitAsync();
+                await Services.GetRequiredService<IViewHistoryStore>().InitializeAsync();
                 setTokenDelegates(userContext);
                 var vm = new ShareTargetViewModel(userContext);
 
@@ -300,6 +302,8 @@ namespace Imgur.Uwp
                 .AddSingleton<IAuthBroker, AuthBroker>()
                 .AddSingleton<IFilePicker, FilePicker>()
                 .AddSingleton<ISystemNotificationService, SystemNotificationService>()
+                .AddSingleton<IUriLauncher, UriLauncher>()
+                .AddSingleton<IViewHistoryStore, SqliteViewHistoryStore>()
 
                 // Contextos Singleton
                 .AddSingleton<IUserContext, Imgur.Services.UserContext>()

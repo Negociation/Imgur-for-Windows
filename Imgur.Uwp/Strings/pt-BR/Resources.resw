@@ -716,4 +716,49 @@
     <value>Postar</value>
     <comment>UploadDialog</comment>
   </data>
+  <data name="UploadInterceptorIntro.Text" xml:space="preserve">
+    <value>Para enviar um arquivo, é necessário definir uma API Key personalizada para não quebrar recursos gerais.</value>
+  </data>
+  <data name="MenuCopyToClipboard.Text" xml:space="preserve">
+    <value>Copiar para a Área de Transferência</value>
+  </data>
+  <data name="MenuShareTo.Text" xml:space="preserve">
+    <value>Compartilhar com...</value>
+  </data>
+  <data name="MenuAddToFavourites.Text" xml:space="preserve">
+    <value>Adicionar aos favoritos</value>
+  </data>
+  <data name="MenuRemoveFromFavourites.Text" xml:space="preserve">
+    <value>Remover dos favoritos</value>
+  </data>
+  <data name="posts_visibility_Public" xml:space="preserve">
+    <value>Público</value>
+  </data>
+  <data name="posts_visibility_Hidden" xml:space="preserve">
+    <value>Oculto</value>
+  </data>
+  <data name="posts_visibility_All" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="FollowingHeader.Header" xml:space="preserve">
+    <value>Seguindo</value>
+  </data>
+  <data name="AccountMenuGeneral.Text" xml:space="preserve">
+    <value>Geral</value>
+  </data>
+  <data name="AccountMenuEditProfile.Text" xml:space="preserve">
+    <value>Editar perfil</value>
+  </data>
+  <data name="AccountMenuManageBlockedUsers.Text" xml:space="preserve">
+    <value>Gerenciar usuários bloqueados</value>
+  </data>
+  <data name="AccountMenuTermsOfService.Text" xml:space="preserve">
+    <value>Termos de Serviço</value>
+  </data>
+  <data name="AccountMenuHelpAndSupport.Text" xml:space="preserve">
+    <value>Ajuda e suporte</value>
+  </data>
+  <data name="MediaSeenLabel.Text" xml:space="preserve">
+    <value>Visto</value>
+  </data>
 </root>

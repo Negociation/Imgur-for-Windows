@@ -10,6 +10,7 @@ namespace Imgur.Uwp.Models
     {
         public Element Element { get; set; }
         public Media Post { get; set; }
+        public string AuthorUsername { get; set; }
         public TimeSpan Position { get; set; }
         public bool WasPlaying { get; set; }
         public Action FavoriteChanged { get; set; }

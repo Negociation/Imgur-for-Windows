@@ -68,10 +68,12 @@ namespace Imgur.ViewModels.Account
         public IIncrementalCollection<MediaViewModel> FavoritesCollection { get; private set; }
         public IIncrementalCollection<MediaViewModel> SubmissionsCollection { get; private set; }
         public IIncrementalCollection<CommentViewModel> CommentsCollection { get; private set; }
+        public IIncrementalCollection<AccountViewModel> FollowingCollection { get; private set; }
 
         public bool HasFavorites => (FavoritesCollection?.Count ?? 0) > 0;
         public bool HasSubmissions => (SubmissionsCollection?.Count ?? 0) > 0;
         public bool HasComments => (CommentsCollection?.Count ?? 0) > 0;
+        public bool HasFollowing => (FollowingCollection?.Count ?? 0) > 0;
 
         //-- Flag de carregamento de nova página (footer ProgressBar)
         private bool _isLoadingNewPage;
@@ -166,6 +168,13 @@ namespace Imgur.ViewModels.Account
         {
             get { return _isCommentsEmpty; }
             private set { _isCommentsEmpty = value; OnPropertyChanged(nameof(IsCommentsEmpty)); }
+        }
+
+        private bool _isFollowingEmpty;
+        public bool IsFollowingEmpty
+        {
+            get { return _isFollowingEmpty; }
+            private set { _isFollowingEmpty = value; OnPropertyChanged(nameof(IsFollowingEmpty)); }
         }
 
         //-- Scroll to Top Flag
@@ -277,6 +286,8 @@ namespace Imgur.ViewModels.Account
 
         //-- Serviço de Notificações In-App
         private readonly IAppNotificationService _appNotification;
+        private readonly IUriLauncher _uriLauncher;
+        private readonly IAccountVmFactory _accountVmFactory;
 
         public AccountViewModel(
             UserAccount account,
@@ -288,7 +299,9 @@ namespace Imgur.ViewModels.Account
             Imgur.Services.AccountService accountService,
             IMediaVmFactory mediaVmFactory,
             ICommentVmFactory commentVmFactory,
-            IAppNotificationService appNotification
+            IAppNotificationService appNotification,
+            IUriLauncher uriLauncher,
+            IAccountVmFactory accountVmFactory
             )
         {
             this.UserAccountInfo = account;
@@ -301,8 +314,8 @@ namespace Imgur.ViewModels.Account
             this._commentVmFactory = commentVmFactory;
             this._localSettings = localSettings;
             this._appNotification = appNotification;
-
-
+            this._uriLauncher = uriLauncher;
+            this._accountVmFactory = accountVmFactory;
 
             BuildCollections();
         }
@@ -312,22 +325,42 @@ namespace Imgur.ViewModels.Account
         {
             if (LoadedSuccessfully) return;
 
-            try{
+            try
+            {
                OnPropertyChanged("IsUserOwnPage");
                OnPropertyChanged(nameof(ShowOwnEmptyPosts));
                OnPropertyChanged(nameof(ShowGenericEmptyPosts));
                Loading = true;
+
+                if (!string.IsNullOrWhiteSpace(UserAccountInfo?.Username) && !UserAccountInfo.IsHidden)
+                {
+                    var accountResult = await _accountService.GetAccountById(UserAccountInfo.Username);
+                    if (accountResult.IsSuccess && accountResult.Data != null)
+                    {
+                        var previousFollow = UserAccountInfo.IsFollowing;
+                        UserAccountInfo = accountResult.Data;
+                        if (previousFollow != null && UserAccountInfo.IsFollowing == null)
+                            UserAccountInfo.IsFollowing = previousFollow;
+                        IsFollowing = UserAccountInfo.IsFollowing ?? false;
+                        OnPropertyChanged(nameof(IsUserOwnPage));
+                    }
+                }
+
                await Task.WhenAll(
                     FavoritesCollection.LoadNextPageAsync(),
                     SubmissionsCollection.LoadNextPageAsync(),
-                    CommentsCollection.LoadNextPageAsync()
+                    CommentsCollection.LoadNextPageAsync(),
+                    FollowingCollection.LoadNextPageAsync()
                 );
 
                 if (!IsUserOwnPage && UserAccountInfo.IsFollowing == null)
                 {
                     var result = await _accountService.GetFollowStatusAsync(UserAccountInfo.Username);
-                    if (!result.IsSuccess)
+                    if (result.IsSuccess)
+                    {
                         UserAccountInfo.IsFollowing = result.Data;
+                        IsFollowing = result.Data;
+                    }
                 }
                 LoadedSuccessfully = true;
             }
@@ -348,6 +381,7 @@ namespace Imgur.ViewModels.Account
             BuildFavoritesCollection();
             BuildSubmissionsCollection();
             BuildCommentsCollection();
+            BuildFollowingCollection();
         }
 
         private void BuildFavoritesCollection()
@@ -515,6 +549,38 @@ namespace Imgur.ViewModels.Account
 
             CommentsCollection.StateChanged += OnCommentsStateChanged;
             OnPropertyChanged(nameof(CommentsCollection));
+        }
+
+        private void BuildFollowingCollection()
+        {
+            if (FollowingCollection != null)
+                FollowingCollection.StateChanged -= OnFollowingStateChanged;
+
+            IsFollowingEmpty = false;
+            var username = UserAccountInfo?.Username;
+
+            FollowingCollection = _collectionFactory.Create<AccountViewModel>(
+                async (page, ct) =>
+                {
+                    var result = await _accountService.GetAccountFollowingAsync(username, page);
+                    if (!result.IsSuccess || result.Data == null || result.Data.Count == 0)
+                        return new List<AccountViewModel>();
+
+                    return result.Data.Select(_accountVmFactory.GetAccountViewModel).ToList();
+                },
+                pageSize: 30,
+                batchSize: 10,
+                autoTriggerNextPage: false);
+
+            FollowingCollection.StateChanged += OnFollowingStateChanged;
+            OnPropertyChanged(nameof(FollowingCollection));
+        }
+
+        private void OnFollowingStateChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(HasFollowing));
+            if (!FollowingCollection.CanLoadMorePages)
+                IsFollowingEmpty = !HasFollowing;
         }
 
         //-- Command para recarregar Posts (Submissions)
@@ -812,7 +878,69 @@ namespace Imgur.ViewModels.Account
             }
         }
 
+        private ICommand _openSettingsCommand;
+        public ICommand OpenSettingsCommand
+        {
+            get
+            {
+                if (_openSettingsCommand == null)
+                {
+                    _openSettingsCommand = new RelayCommand(() =>
+                    {
+                        _navigator.Navigate("settings");
+                    });
+                }
+                return _openSettingsCommand;
+            }
+        }
 
+        private ICommand _openTermsOfServiceCommand;
+        public ICommand OpenTermsOfServiceCommand
+        {
+            get
+            {
+                if (_openTermsOfServiceCommand == null)
+                {
+                    _openTermsOfServiceCommand = new RelayCommand(async () =>
+                    {
+                        await _uriLauncher.LaunchAsync(AppUrlConstants.TermsOfServiceUrl);
+                    });
+                }
+                return _openTermsOfServiceCommand;
+            }
+        }
+
+        private ICommand _openCcpaCommand;
+        public ICommand OpenCcpaCommand
+        {
+            get
+            {
+                if (_openCcpaCommand == null)
+                {
+                    _openCcpaCommand = new RelayCommand(async () =>
+                    {
+                        await _uriLauncher.LaunchAsync(AppUrlConstants.CcpaUrl);
+                    });
+                }
+                return _openCcpaCommand;
+            }
+        }
+
+        private ICommand _openHelpAndSupportCommand;
+        public ICommand OpenHelpAndSupportCommand
+        {
+            get
+            {
+                if (_openHelpAndSupportCommand == null)
+                {
+                    _openHelpAndSupportCommand = new RelayCommand(async () =>
+                    {
+                        await _uriLauncher.LaunchAsync(AppUrlConstants.HelpAndSupportUrl);
+                    });
+                }
+                return _openHelpAndSupportCommand;
+            }
+        }
 
     }
 }

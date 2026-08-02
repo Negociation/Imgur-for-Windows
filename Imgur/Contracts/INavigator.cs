@@ -64,6 +64,16 @@ namespace Imgur.Contracts
         void NavigateMediaToFullScreen(object payload = null);
 
         /// <summary>
+        /// Abre imagem em fullscreen no RootFrame (fundo preto).
+        /// </summary>
+        void NavigateImageToFullScreen(object payload = null);
+
+        /// <summary>
+        /// Abre o elemento do álbum em fullscreen (vídeo ou imagem conforme o tipo).
+        /// </summary>
+        void NavigateElementToFullScreen(object payload = null);
+
+        /// <summary>
         /// Persists the inner frame back stack so it can be restored after terminate.
         /// </summary>
         Task SaveNavigationStateAsync();

@@ -738,4 +738,49 @@
     <value>Trả lời bài đăng</value>
     <comment>ReplyDialog header title</comment>
   </data>
+  <data name="UploadInterceptorIntro.Text" xml:space="preserve">
+    <value>In order to upload a file, is required to set a custom API Key to avoid breaking general features.</value>
+  </data>
+  <data name="MenuCopyToClipboard.Text" xml:space="preserve">
+    <value>Copy to Clipboard</value>
+  </data>
+  <data name="MenuShareTo.Text" xml:space="preserve">
+    <value>Share to...</value>
+  </data>
+  <data name="MenuAddToFavourites.Text" xml:space="preserve">
+    <value>Add to Favourites</value>
+  </data>
+  <data name="MenuRemoveFromFavourites.Text" xml:space="preserve">
+    <value>Remove from Favourites</value>
+  </data>
+  <data name="posts_visibility_Public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="posts_visibility_Hidden" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="posts_visibility_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="FollowingHeader.Header" xml:space="preserve">
+    <value>Following</value>
+  </data>
+  <data name="AccountMenuGeneral.Text" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="AccountMenuEditProfile.Text" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="AccountMenuManageBlockedUsers.Text" xml:space="preserve">
+    <value>Manage blocked users</value>
+  </data>
+  <data name="AccountMenuTermsOfService.Text" xml:space="preserve">
+    <value>Terms of Service</value>
+  </data>
+  <data name="AccountMenuHelpAndSupport.Text" xml:space="preserve">
+    <value>Help and Support</value>
+  </data>
+  <data name="MediaSeenLabel.Text" xml:space="preserve">
+    <value>Đã xem</value>
+  </data>
 </root>

@@ -12,11 +12,12 @@ namespace Imgur.Uwp.Helpers
     /// <summary>
     /// Renderiza texto em RichTextBlock com links / embeds Imgur opcionais.
     /// Imagens (incl. WebP) via CompatibleImageLoader.
+    /// Referências de álbum (#1, #2…) viram hyperlinks verdes (índice 0-based no callback).
     /// </summary>
     public static class CommentRenderer
     {
-        private static readonly Regex UrlRegex = new Regex(
-            @"(https?://[^\s<>""']+)",
+        private static readonly Regex TokenRegex = new Regex(
+            @"(https?://[^\s<>""']+)|#(\d+)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly char[] TrailingUrlJunk = { '.', ',', ';', ':', ')', ']', '}', '"', '\'' };
@@ -29,7 +30,8 @@ namespace Imgur.Uwp.Helpers
             string text,
             bool renderImages = true,
             bool renderVideos = true,
-            bool renderLinks = true)
+            bool renderLinks = true,
+            Action<int> onAlbumPositionClick = null)
         {
             if (target == null)
                 return;
@@ -44,34 +46,45 @@ namespace Imgur.Uwp.Helpers
             }
 
             int lastIndex = 0;
-            foreach (Match match in UrlRegex.Matches(text))
+            foreach (Match match in TokenRegex.Matches(text))
             {
                 if (match.Index > lastIndex)
                     AddText(paragraph, text.Substring(lastIndex, match.Index - lastIndex));
 
-                var raw = match.Value;
-                var url = TrimTrailingJunk(raw);
-                var trailing = raw.Length > url.Length ? raw.Substring(url.Length) : string.Empty;
-
-                if (renderVideos && IsImgurMp4(url))
+                if (match.Groups[2].Success)
                 {
-                    AddMediaEmbed(paragraph, CreateVideoElement(url), url, renderLinks);
-                }
-                else if (renderImages && IsEmbeddableImgurImage(url))
-                {
-                    AddMediaEmbed(paragraph, CreateImageElement(url), url, renderLinks);
-                }
-                else if (renderLinks)
-                {
-                    AddHyperlink(paragraph, url);
+                    // #N → callback com índice 0-based (N-1)
+                    if (int.TryParse(match.Groups[2].Value, out var oneBased) && oneBased > 0)
+                        AddAlbumPositionLink(paragraph, oneBased, onAlbumPositionClick);
+                    else
+                        AddText(paragraph, match.Value);
                 }
                 else
                 {
-                    AddText(paragraph, url);
-                }
+                    var raw = match.Value;
+                    var url = TrimTrailingJunk(raw);
+                    var trailing = raw.Length > url.Length ? raw.Substring(url.Length) : string.Empty;
 
-                if (!string.IsNullOrEmpty(trailing))
-                    AddText(paragraph, trailing);
+                    if (renderVideos && IsImgurMp4(url))
+                    {
+                        AddMediaEmbed(paragraph, CreateVideoElement(url), url, renderLinks);
+                    }
+                    else if (renderImages && IsEmbeddableImgurImage(url))
+                    {
+                        AddMediaEmbed(paragraph, CreateImageElement(url), url, renderLinks);
+                    }
+                    else if (renderLinks)
+                    {
+                        AddHyperlink(paragraph, url);
+                    }
+                    else
+                    {
+                        AddText(paragraph, url);
+                    }
+
+                    if (!string.IsNullOrEmpty(trailing))
+                        AddText(paragraph, trailing);
+                }
 
                 lastIndex = match.Index + match.Length;
             }
@@ -80,6 +93,24 @@ namespace Imgur.Uwp.Helpers
                 AddText(paragraph, text.Substring(lastIndex));
 
             target.Blocks.Add(paragraph);
+        }
+
+        private static void AddAlbumPositionLink(Paragraph paragraph, int oneBased, Action<int> onClick)
+        {
+            var hyperlink = new Hyperlink
+            {
+                Foreground = HyperlinkBrush,
+                UnderlineStyle = UnderlineStyle.Single
+            };
+            hyperlink.Inlines.Add(new Run { Text = "#" + oneBased });
+
+            if (onClick != null)
+            {
+                var zeroBased = oneBased - 1;
+                hyperlink.Click += (s, e) => onClick(zeroBased);
+            }
+
+            paragraph.Inlines.Add(hyperlink);
         }
 
         private static void AddMediaEmbed(Paragraph paragraph, UIElement child, string fallbackUrl, bool renderLinks)

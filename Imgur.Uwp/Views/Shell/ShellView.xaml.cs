@@ -1,27 +1,18 @@
 ﻿using Imgur.Contracts;
-using Imgur.Helpers;
-using Imgur.Models;
-using Imgur.Uwp.Converters;
+using Imgur.Uwp.Helpers;
 using Imgur.Uwp.Views.Explorer;
 using Imgur.ViewModels.Shell;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Navigation;
 
 // O modelo de item de Página em Branco está documentado em https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -34,6 +25,7 @@ namespace Imgur.Uwp.Views.Shell
     {
         public ShellViewModel ViewModel => (ShellViewModel)this.DataContext;
         public bool IsTitleBarPresent { get; private set; }
+        private InAppNotificationPresenter _notificationPresenter;
 
         public ShellView()
         {
@@ -44,19 +36,11 @@ namespace Imgur.Uwp.Views.Shell
             this.DataContext = App.Services.GetRequiredService<ShellViewModel>();
             Loaded += Page_Loaded;
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-
+            _notificationPresenter = new InAppNotificationPresenter(ShellGrid);
         }
 
         private async void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            
-
-            //Retrieve new UI Notifications
-            if (e.PropertyName == nameof(ViewModel.NotificationStack))
-            {
-                this.AddUINotification(ViewModel.NotificationStack[ViewModel.NotificationStack.Count - 1]);
-            }
-
             //Recieve Fullscreen Mode (Title Bar)
             if(e.PropertyName == nameof(ViewModel.IsFullScreenMode))
             {
@@ -134,12 +118,23 @@ namespace Imgur.Uwp.Views.Shell
                     MainFrame.Navigate(typeof(ExplorerView));
             }
 
+            // Reassume a title bar ao voltar do player fullscreen
+            if (IsTitleBarPresent)
+                Window.Current.SetTitleBar(PaneTitle);
+
             navigator.ScrollOffsetChanged -= Navigator_ScrollOffsetChanged;
             navigator.FullScreenModeChanged -= Navigator_FullScreenModeChanged;
             navigator.ScrollOffsetChanged += Navigator_ScrollOffsetChanged;
             navigator.FullScreenModeChanged += Navigator_FullScreenModeChanged;
 
+            _notificationPresenter?.Attach();
             ViewModel.Initialize();
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            _notificationPresenter?.Detach();
+            base.OnNavigatingFrom(e);
         }
 
         private void Navigator_ScrollOffsetChanged(object sender, double offset)
@@ -253,206 +248,6 @@ namespace Imgur.Uwp.Views.Shell
                 VisualStateManager.GoToState(this, "SearchMobileInlineState", false);
             }
 
-        }
-
-        private void AddUINotification(NotificationViewModel notification)
-        {
-            var notificationTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(20)
-            };
-
-            var teachingTip = new TeachingTip
-            {
-                Title = notification.Title ?? "New Message!",
-                IsOpen = true,
-                IsLightDismissEnabled = false,
-                PreferredPlacement = TeachingTipPlacementMode.BottomRight,
-                PlacementMargin = new Thickness(0, 0, -20, 40),
-                Background = new SolidColorBrush(Color.FromArgb(255, 100, 50, 249)),
-            };
-
-
-            if (notification.ImageUrl != null)
-            {
-                notification.ActionCommand = CreateCommandWithClose(notification.ActionCommand, teachingTip);
-                teachingTip.DataContext = notification;
-                teachingTip.Content = CreateNotificationContent();
-            }
-            else
-            {
-                teachingTip.Subtitle = notification.Message;
-                
-                notificationTimer.Tick += (s, e) =>
-                {
-                    teachingTip.IsOpen = false;
-                    notificationTimer.Stop();
-                };
-
-
-                notificationTimer.Start();     
-            }
-
-            teachingTip.Closed += RemoveUINotification;
-            ShellGrid.Children.Add(teachingTip);
-
-          
-        }
-        private UIElement CreateNotificationContent()
-        {
-            var button = new Button
-            {
-                Background = new SolidColorBrush(Colors.Transparent),
-                BorderThickness = new Thickness(0),
-                Padding = new Thickness(10),
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                VerticalContentAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, 10, 0, 0)
-            };
-
-            button.SetBinding(Button.CommandProperty, new Binding
-            {
-                Path = new PropertyPath("ActionCommand")
-            });
-
-            // 🔹 Grid principal
-            var rootGrid = new Grid
-            {
-                MinWidth = 250
-            };
-
-            rootGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
-            rootGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-            // 🖼️ Container da imagem (será preenchido no Loaded)
-            var imageContainer = new Grid();
-            Grid.SetColumn(imageContainer, 0);
-
-            // Quando o button carregar e herdar o DataContext do TeachingTip
-            button.Loaded += (s, e) =>
-            {
-                var notification = button.DataContext as NotificationViewModel;
-                bool isCircular = notification?.IsImageAvatarInfo ?? false;
-
-                FrameworkElement imageElement;
-
-                if (isCircular)
-                {
-                    var ellipse = new Ellipse
-                    {
-                        Width = 50,
-                        Height = 50,
-                        Margin = new Thickness(0, 0, 10, 0),
-                        VerticalAlignment = VerticalAlignment.Top
-                    };
-
-                    var brush = new ImageBrush { Stretch = Stretch.UniformToFill };
-
-                    if (!string.IsNullOrEmpty(notification?.ImageUrl))
-                    {
-                        brush.ImageSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(notification.ImageUrl));
-                    }
-
-                    ellipse.Fill = brush;
-                    imageElement = ellipse;
-                }
-                else
-                {
-                    var image = new Image
-                    {
-                        Width = 50,
-                        Height = 50,
-                        Margin = new Thickness(0, 0, 12, 0),
-                        Stretch = Stretch.UniformToFill,
-                        VerticalAlignment = VerticalAlignment.Top
-                    };
-
-                    image.SetBinding(Image.SourceProperty, new Binding
-                    {
-                        Path = new PropertyPath("ImageUrl")
-                    });
-
-                    imageElement = image;
-                }
-
-                imageContainer.Children.Clear();
-                imageContainer.Children.Add(imageElement);
-            };
-
-            rootGrid.Children.Add(imageContainer);
-
-            // 🔹 Grid de texto (controle vertical real)
-            var textGrid = new Grid
-            {
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, -5, 0, 0),
-            };
-
-            textGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            textGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
-            // 🔸 Subtitle / Author
-            var subtitleText = new TextBlock
-            {
-                FontSize = 12,
-                Opacity = 0.7,
-                Margin = new Thickness(0, 0, 0, 2),
-                TextTrimming = TextTrimming.CharacterEllipsis,
-                MaxLines = 1
-            };
-
-            subtitleText.SetBinding(TextBlock.TextProperty, new Binding
-            {
-                Path = new PropertyPath("Extra")
-            });
-
-            Grid.SetRow(subtitleText, 1);
-
-            // 🔸 Message / Title
-            var messageText = new TextBlock
-            {
-                FontSize = 16,
-                FontWeight = FontWeights.SemiBold,
-                TextTrimming = TextTrimming.CharacterEllipsis,
-                TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(0, -2, 0, 0),
-                MaxLines = 2
-            };
-
-            messageText.SetBinding(TextBlock.TextProperty, new Binding
-            {
-                Path = new PropertyPath("Message")
-            });
-
-            Grid.SetRow(messageText, 0);
-
-            textGrid.Children.Add(subtitleText);
-            textGrid.Children.Add(messageText);
-
-            Grid.SetColumn(textGrid, 1);
-
-            rootGrid.Children.Add(textGrid);
-
-            button.Content = rootGrid;
-            return button;
-        }
-        private void RemoveUINotification(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
-        {
-            ShellGrid.Children.Remove(sender);
-        }
-
-        private ICommand CreateCommandWithClose(
-            ICommand originalCommand,
-            TeachingTip teachingTip)
-        {
-            return new RelayCommand(() =>
-            {
-                if (originalCommand?.CanExecute(null) == true)
-                    originalCommand.Execute(null);
-
-                teachingTip.IsOpen = false;
-            });
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)

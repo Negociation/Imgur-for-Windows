@@ -5,7 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:local="using:Imgur.Uwp.Controls" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d" 
     d:DesignHeight="300" 
     d:DesignWidth="400">
@@ -47,6 +49,14 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Stretch="Uniform"
-            DoubleTapped="Image_DoubleTapped" />
+            DoubleTapped="Image_DoubleTapped">
+            <Interactivity:Interaction.Behaviors>
+                <Core:EventTriggerBehavior EventName="Tapped">
+                    <Core:InvokeCommandAction
+                        Command="{Binding OpenFullScreenCommand, ElementName=ImageViewElement}"
+                        CommandParameter="{Binding ImageElement, ElementName=ImageViewElement}" />
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+        </Image>
     </Grid>
 </UserControl>

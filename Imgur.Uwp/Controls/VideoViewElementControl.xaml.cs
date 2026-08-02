@@ -86,7 +86,12 @@ namespace Imgur.Uwp.Controls
 
         private async void MediaEndedRoutine(MediaPlayer sender, object args)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => this.SetStopStatus());
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                this.SetStopStatus();
+                if (IsPlayerHostedExternally)
+                    FindParentMediaView()?.NotifyCompactPipPlaybackEnded();
+            });
         }
 
         private async void PlaybackSession_PlaybackStateChangedAsync(MediaPlaybackSession sender, object args)
@@ -131,10 +136,14 @@ namespace Imgur.Uwp.Controls
         {
             UpdatePositionText();
             this.playerPosition.Start();
-            this.PlayerOverlay.Visibility = Visibility.Collapsed;
-            this.PlayerInteractionCommandsOverlay.Visibility = Visibility.Visible;
             this.canPauseIcon.Visibility = Visibility.Visible;
             this.canPlayIcon.Visibility = Visibility.Collapsed;
+
+            if (!IsPlayerHostedExternally)
+            {
+                this.PlayerOverlay.Visibility = Visibility.Collapsed;
+                this.PlayerInteractionCommandsOverlay.Visibility = Visibility.Visible;
+            }
         }
 
         private void SetPausedStatus()
@@ -150,11 +159,24 @@ namespace Imgur.Uwp.Controls
 
         private void SetStopStatus()
         {
-            if (this.Player.MediaPlayer.PlaybackSession.Position.TotalSeconds == this.Player.MediaPlayer.PlaybackSession.NaturalDuration.TotalSeconds)
+            try
             {
-                this.PlayerOverlay.Visibility = Visibility.Visible;
-                this.PlayerInteractionCommandsOverlay.Visibility = Visibility.Collapsed;
-                this.playerPosition.Stop();
+                var session = this.Player.MediaPlayer.PlaybackSession;
+                if (session.NaturalDuration.TotalSeconds <= 0)
+                    return;
+
+                if (session.Position.TotalSeconds >= session.NaturalDuration.TotalSeconds - 0.35)
+                {
+                    this.playerPosition.Stop();
+                    if (!IsPlayerHostedExternally)
+                    {
+                        this.PlayerOverlay.Visibility = Visibility.Visible;
+                        this.PlayerInteractionCommandsOverlay.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            catch
+            {
             }
         }
 
@@ -404,6 +426,30 @@ namespace Imgur.Uwp.Controls
             }
         }
 
+        /// <summary>
+        /// True when playback reached the end (natural duration).
+        /// </summary>
+        public bool IsPlaybackFinished
+        {
+            get
+            {
+                try
+                {
+                    var session = Player?.MediaPlayer?.PlaybackSession;
+                    if (session == null)
+                        return false;
+                    var duration = session.NaturalDuration.TotalSeconds;
+                    if (duration <= 0)
+                        return false;
+                    return session.Position.TotalSeconds >= duration - 0.35;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
         public bool IsPlayerHostedExternally { get; private set; }
 
         private int _playerChildIndex = 3;
@@ -447,6 +493,7 @@ namespace Imgur.Uwp.Controls
 
                 PlayerInteractionCommandsOverlay.Visibility = Visibility.Collapsed;
                 PlayerTransportControls.Visibility = Visibility.Collapsed;
+                PlayerOverlay.Visibility = Visibility.Collapsed;
                 IsPlayerHostedExternally = true;
                 return true;
             }
@@ -468,8 +515,9 @@ namespace Imgur.Uwp.Controls
                 if (Player.Parent is Panel host)
                     host.Children.Remove(Player);
 
-                var index = Math.Max(0, Math.Min(_playerChildIndex, RootMedia.Children.Count));
-                RootMedia.Children.Insert(index, Player);
+                // Garante o Player abaixo dos overlays de interação / play
+                var insertAt = Math.Max(0, Math.Min(_playerChildIndex, RootMedia.Children.Count));
+                RootMedia.Children.Insert(insertAt, Player);
 
                 if (_savedPlayerWidth > 0 && !double.IsNaN(_savedPlayerWidth))
                     Player.Width = _savedPlayerWidth;
@@ -482,12 +530,85 @@ namespace Imgur.Uwp.Controls
                 MinHeight = 0;
                 IsPlayerHostedExternally = false;
                 ResizeMediaControl(this, null);
+                SyncUiAfterHostRestore();
                 return true;
             }
             catch (Exception)
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Reativa overlays do player principal após sair do compact pip.
+        /// </summary>
+        private void SyncUiAfterHostRestore()
+        {
+            try
+            {
+                var session = Player?.MediaPlayer?.PlaybackSession;
+                if (session == null)
+                    return;
+
+                switch (session.PlaybackState)
+                {
+                    case MediaPlaybackState.Playing:
+                        PlayerOverlay.Visibility = Visibility.Collapsed;
+                        PlayerInteractionCommandsOverlay.Visibility = Visibility.Visible;
+                        canPauseIcon.Visibility = Visibility.Visible;
+                        canPlayIcon.Visibility = Visibility.Collapsed;
+                        playerPosition.Start();
+                        break;
+                    case MediaPlaybackState.Paused:
+                        if (IsPlaybackFinished)
+                        {
+                            PlayerOverlay.Visibility = Visibility.Visible;
+                            PlayerInteractionCommandsOverlay.Visibility = Visibility.Collapsed;
+                            playerPosition.Stop();
+                        }
+                        else
+                        {
+                            PlayerOverlay.Visibility = Visibility.Collapsed;
+                            PlayerInteractionCommandsOverlay.Visibility = Visibility.Visible;
+                            canPlayIcon.Visibility = Visibility.Visible;
+                            canPauseIcon.Visibility = Visibility.Collapsed;
+                            ShowTransportControls();
+                        }
+                        break;
+                    default:
+                        PlayerOverlay.Visibility = Visibility.Visible;
+                        PlayerInteractionCommandsOverlay.Visibility = Visibility.Collapsed;
+                        playerPosition.Stop();
+                        break;
+                }
+            }
+            catch
+            {
+                PlayerOverlay.Visibility = Visibility.Visible;
+                PlayerInteractionCommandsOverlay.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public async System.Threading.Tasks.Task<bool> ReplayFromStartAsync()
+        {
+            try
+            {
+                if (Player?.MediaPlayer?.PlaybackSession == null || MediaElement == null)
+                    return false;
+
+                Player.MediaPlayer.PlaybackSession.Position = TimeSpan.Zero;
+                if (await _mediaPlayerService.PlayMedia(Player, MediaElement))
+                {
+                    SetPlayingStatus();
+                    if (!IsPlayerHostedExternally)
+                        ShowTransportControls();
+                    return true;
+                }
+            }
+            catch
+            {
+            }
+            return false;
         }
 
         private void RequestUpvoteOverlay()

@@ -162,9 +162,18 @@ namespace Imgur.Uwp.Views.Media
                 {
                     if (!_compactSource.IsActivelyPlaying)
                     {
+                        // Vídeo terminou no PiP: mantém o PiP e mostra replay
+                        if (_compactSource.IsPlaybackFinished)
+                        {
+                            CompactPipReplayOverlay.Visibility = Visibility.Visible;
+                            return;
+                        }
+
                         DismissCompactPip(restorePlayer: true, markDismissed: false);
                         return;
                     }
+
+                    CompactPipReplayOverlay.Visibility = Visibility.Collapsed;
 
                     if (IsElementVisibleInScrollViewer(_compactSource, RootScrollView))
                         DismissCompactPip(restorePlayer: true, markDismissed: false);
@@ -204,6 +213,30 @@ namespace Imgur.Uwp.Views.Media
             UpdateCompactPip();
         }
 
+        /// <summary>
+        /// Vídeo terminou enquanto estava no compact pip — mostra replay.
+        /// </summary>
+        public void NotifyCompactPipPlaybackEnded()
+        {
+            if (!_compactActive)
+                return;
+
+            CompactPipReplayOverlay.Visibility = Visibility.Visible;
+        }
+
+        private async void CompactPipReplay_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (_compactSource == null)
+                return;
+
+            if (await _compactSource.ReplayFromStartAsync())
+            {
+                CompactPipReplayOverlay.Visibility = Visibility.Collapsed;
+                _compactDismissed = false;
+            }
+        }
+
         private void ShowCompactPip(VideoViewElementControl source)
         {
             if (source == null || _compactActive || _compactBusy)
@@ -223,6 +256,7 @@ namespace Imgur.Uwp.Views.Media
                 CompactPipTransform.X = 0;
                 CompactPipTransform.Y = 0;
                 _compactDragged = false;
+                CompactPipReplayOverlay.Visibility = Visibility.Collapsed;
                 CompactPipHost.Visibility = Visibility.Visible;
 
                 _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -255,6 +289,7 @@ namespace Imgur.Uwp.Views.Media
                     _compactSource.RestorePlayerFromHost();
 
                 CompactPipSurface.Children.Clear();
+                CompactPipReplayOverlay.Visibility = Visibility.Collapsed;
                 CompactPipHost.Visibility = Visibility.Collapsed;
                 CompactPipTransform.X = 0;
                 CompactPipTransform.Y = 0;

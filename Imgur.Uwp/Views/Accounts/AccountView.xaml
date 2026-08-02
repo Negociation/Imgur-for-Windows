@@ -34,9 +34,18 @@
     <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LeaveButton">
+                <VisualState x:Name="LeaveButtonDefault"/>
                 <VisualState x:Name="LeaveButtonMobileInlineState">
                     <VisualState.Setters>
                         <Setter Target="LeaveFloatButton.Margin" Value="10,18,0,0"/>
+                        <Setter Target="AccountSettingsButton.Margin" Value="0,18,12,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <!-- Continuum ≥1100: mesmas margens PC (50) menos 20px -->
+                <VisualState x:Name="LeaveButtonContinuumWideState">
+                    <VisualState.Setters>
+                        <Setter Target="LeaveFloatButton.Margin" Value="17,30,0,0"/>
+                        <Setter Target="AccountSettingsButton.Margin" Value="0,30,12,0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -49,6 +58,7 @@
                     <VisualState.Setters>
                         <Setter Target="AccountViewPage.Margin" Value="0,-10,0,0"/>
                         <Setter Target="ExpandedHeader.Height" Value="200"/>
+                        <Setter Target="AccountSettingsButton.Margin" Value="0,15,12,0"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -60,6 +70,9 @@
                         <Setter Target="AccountViewPage.Padding" Value="0"/>
                         <Setter Target="LeaveFloatButton.Margin" Value="17,17,0,0"/>
                         <Setter Target="LeaveFloatButton.Background" Value="#AD19191C"/>
+                        <!-- PC 500–800: abaixo dos caption buttons -->
+                        <Setter Target="AccountSettingsButton.Margin" Value="0,42,12,0"/>
+                        <Setter Target="AccountSettingsButton.Background" Value="#AD19191C"/>
 
                     </VisualState.Setters>
                 </VisualState>
@@ -71,9 +84,12 @@
                         <Setter Target="AccountViewPage.Margin" Value="-5,-80,0,0"/>
                         <Setter Target="AccountViewPage.Padding" Value="0"/>
                         <Setter Target="ExpandedHeader.Height" Value="350"/>
-                        <Setter Target="LeaveFloatButton.Margin" Value="17,30,0,0"/>
+                        <Setter Target="LeaveFloatButton.Margin" Value="17,35,0,0"/>
                         <Setter Target="LeaveFloatButton.MinWidth" Value="34"/>
                         <Setter Target="LeaveFloatButton.MinHeight" Value="34"/>
+                        <Setter Target="AccountSettingsButton.Margin" Value="0,35,12,0"/>
+                        <Setter Target="AccountSettingsButton.MinWidth" Value="34"/>
+                        <Setter Target="AccountSettingsButton.MinHeight" Value="34"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -84,9 +100,12 @@
                         <Setter Target="AccountViewPage.Margin" Value="-5,-80,0,0"/>
                         <Setter Target="AccountViewPage.Padding" Value="0"/>
                         <Setter Target="ExpandedHeader.Height" Value="400"/>
-                        <Setter Target="LeaveFloatButton.Margin" Value="17,30,0,0"/>
+                        <Setter Target="LeaveFloatButton.Margin" Value="17,50,0,0"/>
                         <Setter Target="LeaveFloatButton.MinWidth" Value="34"/>
                         <Setter Target="LeaveFloatButton.MinHeight" Value="34"/>
+                        <Setter Target="AccountSettingsButton.Margin" Value="0,50,12,0"/>
+                        <Setter Target="AccountSettingsButton.MinWidth" Value="34"/>
+                        <Setter Target="AccountSettingsButton.MinHeight" Value="34"/>
 
                     </VisualState.Setters>
                 </VisualState>
@@ -220,6 +239,38 @@
 
 
                     </StackPanel>
+
+                    <!-- Own profile settings (gear) — canto superior direito do cover -->
+                    <Button x:Name="AccountSettingsButton"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource CircleButtonStyle}"
+                            Background="Transparent"
+                            Margin="0,15,12,0"
+                            Padding="0"
+                            Width="30" Height="30"
+                            Opacity="1"
+                            Visibility="{Binding IsUserOwnPage, Converter={StaticResource BoolVisibilityConverter}}"
+                            ToolTipService.ToolTip="Settings">
+                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" FontSize="18" 
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Foreground="White" Glyph="&#xf8b0;"/>
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem x:Uid="AccountMenuGeneral" Text="General" Command="{Binding OpenSettingsCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE713;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="AccountMenuEditProfile" Text="Edit Profile" IsEnabled="False"/>
+                                <MenuFlyoutItem x:Uid="AccountMenuManageBlockedUsers" Text="Manage blocked users" IsEnabled="False"/>
+                                <MenuFlyoutSeparator/>
+                                <MenuFlyoutItem x:Uid="AccountMenuTermsOfService" Text="Terms of Service" Command="{Binding OpenTermsOfServiceCommand}"/>
+                                <MenuFlyoutItem Text="CCPA" Command="{Binding OpenCcpaCommand}"/>
+                                <MenuFlyoutItem x:Uid="AccountMenuHelpAndSupport" Text="Help and Support" Command="{Binding OpenHelpAndSupportCommand}"/>
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
                 </Grid>
 
 
@@ -433,6 +484,33 @@
                                         </Grid>
                                     </toolkit:AdaptiveGridView.Footer>
                                 </toolkit:AdaptiveGridView>
+                            </Grid>
+                        </PivotItem>
+
+                        <!-- Following -->
+                        <PivotItem x:Uid="FollowingHeader" Header="Following" Visibility="{Binding LoadedSuccessfully, Converter={StaticResource BoolVisibilityConverter}, FallbackValue='False'}">
+                            <Grid MinHeight="200">
+                                <controls:EmptyAccountSectionControl Visibility="{Binding IsFollowingEmpty, Converter={StaticResource BoolVisibilityConverter}}" />
+                                <ListView
+                                    Margin="-12,10,-12,40"
+                                    MaxWidth="900"
+                                    IncrementalLoadingTrigger="Edge"
+                                    DataFetchSize="1"
+                                    ItemsSource="{Binding FollowingCollection, Mode=OneWay}"
+                                    SelectionMode="None">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Margin" Value="0,0,0,8"/>
+                                            <Setter Property="Padding" Value="0"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <controls:AccountTileControl ViewModel="{Binding}" EnableCompactMode="True"/>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                             </Grid>
                         </PivotItem>
 

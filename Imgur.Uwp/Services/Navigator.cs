@@ -1,6 +1,7 @@
 ﻿using Imgur.Contracts;
 using Imgur.Factories;
 using Imgur.Models;
+using Imgur.Uwp.Models;
 using Imgur.Uwp.Views.Accounts;
 using Imgur.Uwp.Views.Explorer;
 using Imgur.Uwp.Views.Media;
@@ -54,7 +55,9 @@ namespace Imgur.Uwp.Services
             // Fullscreen no RootFrame tem prioridade (botão da tela, hardware back, etc.)
             if (IsFullScreenMediaActive() ||
                 sourcePage == "fullscreenMedia" ||
-                sourcePage == nameof(FullScreenMediaView))
+                sourcePage == "fullscreenImage" ||
+                sourcePage == nameof(FullScreenMediaView) ||
+                sourcePage == nameof(FullScreenImageView))
             {
                 GoBackFromFullScreen();
                 return;
@@ -65,7 +68,8 @@ namespace Imgur.Uwp.Services
 
         private bool IsFullScreenMediaActive()
         {
-            return RootFrame is Frame root && root.Content is FullScreenMediaView;
+            return RootFrame is Frame root &&
+                   (root.Content is FullScreenMediaView || root.Content is FullScreenImageView);
         }
 
         private void GoBackFromFullScreen()
@@ -293,6 +297,35 @@ namespace Imgur.Uwp.Services
                 // Como Ambie ToScreensaver: RootFrame + SuppressTransition
                 f.Navigate(typeof(FullScreenMediaView), payload, new SuppressNavigationTransitionInfo());
             }
+        }
+
+        public void NavigateImageToFullScreen(object payload = null)
+        {
+            if (RootFrame is Frame f)
+                f.Navigate(typeof(FullScreenImageView), payload, new SuppressNavigationTransitionInfo());
+        }
+
+        public void NavigateElementToFullScreen(object payload = null)
+        {
+            var p = payload as FullScreenMediaPayload;
+            if (p == null && payload is FullScreenElementArgs args)
+            {
+                p = new FullScreenMediaPayload
+                {
+                    Element = args.Element,
+                    Post = args.Post,
+                    AuthorUsername = args.AuthorUsername,
+                    FavoriteChanged = args.FavoriteChanged
+                };
+            }
+
+            if (p?.Element == null)
+                return;
+
+            if (string.Equals(p.Element.Type, "video/mp4", StringComparison.OrdinalIgnoreCase))
+                NavigateMediaToFullScreen(p);
+            else
+                NavigateImageToFullScreen(p);
         }
 
         public bool CanGoBack()

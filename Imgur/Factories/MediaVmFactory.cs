@@ -40,6 +40,7 @@ namespace Imgur.Factories
             var folderDialogService = _serviceProvider.GetRequiredService<IFolderDialogService>();
             var imageService = _serviceProvider.GetRequiredService<ImageService>();
             var albumService = _serviceProvider.GetRequiredService<AlbumService>();
+            var viewHistoryStore = _serviceProvider.GetRequiredService<IViewHistoryStore>();
 
             var vm = new MediaViewModel(
                 media,
@@ -59,7 +60,8 @@ namespace Imgur.Factories
                 contentStorageService,
                 folderDialogService,
                 imageService,
-                albumService
+                albumService,
+                viewHistoryStore
                 );
 
             vm.Initialize();

@@ -1,0 +1,161 @@
+<Page
+    x:Class="Imgur.Uwp.Views.Media.FullScreenImageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Black"
+    RequestedTheme="Dark">
+
+    <Grid x:Name="Root">
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="PcTitleBarRow" Height="0"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="56"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="PcTitleBar"
+              Grid.Row="0"
+              Height="32"
+              Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+              Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="12,0,140,0">
+                <Image Height="22"
+                       VerticalAlignment="Center"
+                       Source="ms-appx:///Assets/App/logo_transparent.png"/>
+                <TextBlock Text="Imgur"
+                           Margin="8,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           Foreground="#1bb76e"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Image x:Name="FullImage"
+                   Stretch="Uniform"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"/>
+
+            <!-- Zona superior: tap mostra título / autor / hora -->
+            <Rectangle x:Name="TopTapZone"
+                       VerticalAlignment="Top"
+                       Height="120"
+                       Fill="Transparent"
+                       Tapped="TopTapZone_Tapped"
+                       PointerEntered="TopTapZone_PointerEntered"/>
+
+            <!-- Header: back sempre; meta só no chrome (não cobre a zona de tap) -->
+            <Border x:Name="HeaderChrome"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    Background="Transparent"
+                    Padding="11,12,16,12"
+                    IsHitTestVisible="True">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="LeaveFloatButton"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource CircleButtonStyle}"
+                            Width="34" Height="34"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            Opacity="0.9"
+                            Click="CloseButton_Click"
+                            ToolTipService.ToolTip="Back">
+                        <FontIcon FontSize="14" FontWeight="Normal"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  FontFamily="{StaticResource FluentUIGlyphs}"
+                                  Foreground="WhiteSmoke" Glyph="&#xE72B;"/>
+                    </Button>
+
+                    <StackPanel x:Name="TitleInfoPanel"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed"
+                                MaxWidth="520">
+                        <TextBlock x:Name="DockTitle"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   MaxLines="1"/>
+                        <TextBlock x:Name="DockMeta"
+                                   FontSize="12"
+                                   Foreground="#B8BCC5"
+                                   Margin="0,2,0,0">
+                            <Run x:Name="DockAuthorRun"/>
+                            <Run x:Name="DockMetaSep" Text=""/>
+                            <Run x:Name="DockTimeRun"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+
+        </Grid>
+        <!-- Bottom: 3 glyphs equidistantes, sem fundo -->
+        <Grid x:Name="BottomBar"
+                  Grid.Row="2"
+                  VerticalAlignment="Bottom"
+                  Height="56"
+                  Background="Transparent"
+                  Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="12"
+                        Click="Favorite_Click"
+                        ToolTipService.ToolTip="Favourite">
+                <FontIcon x:Name="FavoriteIcon"
+                              FontFamily="{StaticResource FluentUIGlyphs}"
+                              FontSize="22"
+                              FontWeight="ExtraBold"
+                              Foreground="White"
+                              Glyph="&#xEB51;"/>
+            </Button>
+
+            <Button Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="12"
+                        Click="Download_Click"
+                        ToolTipService.ToolTip="Download">
+                <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"
+                              FontSize="22"
+                              FontWeight="ExtraBold"
+                              Foreground="White"
+                              Glyph="&#xE896;"/>
+            </Button>
+
+            <Button Grid.Column="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="12"
+                        Click="CopyLink_Click"
+                        ToolTipService.ToolTip="Copy link">
+                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"
+                              FontSize="22"
+                              Foreground="White"
+                              Glyph="&#xE8C8;"/>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

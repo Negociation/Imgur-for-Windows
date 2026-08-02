@@ -37,7 +37,8 @@
             <StackPanel Margin="0,10" MinHeight="100">
                 <controls:ImageViewElementControl
                     ImageElement="{Binding}"
-                    DownloadCommand="{Binding DataContext.DownloadElementCommand, ElementName=MediaViewPage}" />
+                    DownloadCommand="{Binding DataContext.DownloadElementCommand, ElementName=MediaViewPage}"
+                    OpenFullScreenCommand="{Binding DataContext.OpenElementFullScreenCommand, ElementName=MediaViewPage}" />
                 <TextBlock FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap" Margin="10,0,10,0" IsTextSelectionEnabled="True" />
                 <controls:LinkedRichTextBlock
                     Text="{Binding Description}"
@@ -985,6 +986,30 @@
                     <Grid x:Name="CompactPipSurface" />
                     <Rectangle Fill="Transparent"
                                Tapped="CompactPipMedia_Tapped" />
+                    <!-- Replay quando o vídeo no PiP terminou -->
+                    <Grid x:Name="CompactPipReplayOverlay"
+                          Background="#99000000"
+                          Visibility="Collapsed"
+                          Tapped="CompactPipReplay_Tapped">
+                        <Button Style="{StaticResource CircleButtonStyle}"
+                                Height="44" Width="44"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                IsHitTestVisible="False">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="1,1" StartPoint="0.1,0">
+                                    <GradientStop Color="#0ddb74" Offset="0.1"/>
+                                    <GradientStop Color="#1bb76e" Offset="0.5"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                            <FontIcon Margin="2,0,0,0"
+                                      FontSize="20"
+                                      FontWeight="ExtraBold"
+                                      FontFamily="{StaticResource FluentUIGlyphs}"
+                                      Foreground="White"
+                                      Glyph="&#xE768;"/>
+                        </Button>
+                    </Grid>
                     <Border x:Name="CompactPipCloseButton"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
