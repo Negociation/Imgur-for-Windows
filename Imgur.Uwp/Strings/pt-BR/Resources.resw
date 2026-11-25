@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -492,6 +492,14 @@
   <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
     <value>Configurações Avançadas</value>
   </data>
+  <data name="SettingsApiKeyAppId.Text" xml:space="preserve">
+    <value>Id do App:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeySecret.Text" xml:space="preserve">
+    <value>Chave Secreta:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
   <data name="SignInIntercetorMsg.Text" xml:space="preserve">
     <value>Entre para continuar!</value>
     <comment>LoginInterceptorDialog</comment>
@@ -760,5 +768,29 @@
   </data>
   <data name="MediaSeenLabel.Text" xml:space="preserve">
     <value>Visto</value>
+  </data>
+  <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>Copiar para Área de Transferência</value>
+  </data>
+  <data name="OpenSettingsMsg.Content" xml:space="preserve">
+    <value>Abrir Configurações</value>
+  </data>
+  <data name="AppLanguageChangedRestartMsg" xml:space="preserve">
+    <value>O aplicativo foi reiniciado para aplicar o novo idioma.</value>
+  </data>
+  <data name="SettingsLanguage.Header" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="AppLanguageChangedRestartTitle" xml:space="preserve">
+    <value>Idioma atualizado</value>
+  </data>
+  <data name="SettingsLanguageSystem" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="SettingsLanguage.Text" xml:space="preserve">
+    <value>Escolha o idioma do aplicativo. O app reinicia para aplicar a alteração.</value>
+  </data>
+  <data name="AppLanguageReopenTitle" xml:space="preserve">
+    <value>Reabrir o Imgur?</value>
   </data>
 </root>

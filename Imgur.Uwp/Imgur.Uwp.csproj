@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Imgur.Uwp</RootNamespace>
     <AssemblyName>Imgur.Uwp</AssemblyName>
-    <DefaultLanguage>pt-BR</DefaultLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
@@ -21,7 +21,13 @@
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x64|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
+    <!-- Do not split languages into resource packs. Default includes Language,
+         so a bundle install only deploys packs matching the device language and
+         PrimaryLanguageOverride falls back to en-US for the rest (W10M sideload). -->
+    <AppxBundleAutoResourcePackageQualifiers>Scale|DXFeatureLevel</AppxBundleAutoResourcePackageQualifiers>
+    <!-- Language list (semicolons) stays in the main package; Scale=200 matches SplashScreen.scale-200. -->
+    <AppxDefaultResourceQualifiers>Language=en-US;pt-BR;es-ES;zh-CN;ru-RU;uk-UA;id-ID;vi-VN|Scale=200</AppxDefaultResourceQualifiers>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
@@ -70,7 +76,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
@@ -117,7 +124,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -217,6 +225,7 @@
     <Compile Include="Helpers\CompatibleImageLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountNotificationsService.cs" />
+    <Compile Include="Services\AppLanguageService.cs" />
     <Compile Include="Services\AppLifeCycleService.cs" />
     <Compile Include="Services\AuthBroker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
@@ -299,7 +308,7 @@
     <None Include="Imgur.Uwp_TemporaryKey.pfx" />
     <PRIResource Include="Strings\es-ES\Resources.resw" />
     <PRIResource Include="Strings\zh-CN\Resources.resw" />
-    <PRIResource Include="Strings\vi-VI\Resources.resw" />
+    <PRIResource Include="Strings\vi-VN\Resources.resw" />
     <PRIResource Include="Strings\id-ID\Resources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
     <PRIResource Include="Strings\uk-UA\Resources.resw" />
@@ -529,12 +538,11 @@
     <PackageReference Include="PullToRefresh.UWP">
       <Version>0.3.4</Version>
     </PackageReference>
-    <!-- UAP 10.0.15063: sqlite-net 1.8+/PCLRaw 2.x exigem min 16299 (netstandard2.0) -->
+    <!-- UAP 10.0.15063: sqlite-net 1.8+/PCLRaw 2.x exigem min 16299 (netstandard2.0).
+         Não referenciar SQLitePCLRaw.bundle_green à parte — sqlite-net-pcl já o traz
+         e a duplicação quebra o .NET Native (chave duplicada no payload). -->
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.5.231</Version>
-    </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.bundle_green">
-      <Version>1.1.14</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

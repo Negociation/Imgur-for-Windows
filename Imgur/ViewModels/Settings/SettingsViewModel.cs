@@ -1,7 +1,9 @@
 ﻿using Imgur.Constants;
 using Imgur.Contracts;
 using Imgur.Helpers;
+using Imgur.Models;
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace Imgur.ViewModels.Settings
@@ -17,6 +19,7 @@ namespace Imgur.ViewModels.Settings
         private IDialogService _dialogService;
         private IAppLifeCycleService _appLifecycle;
         private readonly IUserContext _userContext;
+        private readonly IAppLanguageService _appLanguage;
 
         public SettingsViewModel(
             ILocalSettings localSettings,
@@ -26,7 +29,8 @@ namespace Imgur.ViewModels.Settings
             IAccountNotificationsService accountNotificationsService,
             IDialogService dialogService,
             IAppLifeCycleService appLifecycle,
-            IUserContext userContext
+            IUserContext userContext,
+            IAppLanguageService appLanguage
             )
         {
             _localSettings = localSettings;
@@ -37,6 +41,17 @@ namespace Imgur.ViewModels.Settings
             _dialogService = dialogService;
             _appLifecycle = appLifecycle;
             _userContext = userContext;
+            _appLanguage = appLanguage;
+
+            ChangeLanguageCommand = new RelayCommand<object>(param =>
+            {
+                int index = -1;
+                if (param is int i)
+                    index = i;
+                else if (param != null && int.TryParse(param.ToString(), out var parsed))
+                    index = parsed;
+                _ = ChangeLanguageAsync(index);
+            });
         }
 
 
@@ -107,6 +122,47 @@ namespace Imgur.ViewModels.Settings
             set => _localSettings.Set(LocalSettingsConstants.CustomClientSecret, value);
         }
 
+        public AppLanguage SelectedLanguage
+        {
+            get
+            {
+                int raw = _localSettings.Get<int>(LocalSettingsConstants.SelectedLanguage);
+                return AppLanguageInfo.FromStored(raw);
+            }
+        }
+
+        public int SelectedLanguageIndex
+        {
+            get
+            {
+                AppLanguage selected = SelectedLanguage;
+                IReadOnlyList<AppLanguage> all = AppLanguageInfo.All;
+                for (int i = 0; i < all.Count; i++)
+                {
+                    if (all[i] == selected)
+                        return i;
+                }
+                return 0;
+            }
+        }
+
+        public IReadOnlyList<string> LanguageOptions =>
+            AppLanguageInfo.GetDisplayNames(_appLanguage.GetSystemDisplayLabel());
+
+        public string SelectedLanguageOption
+        {
+            get
+            {
+                IReadOnlyList<string> options = LanguageOptions;
+                int index = SelectedLanguageIndex;
+                if (index >= 0 && index < options.Count)
+                    return options[index];
+                return options.Count > 0 ? options[0] : AppLanguageInfo.SystemDisplayName;
+            }
+        }
+
+        public ICommand ChangeLanguageCommand { get; }
+
         private ICommand _leaveCurrentPage;
 
         public ICommand LeaveCurrentPage
@@ -154,5 +210,26 @@ namespace Imgur.ViewModels.Settings
             await _appLifecycle.RestartToApplyCustomApiSettings();
         });
 
+        private async System.Threading.Tasks.Task ChangeLanguageAsync(int index)
+        {
+            IReadOnlyList<AppLanguage> all = AppLanguageInfo.All;
+            if (index < 0 || index >= all.Count)
+                return;
+
+            AppLanguage language = all[index];
+            if (language == SelectedLanguage)
+                return;
+
+            try
+            {
+                await _appLanguage.ChangeLanguageAndRestartAsync(language);
+            }
+            catch (Exception)
+            {
+                OnPropertyChanged(nameof(SelectedLanguage));
+                OnPropertyChanged(nameof(SelectedLanguageIndex));
+                OnPropertyChanged(nameof(SelectedLanguageOption));
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -165,7 +165,7 @@
     <comment>AppBar</comment>
   </data>
   <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
-    <value>In order to apply the new api settings , the application was restarted.</value>
+    <value>Để áp dụng cài đặt API mới, ứng dụng đã được khởi động lại.</value>
   </data>
   <data name="AppBranch.Text" xml:space="preserve">
     <value>Kênh</value>
@@ -293,11 +293,8 @@
   <data name="notification_generic" xml:space="preserve">
     <value>Thông báo mới!</value>
   </data>
-  <data name="notification_open_galllery" xml:space="preserve">
-    <value>Mở Trưng bày?</value>
-  </data>
   <data name="NotificationTitleRestartMsg" xml:space="preserve">
-    <value>Restart Required!</value>
+    <value>Cần khởi động lại!</value>
   </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
     <value>Ảnh, #tags, @users ôi trời!</value>
@@ -382,7 +379,7 @@
     <comment>AboutControl</comment>
   </data>
   <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>Cài đặt nâng cao</value>
   </data>
   <data name="SettingsPageAppearanceTitle.Text" xml:space="preserve">
     <value>Giao diện</value>
@@ -480,37 +477,45 @@
     <value>Lượt xem</value>
   </data>
   <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Save</value>
+    <value>Lưu</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="Save.Text" xml:space="preserve">
-    <value>Save</value>
+    <value>Lưu</value>
   </data>
   <data name="SettingsApiKey.Header" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
+    <value>Đặt khóa API tùy chỉnh</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsApiKey.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <value>Lưu khóa API tùy chỉnh để dùng thay khóa mặc định. Có thể cần cho một số tính năng tốn tài nguyên.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsApiKeyButton.Text" xml:space="preserve">
-    <value>Configure</value>
+    <value>Cấu hình</value>
   </data>
   <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
+    <value>Đặt khóa API tùy chỉnh</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <value>Lưu khóa API tùy chỉnh để dùng thay khóa mặc định. Có thể cần cho một số tính năng tốn tài nguyên.</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
-    <value>In order to use the default Api Keys, just leave the fields blank and save it.</value>
+    <value>Để dùng khóa API mặc định, hãy để trống các trường rồi lưu.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyAppId.Text" xml:space="preserve">
+    <value>Id ứng dụng:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeySecret.Text" xml:space="preserve">
+    <value>Khóa bí mật:</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SignInIntercetorMsg.Text" xml:space="preserve">
-    <value>Sign in to save it!</value>
+    <value>Đăng nhập để lưu!</value>
     <comment>LoginInterceptorDialog</comment>
   </data>
   <data name="AppCloseCancel" xml:space="preserve">
@@ -532,22 +537,22 @@
     <value>Hidden</value>
   </data>
   <data name="notification_api_warning" xml:space="preserve">
-    <value>Api Status Notice!</value>
+    <value>Thông báo trạng thái API!</value>
   </data>
   <data name="notification_api_warning_content" xml:space="preserve">
-    <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
+    <value>API Imgur hiện đang bị giảm hiệu năng. Một số tính năng trong ứng dụng có thể hoạt động bất thường.</value>
   </data>
   <data name="notification_open_account" xml:space="preserve">
-    <value>Open Imgurian Profile ?</value>
+    <value>Mở hồ sơ Imgurian?</value>
   </data>
   <data name="notification_open_album" xml:space="preserve">
-    <value>Open Album</value>
+    <value>Mở Album</value>
   </data>
   <data name="notification_open_image" xml:space="preserve">
-    <value>Open Image ?</value>
+    <value>Mở hình ảnh?</value>
   </data>
   <data name="notification_open_tag" xml:space="preserve">
-    <value>Open Tag ?</value>
+    <value>Mở thẻ?</value>
   </data>
   <data name="notification_open_gallery" xml:space="preserve">
     <value>Mở Trưng bày?</value>
@@ -782,5 +787,23 @@
   </data>
   <data name="MediaSeenLabel.Text" xml:space="preserve">
     <value>Đã xem</value>
+  </data>
+  <data name="AppLanguageChangedRestartMsg" xml:space="preserve">
+    <value>Ứng dụng đã được khởi động lại để áp dụng ngôn ngữ mới.</value>
+  </data>
+  <data name="SettingsLanguage.Header" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
+  <data name="AppLanguageChangedRestartTitle" xml:space="preserve">
+    <value>Đã cập nhật ngôn ngữ</value>
+  </data>
+  <data name="SettingsLanguageSystem" xml:space="preserve">
+    <value>Hệ thống</value>
+  </data>
+  <data name="SettingsLanguage.Text" xml:space="preserve">
+    <value>Chọn ngôn ngữ ứng dụng. Ứng dụng sẽ khởi động lại để áp dụng.</value>
+  </data>
+  <data name="AppLanguageReopenTitle" xml:space="preserve">
+    <value>Mở lại Imgur?</value>
   </data>
 </root>

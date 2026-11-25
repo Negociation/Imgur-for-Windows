@@ -126,19 +126,19 @@
   </data>
   <data name="category_hot" xml:space="preserve">
     <value>Más viral</value>
-    <comment>Enum -> Sections</comment>
+    <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="category_top" xml:space="preserve">
     <value>Mayor puntuación</value>
-    <comment>Enum -> Sections</comment>
+    <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="category_user" xml:space="preserve">
     <value>Enviado por usuarios</value>
-    <comment>Enum -> Sections</comment>
+    <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="Connect.Text" xml:space="preserve">
     <value>Conectar</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="DaysElapsedFormat" xml:space="preserve">
     <value>hace {0} días</value>
@@ -146,7 +146,7 @@
   </data>
   <data name="Explorer.Text" xml:space="preserve">
     <value>¡Explora contenido nuevo!</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="HoursElapsedFormat" xml:space="preserve">
     <value>hace {0} horas</value>
@@ -158,7 +158,7 @@
   </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
     <value>Imágenes, #etiquetas, @usuarios ¡y más!</value>
-    <comment>ShellView -> AutoSuggestBox</comment>
+    <comment>ShellView -&gt; AutoSuggestBox</comment>
   </data>
   <data name="SecondsElapsedFormat" xml:space="preserve">
     <value>hace {0} segundos</value>
@@ -166,7 +166,7 @@
   </data>
   <data name="Settings.Text" xml:space="preserve">
     <value>Configuración</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="SettingsAutoPlay.Header" xml:space="preserve">
     <value>Reproducción automática de miniaturas</value>
@@ -258,51 +258,51 @@
   </data>
   <data name="SortLabel.Text" xml:space="preserve">
     <value>ORDENAR POR:</value>
-    <comment>ExplorerView->Command Bar</comment>
+    <comment>ExplorerView-&gt;Command Bar</comment>
   </data>
   <data name="sort_all" xml:space="preserve">
     <value>Todos los tiempos</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_day" xml:space="preserve">
     <value>Hoy</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_month" xml:space="preserve">
     <value>Este mes</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_rising" xml:space="preserve">
     <value>En ascenso</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_time" xml:space="preserve">
     <value>Más reciente</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_top" xml:space="preserve">
     <value>Lo mejor</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_viral" xml:space="preserve">
     <value>Popular</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_week" xml:space="preserve">
     <value>Esta semana</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_year" xml:space="preserve">
     <value>Este año</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="Tags.Text" xml:space="preserve">
     <value>Explorar etiquetas</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="Upload.Text" xml:space="preserve">
     <value>Subir nuevo archivo</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="Views.Text" xml:space="preserve">
     <value>Vistas</value>
@@ -315,19 +315,19 @@
   </data>
   <data name="InterceptorHeader_FollowUser" xml:space="preserve">
     <value>¡Estás a punto de seguir a un Imgurian!</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Like" xml:space="preserve">
     <value>¡Estás a punto de dar me gusta a una publicación de Imgur!</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Upload" xml:space="preserve">
     <value>¡Estás a punto de hacer una publicación en Imgur!</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Vote" xml:space="preserve">
     <value>¡Estás a punto de votar en una publicación de Imgur!</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="LoginOrRegister.Text" xml:space="preserve">
     <value>¡Inicia sesión o regístrate!</value>
@@ -343,7 +343,7 @@
   </data>
   <data name="CommentsHeader.Header" xml:space="preserve">
     <value>Comentarios</value>
-    <comment>AccountView ->Pivot</comment>
+    <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
     <value>Parece que aún no hay comentarios.</value>
@@ -359,7 +359,7 @@
   </data>
   <data name="FavouritesHeader.Header" xml:space="preserve">
     <value>Favoritos</value>
-    <comment>AccountView ->Pivot</comment>
+    <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="Follow.Text" xml:space="preserve">
     <value>Seguir</value>
@@ -373,7 +373,7 @@
   </data>
   <data name="InterceptorHeader_FollowTag" xml:space="preserve">
     <value>¡Estás a punto de seguir una etiqueta!</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="LoadingMedia.Text" xml:space="preserve">
     <value>¡Cargando lo mejor!</value>
@@ -396,7 +396,7 @@
   </data>
   <data name="PostsHeader.Header" xml:space="preserve">
     <value>Publicaciones</value>
-    <comment>AccountView ->Pivot</comment>
+    <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="QueryTitle.Text" xml:space="preserve">
     <value>Búsqueda:</value>
@@ -453,6 +453,14 @@
   <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
     <value>Configuración avanzada</value>
     <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKeyAppId.Text" xml:space="preserve">
+    <value>Id de la app:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeySecret.Text" xml:space="preserve">
+    <value>Clave secreta:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SignInIntercetorMsg.Text" xml:space="preserve">
     <value>¡Inicia sesión para guardarlo!</value>
@@ -589,7 +597,7 @@
   </data>
   <data name="InterceptorHeader_Comment" xml:space="preserve">
     <value>¡Estás a punto de comentar en una publicación de Imgur!</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="notification_comment_error_content" xml:space="preserve">
     <value>Algo salió mal al publicar tu comentario.</value>
@@ -721,5 +729,23 @@
   </data>
   <data name="MediaSeenLabel.Text" xml:space="preserve">
     <value>Visto</value>
+  </data>
+  <data name="AppLanguageChangedRestartMsg" xml:space="preserve">
+    <value>La aplicación se reinició para aplicar el nuevo idioma.</value>
+  </data>
+  <data name="SettingsLanguage.Header" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="AppLanguageChangedRestartTitle" xml:space="preserve">
+    <value>Idioma actualizado</value>
+  </data>
+  <data name="SettingsLanguageSystem" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="SettingsLanguage.Text" xml:space="preserve">
+    <value>Elige el idioma de la aplicación. La app se reinicia para aplicar el cambio.</value>
+  </data>
+  <data name="AppLanguageReopenTitle" xml:space="preserve">
+    <value>¿Reabrir Imgur?</value>
   </data>
 </root>

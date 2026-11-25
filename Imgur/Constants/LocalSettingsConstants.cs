@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Imgur.Models;
 
 namespace Imgur.Constants
 {
@@ -34,6 +35,9 @@ namespace Imgur.Constants
 
         public const string LastAccountNotificationId = "LastAccountNotificationId";
 
+        /// <summary>Selected UI language (<see cref="AppLanguage"/> as int). Default System.</summary>
+        public const string SelectedLanguage = "SelectedLanguage";
+
         public static IReadOnlyDictionary<string, object> Defaults { get; } = new Dictionary<string, object>()
         {
             { LiveTiles, true },
@@ -49,7 +53,8 @@ namespace Imgur.Constants
             { CustomClientSecret, ""},
             { AppRedirectCallback, "" },
             { LastRemindNotificationMediaId, "" },
-            { LastAccountNotificationId, "" }
+            { LastAccountNotificationId, "" },
+            { SelectedLanguage, (int)AppLanguage.System }
         };
     }
 }

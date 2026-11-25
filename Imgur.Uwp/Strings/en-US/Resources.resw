@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -513,6 +513,14 @@
     <value>Advanced Settings</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsApiKeyAppId.Text" xml:space="preserve">
+    <value>App Id:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeySecret.Text" xml:space="preserve">
+    <value>Secret Key:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
   <data name="SignInIntercetorMsg.Text" xml:space="preserve">
     <value>Sign in to save it!</value>
     <comment>LoginInterceptorDialog</comment>
@@ -780,5 +788,23 @@
   </data>
   <data name="MediaSeenLabel.Text" xml:space="preserve">
     <value>Seen</value>
+  </data>
+  <data name="AppLanguageChangedRestartMsg" xml:space="preserve">
+    <value>The app was restarted to apply the new language.</value>
+  </data>
+  <data name="SettingsLanguage.Header" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="AppLanguageChangedRestartTitle" xml:space="preserve">
+    <value>Language updated</value>
+  </data>
+  <data name="SettingsLanguageSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="SettingsLanguage.Text" xml:space="preserve">
+    <value>Choose the app language. The app restarts to apply the change.</value>
+  </data>
+  <data name="AppLanguageReopenTitle" xml:space="preserve">
+    <value>Reopen Imgur?</value>
   </data>
 </root>

@@ -33,7 +33,7 @@ namespace Imgur.Uwp.Controls
 
         // Using a DependencyProperty as the backing store for Header.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HeaderProperty =
-            DependencyProperty.Register("Header", typeof(string), typeof(SettingBox), new PropertyMetadata(0));
+            DependencyProperty.Register("Header", typeof(string), typeof(SettingBox), new PropertyMetadata(string.Empty));
 
 
 
@@ -43,9 +43,9 @@ namespace Imgur.Uwp.Controls
             set { SetValue(TextProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
+        // Using a Dependency Property as the backing store for Text.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(SettingBox), new PropertyMetadata(0));
+            DependencyProperty.Register("Text", typeof(string), typeof(SettingBox), new PropertyMetadata(string.Empty));
 
 
 
@@ -55,9 +55,9 @@ namespace Imgur.Uwp.Controls
             set { SetValue(ControlProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Control.  This enables animation, styling, binding, etc...
+        // Using a Dependency Property as the backing store for Control.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ControlProperty =
-            DependencyProperty.Register("Control", typeof(object), typeof(SettingBox), new PropertyMetadata(0));
+            DependencyProperty.Register("Control", typeof(object), typeof(SettingBox), new PropertyMetadata(null));
 
 
 
@@ -68,9 +68,9 @@ namespace Imgur.Uwp.Controls
             set { SetValue(BoxBrushProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for BorderBrush.  This enables animation, styling, binding, etc...
+        // Using a Dependency Property as the backing store for BorderBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BoxBrushProperty =
-            DependencyProperty.Register("BoxBrush", typeof(string), typeof(SettingBox), new PropertyMetadata(0));
+            DependencyProperty.Register("BoxBrush", typeof(string), typeof(SettingBox), new PropertyMetadata(string.Empty));
 
     }
 }

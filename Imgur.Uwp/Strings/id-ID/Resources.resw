@@ -241,7 +241,7 @@
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Header" xml:space="preserve">
-    <value>Nyakakan Live Tiles</value>
+    <value>Nyalakan Live Tiles</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsLiveTiles.Text" xml:space="preserve">
@@ -367,41 +367,49 @@
     <value>Muat lebih</value>
   </data>
   <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Save</value>
+    <value>Simpan</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="Save.Text" xml:space="preserve">
-    <value>Save</value>
+    <value>Simpan</value>
   </data>
   <data name="SettingsApiKey.Header" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
+    <value>Atur Kunci API Kustom</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsApiKey.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <value>Simpan kunci API kustom untuk aplikasi alih-alih bawaan. Mungkin diperlukan untuk beberapa fitur berbeban tinggi.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsApiKeyButton.Text" xml:space="preserve">
-    <value>Configure</value>
+    <value>Konfigurasi</value>
   </data>
   <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
+    <value>Atur Kunci API Kustom</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <value>Simpan kunci API kustom untuk aplikasi alih-alih bawaan. Mungkin diperlukan untuk beberapa fitur berbeban tinggi.</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
-    <value>In order to use the default Api Keys, just leave the fields blank and save it.</value>
+    <value>Untuk menggunakan kunci API bawaan, biarkan kolom kosong lalu simpan.</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>Pengaturan Lanjutan</value>
     <comment>Settings</comment>
   </data>
+  <data name="SettingsApiKeyAppId.Text" xml:space="preserve">
+    <value>Id Aplikasi:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeySecret.Text" xml:space="preserve">
+    <value>Kunci Rahasia:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
   <data name="SignInIntercetorMsg.Text" xml:space="preserve">
-    <value>Sign in to save it!</value>
+    <value>Masuk untuk menyimpan!</value>
     <comment>LoginInterceptorDialog</comment>
   </data>
   <data name="AppCloseCancel" xml:space="preserve">
@@ -417,25 +425,25 @@
     <value>Leaving Already ?</value>
   </data>
   <data name="notification_api_warning" xml:space="preserve">
-    <value>Api Status Notice!</value>
+    <value>Pemberitahuan Status API!</value>
   </data>
   <data name="notification_api_warning_content" xml:space="preserve">
-    <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
+    <value>API Imgur saat ini mengalami penurunan performa. Beberapa fitur di aplikasi mungkin berperilaku tidak terduga.</value>
   </data>
   <data name="notification_open_account" xml:space="preserve">
-    <value>Open Imgurian Profile ?</value>
+    <value>Buka Profil Imgurian?</value>
   </data>
   <data name="notification_open_album" xml:space="preserve">
-    <value>Open Album</value>
+    <value>Buka Album</value>
   </data>
   <data name="notification_open_image" xml:space="preserve">
-    <value>Open Image ?</value>
+    <value>Buka Gambar?</value>
   </data>
   <data name="notification_open_tag" xml:space="preserve">
-    <value>Open Tag ?</value>
+    <value>Buka Tag?</value>
   </data>
   <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
-    <value>In order to apply the new api settings , the application was restarted.</value>
+    <value>Untuk menerapkan pengaturan API baru, aplikasi telah dimulai ulang.</value>
   </data>
   <data name="Hidden.Text" xml:space="preserve">
     <value>Hidden</value>
@@ -444,13 +452,13 @@
     <value>Hidden</value>
   </data>
   <data name="NotificationTitleRestartMsg" xml:space="preserve">
-    <value>Restart Required!</value>
+    <value>Perlu Mulai Ulang!</value>
   </data>
   <data name="notification_clipboard_content" xml:space="preserve">
-    <value>Copied to Clipboard</value>
+    <value>Disalin ke Papanklip</value>
   </data>
   <data name="notification_generic" xml:space="preserve">
-    <value>New Notification!</value>
+    <value>Notifikasi Baru!</value>
   </data>
   <data name="Home.Text" xml:space="preserve">
     <value>Beranda</value>
@@ -780,5 +788,23 @@
   </data>
   <data name="MediaSeenLabel.Text" xml:space="preserve">
     <value>Dilihat</value>
+  </data>
+  <data name="AppLanguageChangedRestartMsg" xml:space="preserve">
+    <value>Aplikasi dimulai ulang untuk menerapkan bahasa baru.</value>
+  </data>
+  <data name="SettingsLanguage.Header" xml:space="preserve">
+    <value>Bahasa</value>
+  </data>
+  <data name="AppLanguageChangedRestartTitle" xml:space="preserve">
+    <value>Bahasa diperbarui</value>
+  </data>
+  <data name="SettingsLanguageSystem" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="SettingsLanguage.Text" xml:space="preserve">
+    <value>Pilih bahasa aplikasi. Aplikasi akan dimulai ulang untuk menerapkan perubahan.</value>
+  </data>
+  <data name="AppLanguageReopenTitle" xml:space="preserve">
+    <value>Buka ulang Imgur?</value>
   </data>
 </root>

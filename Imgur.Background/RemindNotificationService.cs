@@ -75,7 +75,7 @@ namespace Imgur.Background
                     : first.CoverImage;
 
                 string localImagePath = await DownloadImageForToastAsync(imageUrl);
-                ShowToast(first.Title ?? "Top of the day", localImagePath);
+                ShowToast(first.Title ?? "Top of the day", localImagePath, first.Id, first.IsAlbum);
                 localSettings.Set(LocalSettingsConstants.LastRemindNotificationMediaId, first.Id);
                 Debug.WriteLine($"Remind: toast exibido para {first.Id}");
             }
@@ -85,10 +85,19 @@ namespace Imgur.Background
             }
         }
 
-        private static void ShowToast(string title, string imagePath)
+        /// <summary>
+        /// Argumento do toast: remind|{mediaId}|{0|1 isAlbum}
+        /// </summary>
+        internal const string ToastLaunchPrefix = "remind";
+
+        private static void ShowToast(string title, string imagePath, string mediaId, bool isAlbum)
         {
+            var launchArg = $"{ToastLaunchPrefix}|{mediaId}|{(isAlbum ? "1" : "0")}";
+
             var content = new ToastContent()
             {
+                Launch = launchArg,
+                ActivationType = ToastActivationType.Foreground,
                 Visual = new ToastVisual()
                 {
                     BindingGeneric = new ToastBindingGeneric()

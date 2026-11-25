@@ -62,6 +62,9 @@ namespace Imgur.Uwp
 
         public App()
         {
+            // Antes de qualquer ResourceLoader / x:Uid
+            AppLanguageService.ApplyOverrideEarlyFromLocalSettings();
+
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
@@ -73,6 +76,63 @@ namespace Imgur.Uwp
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
             await ActivateAsync(e.PrelaunchActivated, e.PreviousExecutionState);
+        }
+
+        /// <summary>
+        /// Toast / outras ativações não passam por OnLaunched. Sem isto o app crasha
+        /// ao abrir notificação com o processo morto (Services/frame nunca iniciais).
+        /// </summary>
+        protected override async void OnActivated(IActivatedEventArgs args)
+        {
+            try
+            {
+                string toastArgument = null;
+                if (args is ToastNotificationActivatedEventArgs toastArgs)
+                    toastArgument = toastArgs.Argument;
+
+                await ActivateAsync(false, args.PreviousExecutionState);
+
+                if (!string.IsNullOrWhiteSpace(toastArgument))
+                    TryNavigateFromToastArgument(toastArgument);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"OnActivated: {ex}");
+            }
+        }
+
+        private void TryNavigateFromToastArgument(string argument)
+        {
+            try
+            {
+                // Format: remind|{mediaId}|{0|1 isAlbum}
+                var parts = argument.Split('|');
+                if (parts.Length < 2)
+                    return;
+
+                if (!string.Equals(parts[0], "remind", StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                var mediaId = parts[1]?.Trim();
+                if (string.IsNullOrWhiteSpace(mediaId))
+                    return;
+
+                bool isAlbum = parts.Length > 2 && parts[2] == "1";
+
+                var media = new Media
+                {
+                    Id = mediaId,
+                    IsAlbum = isAlbum,
+                    Elements = new System.Collections.ObjectModel.ObservableCollection<Element>()
+                };
+
+                var vm = Services.GetRequiredService<IMediaVmFactory>().GetMediaViewModel(media);
+                Services.GetRequiredService<INavigator>().Navigate("media", vm);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"TryNavigateFromToastArgument: {ex.Message}");
+            }
         }
 
         private string getPfn()
@@ -197,10 +257,11 @@ namespace Imgur.Uwp
             var navigator = Services.GetRequiredService<INavigator>();
             navigator.RootFrame = rootFrame;
 
-            // Precisa rodar ANTES do Shell.OnNavigatedTo
+            // Só limpa/restaura journal em cold start — toast com app a correr não pode apagar o estado.
             if (previousState == ApplicationExecutionState.Terminated)
                 await navigator.PrepareNavigationRestoreAsync();
-            else
+            else if (previousState == ApplicationExecutionState.NotRunning
+                  || previousState == ApplicationExecutionState.ClosedByUser)
                 await navigator.ClearNavigationStateAsync();
 
             if (prelaunched == false)
@@ -209,6 +270,7 @@ namespace Imgur.Uwp
 
                 await InitializeShellAsync(rootFrame);
 
+                HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
                 HardwareButtons.BackPressed += hardwareButtonsBackPressedAsync;
 
                 await UpdateLiveTilesInBackgroundAsync();
@@ -299,6 +361,7 @@ namespace Imgur.Uwp
                 .AddSingleton<ITokenService, TokenService>()
                 .AddSingleton<IImgurApiCredentialsProvider, ImgurApiCredentialsProvider>()
                 .AddSingleton<IAppLifeCycleService, AppLifeCycleService>()
+                .AddSingleton<IAppLanguageService, AppLanguageService>()
                 .AddSingleton<IAuthBroker, AuthBroker>()
                 .AddSingleton<IFilePicker, FilePicker>()
                 .AddSingleton<ISystemNotificationService, SystemNotificationService>()

@@ -13,7 +13,6 @@
             <RowDefinition x:Name="PcTitleBarRow" Height="0"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="56"/>
-
         </Grid.RowDefinitions>
 
         <Grid x:Name="PcTitleBar"
@@ -36,13 +35,30 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="1">
-            <Image x:Name="FullImage"
-                   Stretch="Uniform"
-                   HorizontalAlignment="Stretch"
-                   VerticalAlignment="Stretch"/>
+        <Grid x:Name="ImageArea"
+              Grid.Row="1"
+              Background="Black"
+              ManipulationMode="Scale,TranslateX,TranslateY"
+              ManipulationDelta="ImageArea_ManipulationDelta"
+              ManipulationCompleted="ImageArea_ManipulationCompleted"
+              DoubleTapped="ImageArea_DoubleTapped"
+              PointerWheelChanged="ImageArea_PointerWheelChanged">
+            <Grid x:Name="ImageHost"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Background="Transparent"
+                  RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <CompositeTransform x:Name="ImageTransform"/>
+                </Grid.RenderTransform>
+                <Image x:Name="FullImage"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       ImageOpened="FullImage_ImageOpened"/>
+            </Grid>
 
-            <!-- Zona superior: tap mostra título / autor / hora -->
+            <!-- Só chrome; hit-test desligado durante zoom (não bloquear pan) -->
             <Rectangle x:Name="TopTapZone"
                        VerticalAlignment="Top"
                        Height="120"
@@ -50,7 +66,6 @@
                        Tapped="TopTapZone_Tapped"
                        PointerEntered="TopTapZone_PointerEntered"/>
 
-            <!-- Header: back sempre; meta só no chrome (não cobre a zona de tap) -->
             <Border x:Name="HeaderChrome"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
@@ -96,16 +111,14 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
-
-
         </Grid>
-        <!-- Bottom: 3 glyphs equidistantes, sem fundo -->
+
         <Grid x:Name="BottomBar"
-                  Grid.Row="2"
-                  VerticalAlignment="Bottom"
-                  Height="56"
-                  Background="Transparent"
-                  Margin="0">
+              Grid.Row="2"
+              VerticalAlignment="Bottom"
+              Height="56"
+              Background="Transparent"
+              Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -113,48 +126,48 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Padding="12"
-                        Click="Favorite_Click"
-                        ToolTipService.ToolTip="Favourite">
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="12"
+                    Click="Favorite_Click"
+                    ToolTipService.ToolTip="Favourite">
                 <FontIcon x:Name="FavoriteIcon"
-                              FontFamily="{StaticResource FluentUIGlyphs}"
-                              FontSize="22"
-                              FontWeight="ExtraBold"
-                              Foreground="White"
-                              Glyph="&#xEB51;"/>
+                          FontFamily="{StaticResource FluentUIGlyphs}"
+                          FontSize="22"
+                          FontWeight="ExtraBold"
+                          Foreground="White"
+                          Glyph="&#xEB51;"/>
             </Button>
 
             <Button Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Padding="12"
-                        Click="Download_Click"
-                        ToolTipService.ToolTip="Download">
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="12"
+                    Click="Download_Click"
+                    ToolTipService.ToolTip="Download">
                 <FontIcon FontFamily="{StaticResource FluentUIGlyphs}"
-                              FontSize="22"
-                              FontWeight="ExtraBold"
-                              Foreground="White"
-                              Glyph="&#xE896;"/>
+                          FontSize="22"
+                          FontWeight="ExtraBold"
+                          Foreground="White"
+                          Glyph="&#xE896;"/>
             </Button>
 
             <Button Grid.Column="2"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Padding="12"
-                        Click="CopyLink_Click"
-                        ToolTipService.ToolTip="Copy link">
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="12"
+                    Click="CopyLink_Click"
+                    ToolTipService.ToolTip="Copy link">
                 <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}"
-                              FontSize="22"
-                              Foreground="White"
-                              Glyph="&#xE8C8;"/>
+                          FontSize="22"
+                          Foreground="White"
+                          Glyph="&#xE8C8;"/>
             </Button>
         </Grid>
     </Grid>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -165,7 +165,7 @@
     <comment>AppBar</comment>
   </data>
   <data name="AppApiSettingsChangedRestartMsg" xml:space="preserve">
-    <value>In order to apply the new api settings , the application was restarted.</value>
+    <value>Щоб застосувати нові параметри API, програму було перезапущено.</value>
   </data>
   <data name="AppBranch.Text" xml:space="preserve">
     <value>Гілка</value>
@@ -288,16 +288,16 @@
     <comment>Converter Timestamp</comment>
   </data>
   <data name="notification_clipboard_content" xml:space="preserve">
-    <value>Copied to Clipboard</value>
+    <value>Скопійовано до буфера обміну</value>
   </data>
   <data name="notification_generic" xml:space="preserve">
-    <value>New Notification!</value>
+    <value>Нове сповіщення!</value>
   </data>
   <data name="notification_open_gallery" xml:space="preserve">
-    <value>Open Gallery ? </value>
+    <value>Відкрити галерею?</value>
   </data>
   <data name="NotificationTitleRestartMsg" xml:space="preserve">
-    <value>Restart Required!</value>
+    <value>Потрібен перезапуск!</value>
   </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
     <value>Зображення, хештеги, @користувачі, оце так!</value>
@@ -382,7 +382,7 @@
     <comment>AboutControl</comment>
   </data>
   <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>Розширені параметри</value>
   </data>
   <data name="SettingsPageAppearanceTitle.Text" xml:space="preserve">
     <value>Оформлення</value>
@@ -480,37 +480,45 @@
     <value>Перегляди</value>
   </data>
   <data name="ApiKeyDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Save</value>
+    <value>Зберегти</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="Save.Text" xml:space="preserve">
-    <value>Save</value>
+    <value>Зберегти</value>
   </data>
   <data name="SettingsApiKey.Header" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
+    <value>Задати власний API-ключ</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsApiKey.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <value>Збережіть власний API-ключ для програми замість стандартного. Може знадобитися для деяких ресурсомістких функцій.</value>
     <comment>Settings</comment>
   </data>
   <data name="SettingsApiKeyButton.Text" xml:space="preserve">
-    <value>Configure</value>
+    <value>Налаштувати</value>
   </data>
   <data name="SettingsApiKeyDialog.Text" xml:space="preserve">
-    <value>Set a Custom Api Key</value>
+    <value>Задати власний API-ключ</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SettingsApiKeyMsg.Text" xml:space="preserve">
-    <value>Store a Custom Api Key for App usage instead of the default. Might be necessary for some high resource features.</value>
+    <value>Збережіть власний API-ключ для програми замість стандартного. Може знадобитися для деяких ресурсомістких функцій.</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SettingsApiKeyWarning.Text" xml:space="preserve">
-    <value>In order to use the default Api Keys, just leave the fields blank and save it.</value>
+    <value>Щоб використовувати стандартні API-ключі, залиште поля порожніми та збережіть.</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeyAppId.Text" xml:space="preserve">
+    <value>ID програми:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeySecret.Text" xml:space="preserve">
+    <value>Секретний ключ:</value>
     <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SignInIntercetorMsg.Text" xml:space="preserve">
-    <value>Sign in to save it!</value>
+    <value>Увійдіть, щоб зберегти!</value>
     <comment>LoginInterceptorDialog</comment>
   </data>
   <data name="AppCloseCancel" xml:space="preserve">
@@ -532,22 +540,22 @@
     <value>Hidden</value>
   </data>
   <data name="notification_api_warning" xml:space="preserve">
-    <value>Api Status Notice!</value>
+    <value>Повідомлення про стан API!</value>
   </data>
   <data name="notification_api_warning_content" xml:space="preserve">
-    <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
+    <value>API Imgur зараз працює зі зниженою продуктивністю. Деякі функції програми можуть працювати несподівано.</value>
   </data>
   <data name="notification_open_account" xml:space="preserve">
-    <value>Open Imgurian Profile ?</value>
+    <value>Відкрити профіль Imgurian?</value>
   </data>
   <data name="notification_open_album" xml:space="preserve">
-    <value>Open Album</value>
+    <value>Відкрити альбом</value>
   </data>
   <data name="notification_open_image" xml:space="preserve">
-    <value>Open Image ?</value>
+    <value>Відкрити зображення?</value>
   </data>
   <data name="notification_open_tag" xml:space="preserve">
-    <value>Open Tag ?</value>
+    <value>Відкрити тег?</value>
   </data>
   <data name="CopyToClipboard.Content" xml:space="preserve">
     <value>Копіювати в буфер обміну</value>
@@ -779,5 +787,23 @@
   </data>
   <data name="MediaSeenLabel.Text" xml:space="preserve">
     <value>Переглянуто</value>
+  </data>
+  <data name="AppLanguageChangedRestartMsg" xml:space="preserve">
+    <value>Програму було перезапущено, щоб застосувати нову мову.</value>
+  </data>
+  <data name="SettingsLanguage.Header" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="AppLanguageChangedRestartTitle" xml:space="preserve">
+    <value>Мову оновлено</value>
+  </data>
+  <data name="SettingsLanguageSystem" xml:space="preserve">
+    <value>Системна</value>
+  </data>
+  <data name="SettingsLanguage.Text" xml:space="preserve">
+    <value>Оберіть мову програми. Програма перезапуститься, щоб застосувати зміну.</value>
+  </data>
+  <data name="AppLanguageReopenTitle" xml:space="preserve">
+    <value>Відкрити Imgur знову?</value>
   </data>
 </root>

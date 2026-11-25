@@ -10,5 +10,7 @@ namespace Imgur.Contracts
         Task RestartAsync(string reason = null);
 
         Task RestartToApplyCustomApiSettings();
+
+        Task RestartToApplyLanguageSettings();
     }
 }

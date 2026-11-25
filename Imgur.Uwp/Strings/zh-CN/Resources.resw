@@ -126,19 +126,19 @@
   </data>
   <data name="category_hot" xml:space="preserve">
     <value>最受欢迎</value>
-    <comment>Enum -> Sections</comment>
+    <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="category_top" xml:space="preserve">
     <value>最高分</value>
-    <comment>Enum -> Sections</comment>
+    <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="category_user" xml:space="preserve">
     <value>用户投稿</value>
-    <comment>Enum -> Sections</comment>
+    <comment>Enum -&gt; Sections</comment>
   </data>
   <data name="Connect.Text" xml:space="preserve">
     <value>连接</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="DaysElapsedFormat" xml:space="preserve">
     <value>{0} 天前</value>
@@ -146,7 +146,7 @@
   </data>
   <data name="Explorer.Text" xml:space="preserve">
     <value>探索新内容！</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="HoursElapsedFormat" xml:space="preserve">
     <value>{0} 小时前</value>
@@ -158,7 +158,7 @@
   </data>
   <data name="PaneSearchBox.PlaceholderText" xml:space="preserve">
     <value>图片、#标签、@用户，尽在此处！</value>
-    <comment>ShellView -> AutoSuggestBox</comment>
+    <comment>ShellView -&gt; AutoSuggestBox</comment>
   </data>
   <data name="SecondsElapsedFormat" xml:space="preserve">
     <value>{0} 秒前</value>
@@ -166,7 +166,7 @@
   </data>
   <data name="Settings.Text" xml:space="preserve">
     <value>设置</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="SettingsAutoPlay.Header" xml:space="preserve">
     <value>自动播放缩略图</value>
@@ -258,51 +258,51 @@
   </data>
   <data name="SortLabel.Text" xml:space="preserve">
     <value>排序方式：</value>
-    <comment>ExplorerView->Command Bar</comment>
+    <comment>ExplorerView-&gt;Command Bar</comment>
   </data>
   <data name="sort_all" xml:space="preserve">
     <value>全部时间</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_day" xml:space="preserve">
     <value>今天</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_month" xml:space="preserve">
     <value>本月</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_rising" xml:space="preserve">
     <value>上升中</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_time" xml:space="preserve">
     <value>最新</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_top" xml:space="preserve">
     <value>最佳</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_viral" xml:space="preserve">
     <value>热门</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_week" xml:space="preserve">
     <value>本周</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="sort_year" xml:space="preserve">
     <value>今年</value>
-    <comment>Enum -> Sorts</comment>
+    <comment>Enum -&gt; Sorts</comment>
   </data>
   <data name="Tags.Text" xml:space="preserve">
     <value>探索标签</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="Upload.Text" xml:space="preserve">
     <value>上传新文件</value>
-    <comment>ShellView -> NavigationViewItem</comment>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
   <data name="Views.Text" xml:space="preserve">
     <value>浏览量</value>
@@ -315,19 +315,19 @@
   </data>
   <data name="InterceptorHeader_FollowUser" xml:space="preserve">
     <value>您即将关注一位 Imgur 用户！</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Like" xml:space="preserve">
     <value>您即将点赞一条 Imgur 帖子！</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Upload" xml:space="preserve">
     <value>您即将发布一条 Imgur 帖子！</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="InterceptorHeader_Vote" xml:space="preserve">
     <value>您即将对一条 Imgur 帖子投票！</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="LoginOrRegister.Text" xml:space="preserve">
     <value>登录或注册！</value>
@@ -343,7 +343,7 @@
   </data>
   <data name="CommentsHeader.Header" xml:space="preserve">
     <value>评论</value>
-    <comment>AccountView ->Pivot</comment>
+    <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="EmptyCommentsParagraphFirst.Text" xml:space="preserve">
     <value>目前还没有评论。</value>
@@ -359,7 +359,7 @@
   </data>
   <data name="FavouritesHeader.Header" xml:space="preserve">
     <value>收藏夹</value>
-    <comment>AccountView ->Pivot</comment>
+    <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="Follow.Text" xml:space="preserve">
     <value>关注</value>
@@ -373,7 +373,7 @@
   </data>
   <data name="InterceptorHeader_FollowTag" xml:space="preserve">
     <value>您即将关注一个标签！</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="LoadingMedia.Text" xml:space="preserve">
     <value>正在加载热门内容！</value>
@@ -396,7 +396,7 @@
   </data>
   <data name="PostsHeader.Header" xml:space="preserve">
     <value>帖子</value>
-    <comment>AccountView ->Pivot</comment>
+    <comment>AccountView -&gt;Pivot</comment>
   </data>
   <data name="QueryTitle.Text" xml:space="preserve">
     <value>搜索内容：</value>
@@ -453,6 +453,14 @@
   <data name="SettingsPageAdvancedTitle.Text" xml:space="preserve">
     <value>高级设置</value>
     <comment>Settings</comment>
+  </data>
+  <data name="SettingsApiKeyAppId.Text" xml:space="preserve">
+    <value>应用 ID:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
+  </data>
+  <data name="SettingsApiKeySecret.Text" xml:space="preserve">
+    <value>密钥:</value>
+    <comment>CustomApiKeySettingsDialog</comment>
   </data>
   <data name="SignInIntercetorMsg.Text" xml:space="preserve">
     <value>登录以保存！</value>
@@ -589,7 +597,7 @@
   </data>
   <data name="InterceptorHeader_Comment" xml:space="preserve">
     <value>您即将评论一条 Imgur 帖子！</value>
-    <comment>Enum -> LoginInterceptorEnum</comment>
+    <comment>Enum -&gt; LoginInterceptorEnum</comment>
   </data>
   <data name="notification_comment_error_content" xml:space="preserve">
     <value>发布评论时出现错误。</value>
@@ -721,5 +729,23 @@
   </data>
   <data name="MediaSeenLabel.Text" xml:space="preserve">
     <value>已看过</value>
+  </data>
+  <data name="AppLanguageChangedRestartMsg" xml:space="preserve">
+    <value>应用已重启以应用新语言。</value>
+  </data>
+  <data name="SettingsLanguage.Header" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="AppLanguageChangedRestartTitle" xml:space="preserve">
+    <value>语言已更新</value>
+  </data>
+  <data name="SettingsLanguageSystem" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  <data name="SettingsLanguage.Text" xml:space="preserve">
+    <value>选择应用语言。应用将重启以应用更改。</value>
+  </data>
+  <data name="AppLanguageReopenTitle" xml:space="preserve">
+    <value>重新打开 Imgur？</value>
   </data>
 </root>
