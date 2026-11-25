@@ -1,4 +1,4 @@
-﻿using Imgur.Constants;
+using Imgur.Constants;
 using Imgur.Contracts;
 using Imgur.Enums;
 using Imgur.Factories;
@@ -16,6 +16,18 @@ namespace Imgur.ViewModels.Shell
         public int CurrentPageIndex { get; set; }
         public bool IsAuthenticated => _userContext.IsAuthenticated;
         public bool IsNotAuthenticated => !_userContext.IsAuthenticated;
+
+        private bool _isSearchVisible = true;
+        public bool IsSearchVisible
+        {
+            get => _isSearchVisible;
+            private set
+            {
+                if (_isSearchVisible == value) return;
+                _isSearchVisible = value;
+                OnPropertyChanged(nameof(IsSearchVisible));
+            }
+        }
 
         private bool _isFullScreenMode;
 
@@ -38,12 +50,15 @@ namespace Imgur.ViewModels.Shell
 
         public User CurrentUser => _userContext.CurrentUser;
 
+        public bool HasUnreadNotifications => _inbox?.HasUnreadNotifications ?? false;
+
         private readonly INavigator _navigator;
         private readonly IAppNotificationService _notification;
         private readonly IUserContext _userContext;
         private readonly IDialogService _dialogService;
         private readonly ILocalSettings _localSettings;
         private readonly IAccountVmFactory _accountVmFactory;
+        private readonly IAccountInboxService _inbox;
 
 
         private readonly IExplorerSearchVmFactory _explorerSearchVmFactory;
@@ -56,7 +71,8 @@ namespace Imgur.ViewModels.Shell
             IExplorerSearchVmFactory explorerSearchVmFactory,
             IUserContext userContext,
             ILocalSettings localSettings,
-            IAccountVmFactory accountVmFactory
+            IAccountVmFactory accountVmFactory,
+            IAccountInboxService inbox
             )
         {
             _navigator = Navigator;
@@ -66,14 +82,24 @@ namespace Imgur.ViewModels.Shell
             _explorerSearchVmFactory = explorerSearchVmFactory;
             _localSettings = localSettings;
             _accountVmFactory = accountVmFactory;
+            _inbox = inbox;
 
             _userContext.OnAuthenticationChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(IsAuthenticated));
                 OnPropertyChanged(nameof(IsNotAuthenticated));
                 OnPropertyChanged(nameof(CurrentUser));
+                if (_userContext.IsAuthenticated)
+                    _ = _inbox.RefreshUnreadAsync();
+                else
+                    OnPropertyChanged(nameof(HasUnreadNotifications));
             };
 
+            if (_inbox != null)
+            {
+                _inbox.UnreadChanged += (s, e) =>
+                    OnPropertyChanged(nameof(HasUnreadNotifications));
+            }
         }
 
         private ICommand _navigateToCommand;
@@ -224,6 +250,29 @@ namespace Imgur.ViewModels.Shell
             }
         }
 
+        private ICommand _openNotificationsCommand;
+        public ICommand OpenNotificationsCommand
+        {
+            get
+            {
+                if (_openNotificationsCommand == null)
+                {
+                    _openNotificationsCommand = new RelayCommand(async () =>
+                    {
+                        if (!IsAuthenticated)
+                        {
+                            await _dialogService.ShowLoginInterceptorDialog(LoginInterceptorEnum.Comment);
+                            return;
+                        }
+
+                        await _dialogService.ShowNotificationsDialogAsync();
+                        OnPropertyChanged(nameof(HasUnreadNotifications));
+                    });
+                }
+                return _openNotificationsCommand;
+            }
+        }
+
         public void Initialize()
         {
             //Get Events
@@ -231,6 +280,9 @@ namespace Imgur.ViewModels.Shell
             this._navigator.FullScreenModeChanged += OnViewPageFullscreenModeChanged;
             this._navigator.NavigateInvoked += NavigateInvoked;
             this.CurrentPageIndex = 0;
+
+            if (IsAuthenticated)
+                _ = _inbox.RefreshUnreadAsync();
         }
 
         private void NavigateInvoked(object sender, string e)
@@ -245,7 +297,8 @@ namespace Imgur.ViewModels.Shell
                     index = 1;
                     break;
                 case "settings":
-                    index = 4;
+                    // MenuItems: Home, Explorer, Tags, AuthAction (4) + Footer Account, Upload → Settings
+                    index = 6;
                     break;
                 default:
                     index = -1;
@@ -256,6 +309,15 @@ namespace Imgur.ViewModels.Shell
                 CurrentPageIndex = index;
                 OnPropertyChanged(nameof(CurrentPageIndex));
             }
+
+            IsSearchVisible = IsSearchRoute(e);
+        }
+
+        private static bool IsSearchRoute(string route)
+        {
+            // Search some só em Edit Profile; Account/Settings e o resto mantêm a barra
+            // (no desktop a AccountView depende desse espaço para a engrenagem não ficar sob o chrome).
+            return !string.Equals(route, "editprofile", System.StringComparison.Ordinal);
         }
 
         private void OnNotificationRecieved(object sender, NotificationViewModel e)

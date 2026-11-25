@@ -1,4 +1,4 @@
-﻿using Imgur.Api.Services.Models.Common;
+using Imgur.Api.Services.Models.Common;
 using Imgur.Api.Services.Models.Response.Image;
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,9 @@ namespace Imgur.Api.Services.Contracts
             string albumId = null);
 
         Task<ApiResponse<ImageResponse>> GetImageAsync(string imageId);
+
+        /// <summary>DELETE /3/image/{deleteHash}</summary>
+        Task<ApiResponse<bool>> DeleteImageAsync(string deleteHash);
     }
 
 

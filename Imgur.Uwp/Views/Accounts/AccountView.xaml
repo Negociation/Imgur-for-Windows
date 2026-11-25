@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Name="AccountViewPage"
     x:Class="Imgur.Uwp.Views.Accounts.AccountView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -13,18 +13,21 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     SizeChanged="AccountViewPage_SizeChanged"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
 
     <Page.Resources>
 
         <Style x:Key="CommentMobileStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="0"/>
         </Style>
 
         <Style x:Key="CommentDesktopStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Margin" Value="0,0,0,10"/>
             <Setter Property="Padding" Value="0"/>
         </Style>
@@ -262,7 +265,11 @@
                                         <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE713;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem x:Uid="AccountMenuEditProfile" Text="Edit Profile" IsEnabled="False"/>
+                                <MenuFlyoutItem x:Uid="AccountMenuEditProfile" Text="Edit Profile" Command="{Binding OpenEditProfileCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Glyph="&#xE70F;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                                 <MenuFlyoutItem x:Uid="AccountMenuManageBlockedUsers" Text="Manage blocked users" IsEnabled="False"/>
                                 <MenuFlyoutSeparator/>
                                 <MenuFlyoutItem x:Uid="AccountMenuTermsOfService" Text="Terms of Service" Command="{Binding OpenTermsOfServiceCommand}"/>
@@ -404,10 +411,11 @@
                                         SelectionMode="None"
                                         DesiredWidth="250"
                                         ItemHeight="200"
-                                        Visibility="{Binding IsSubmissionsEmpty, Converter={StaticResource BoolNegationConverter}}">
+                                        Visibility="{Binding IsSubmissionsEmpty, Converter={StaticResource BoolNegationConverter}}" ShowsScrollingPlaceholders="False">
                                         <toolkit:AdaptiveGridView.ItemContainerStyle>
                                             <Style TargetType="GridViewItem">
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                                 <Setter Property="Margin" Value="0"/>
                                                 <Setter Property="Padding" Value="0"/>
@@ -453,10 +461,11 @@
                                     DataFetchSize="1"
                                     SelectionMode="None"
                                     DesiredWidth="250"
-                                    ItemHeight="200">
+                                    ItemHeight="200" ShowsScrollingPlaceholders="False">
                                     <toolkit:AdaptiveGridView.ItemContainerStyle>
                                         <Style TargetType="GridViewItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                             <Setter Property="Margin" Value="0"/>
                                             <Setter Property="Padding" Value="0"/>
@@ -497,9 +506,10 @@
                                     IncrementalLoadingTrigger="Edge"
                                     DataFetchSize="1"
                                     ItemsSource="{Binding FollowingCollection, Mode=OneWay}"
-                                    SelectionMode="None">
+                                    SelectionMode="None" ShowsScrollingPlaceholders="False">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             <Setter Property="Margin" Value="0,0,0,8"/>
                                             <Setter Property="Padding" Value="0"/>
@@ -525,9 +535,10 @@
                                     IncrementalLoadingTrigger="Edge"
                                     DataFetchSize="1"
                                     ItemsSource="{Binding CommentsCollection, Mode=OneWay}"
-                                    SelectionMode="None">
+                                    SelectionMode="None" ShowsScrollingPlaceholders="False">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             <Setter Property="Margin" Value="0,0,0,8"/>
                                             <Setter Property="Padding" Value="0"/>
@@ -536,12 +547,16 @@
 
                                     <ListView.ItemTemplate>
                                         <DataTemplate x:DataType="mediavm:CommentViewModel">
-                                          <!--  <controls:CommentTileControl ViewModel="{Binding}" /> -->
-                                            <Grid HorizontalAlignment="Stretch">
-                                                <Button Padding="0" Style="{x:Null}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                            <Grid HorizontalAlignment="Stretch" Background="Transparent">
+                                                <Button Padding="0"
+                                                        Style="{x:Null}"
+                                                        BorderThickness="0"
+                                                        Background="Transparent"
+                                                        HorizontalAlignment="Stretch"
+                                                        HorizontalContentAlignment="Stretch"
+                                                        Command="{Binding OpenOriginPostCommand}">
                                                     <controls:AccountCommentControl/>
                                                 </Button>
-                                                
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>

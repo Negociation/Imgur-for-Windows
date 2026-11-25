@@ -1,4 +1,4 @@
-﻿using Imgur.Contracts;
+using Imgur.Contracts;
 using Imgur.Factories;
 using Imgur.Models;
 using Imgur.Uwp.Models;
@@ -143,6 +143,13 @@ namespace Imgur.Uwp.Services
                 f.Tag = "settings";
                 setFullScreenMode(false);
             }
+            else if (type == typeof(EditProfileView))
+            {
+                f.Tag = "editprofile";
+                // Fullscreen como Account: cover sobe sob a title bar e ReportScrollOffset
+                // ativa AcrylicBar nos botões min/max/close. Search continua oculta via IsSearchVisible.
+                setFullScreenMode(true);
+            }
             else if (type == typeof(MediaView))
             {
                 f.Tag = "media";
@@ -235,6 +242,14 @@ namespace Imgur.Uwp.Services
                             this.setFullScreenMode(false);
                             f.Tag = name;
                             f.Navigate(typeof(SettingsView), null, new DrillInNavigationTransitionInfo());
+                        }
+                        break;
+                    case "editprofile":
+                        if (f.Content.GetType() != typeof(EditProfileView))
+                        {
+                            this.setFullScreenMode(true);
+                            f.Tag = name;
+                            f.Navigate(typeof(EditProfileView), null, new DrillInNavigationTransitionInfo());
                         }
                         break;
                     case "media":
@@ -494,6 +509,9 @@ namespace Imgur.Uwp.Services
             if (pageType == typeof(SettingsView))
                 return new NavJournalEntry { Key = "settings" };
 
+            if (pageType == typeof(EditProfileView))
+                return new NavJournalEntry { Key = "editprofile" };
+
             if (pageType == typeof(TagsView))
                 return new NavJournalEntry { Key = "tags" };
 
@@ -565,6 +583,10 @@ namespace Imgur.Uwp.Services
 
                 case "settings":
                     f.Navigate(typeof(SettingsView), null, transition);
+                    return true;
+
+                case "editprofile":
+                    f.Navigate(typeof(EditProfileView), null, transition);
                     return true;
 
                 case "tags":

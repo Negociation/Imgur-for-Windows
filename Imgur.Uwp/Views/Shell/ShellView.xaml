@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Imgur.Uwp.Views.Shell.ShellView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -239,8 +239,8 @@
             <VisualStateGroup x:Name="SearchBarStates">
                 <VisualState x:Name="SearchMobileInlineState">
                     <VisualState.Setters>
-                        <Setter Target="SearchBox.(Grid.Column)" Value="0" />
-                        <Setter Target="SearchBox.(Grid.ColumnSpan)" Value="3" />
+                        <Setter Target="SearchHost.(Grid.Column)" Value="0" />
+                        <Setter Target="SearchHost.(Grid.ColumnSpan)" Value="3" />
                         <Setter Target="SearchBox.Margin" Value="60,20,60,15" />
                         <Setter Target="SearchBox.HorizontalAlignment" Value="Stretch" />
                         <Setter Target="SearchBox.MaxWidth" Value="600" />
@@ -248,11 +248,11 @@
                 </VisualState>
                 <VisualState x:Name="SearchDesktopInlineState">
                     <VisualState.Setters>
-                        <Setter Target="SearchBox.(Grid.Column)" Value="0" />
+                        <Setter Target="SearchHost.(Grid.Column)" Value="0" />
                         <Setter Target="SearchBox.HorizontalAlignment" Value="Center" />
                         <Setter Target="AutoSuggestSearchBox.MinWidth" Value="200" />
                         <Setter Target="SearchBox.Margin" Value="50,30,50,0" />
-                        <Setter Target="SearchBox.(Grid.ColumnSpan)" Value="3" />
+                        <Setter Target="SearchHost.(Grid.ColumnSpan)" Value="3" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -270,8 +270,8 @@
                         <Setter Target="SearchBox.Visibility" Value="Visible" />
                         <Setter Target="SearchBox.HorizontalAlignment" Value="Stretch" />
                         <Setter Target="SearchBox.MaxWidth" Value="600" />
-                        <Setter Target="SearchBox.(Grid.Column)" Value="1" />
-                        <Setter Target="SearchBox.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="SearchHost.(Grid.Column)" Value="1" />
+                        <Setter Target="SearchHost.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="PaneSearchBox.Visibility" Value="Collapsed" />
                         <Setter Target="MainFrame.Padding" Value="10,0,0,0" />
                         <Setter Target="NavigationViewContent.Margin" Value="0" />
@@ -381,11 +381,11 @@
             VerticalAlignment="Top"/>
 
         <Grid x:Name="NavigationViewContent" Margin="0" Background="Transparent" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <!-- Animation Tranformers for Desktop (If width < 500px) -->
-            <winui:NavigationView x:Name="NavigationView" Style="{StaticResource NavigationViewStyle}" Grid.RowSpan="2" Margin="0,0,0 0" IsSettingsVisible="False" PaneOpening="NavigationView_PaneOpening" PaneOpened="NavigationView_PaneOpened" CompactPaneLength="58"  OpenPaneLength="280" IsTitleBarAutoPaddingEnabled="False"  IsBackButtonVisible="Collapsed">
-                <winui:NavigationView.RenderTransform>
-                    <TranslateTransform x:Name="NavTranslate"/>
-                </winui:NavigationView.RenderTransform>
+            <!-- Animation Tranformers for Desktop (If width < 500px). Fica no Grid para mover junto a HamburgerUnreadBadge. -->
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="NavTranslate"/>
+            </Grid.RenderTransform>
+            <winui:NavigationView x:Name="NavigationView" Style="{StaticResource NavigationViewStyle}" Grid.RowSpan="2" Margin="0,0,0 0" IsSettingsVisible="False" PaneOpening="NavigationView_PaneOpening" PaneOpened="NavigationView_PaneOpened" PaneClosed="NavigationView_PaneClosed" CompactPaneLength="58"  OpenPaneLength="280" IsTitleBarAutoPaddingEnabled="False"  IsBackButtonVisible="Collapsed">
 
                 <winui:NavigationView.PaneHeader>
                     <StackPanel Margin="0"  x:Name="PaneTitleContent" Orientation="Horizontal" HorizontalAlignment="Left" >
@@ -400,7 +400,7 @@
                     </StackPanel>
                 </winui:NavigationView.Header>
                 <winui:NavigationView.AutoSuggestBox>
-                    <AutoSuggestBox x:Uid="PaneSearchBox" QueryIcon="Find" IsTabStop="False" IsFocusEngaged="False" Margin="0,-20,0,0" BorderBrush="#1e2022" MinWidth="260" BorderThickness="1.2" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"   x:Name="PaneSearchBox" Visibility="{Binding IsPaneOpen,ElementName=SplitView}" Grid.Column="2" Opacity="0.9"  HorizontalAlignment="Stretch" QuerySubmitted="SearchBox_QuerySubmitted" />
+                    <AutoSuggestBox x:Uid="PaneSearchBox" QueryIcon="Find" IsTabStop="False" IsFocusEngaged="False" Margin="0,-20,0,0" BorderBrush="#1e2022" MinWidth="260" BorderThickness="1.2" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"   x:Name="PaneSearchBox" Visibility="{Binding IsPaneOpen,ElementName=SplitView}" Grid.Column="2" Opacity="0.9"  HorizontalAlignment="Stretch" QuerySubmitted="SearchBox_QuerySubmitted" IsEnabled="{Binding IsSearchVisible}" />
                 </winui:NavigationView.AutoSuggestBox>
 
                 <winui:NavigationView.MenuItems>
@@ -420,9 +420,27 @@
                         </winui:NavigationViewItem.Content>
                     </winui:NavigationViewItem>
 
-                    <winui:NavigationViewItem  x:Name="ConnectItem" IsSelected="False" SelectsOnInvoked="False" IsEnabled="True" Style="{StaticResource CustomNavigationViewItemStyle}"  Visibility="{Binding IsNotAuthenticated, Converter={StaticResource BoolVisibilityConverter}}">
+                    <!-- Um único slot estável no MenuItems: Visibility em MenuItem quebra o ItemsRepeater do WinUI 2.7
+                         quando Connect some e Notifications aparece no mesmo tick do auth. -->
+                    <winui:NavigationViewItem x:Name="AuthActionItem" IsSelected="False" SelectsOnInvoked="False" IsEnabled="True" Style="{StaticResource CustomNavigationViewItemStyle}">
                         <winui:NavigationViewItem.Content>
-                            <controls:NavigationViewItem x:Uid="Connect" Icon="&#xE748;" IsSelected="{x:Bind ConnectItem.IsSelected,Mode=OneWay}"  Command="{Binding InvokeLoginCommand}" IsEnabled="{x:Bind ConnectItem.IsEnabled,Mode=OneWay}" FontIcon="{StaticResource FluentUIGlyphs}" />
+                            <Grid>
+                                <controls:NavigationViewItem x:Uid="Notifications"
+                                                             Command="{Binding OpenNotificationsCommand}"
+                                                             Icon="&#xEA8F;"
+                                                             ShowBadge="{Binding HasUnreadNotifications}"
+                                                             IsSelected="{x:Bind AuthActionItem.IsSelected,Mode=OneWay}"
+                                                             IsEnabled="{x:Bind AuthActionItem.IsEnabled,Mode=OneWay}"
+                                                             FontIcon="{StaticResource SegoeMDLGlyphs}"
+                                                             Visibility="{Binding IsAuthenticated, Converter={StaticResource BoolVisibilityConverter}}" />
+                                <controls:NavigationViewItem x:Uid="Connect"
+                                                             Icon="&#xE748;"
+                                                             IsSelected="{x:Bind AuthActionItem.IsSelected,Mode=OneWay}"
+                                                             Command="{Binding InvokeLoginCommand}"
+                                                             IsEnabled="{x:Bind AuthActionItem.IsEnabled,Mode=OneWay}"
+                                                             FontIcon="{StaticResource FluentUIGlyphs}"
+                                                             Visibility="{Binding IsNotAuthenticated, Converter={StaticResource BoolVisibilityConverter}}" />
+                            </Grid>
                         </winui:NavigationViewItem.Content>
                     </winui:NavigationViewItem>
                 </winui:NavigationView.MenuItems>
@@ -482,6 +500,19 @@
 
                     
                     <StackPanel Height="40" Orientation="Horizontal" Padding="0,2,10,0">
+                        <!-- Acesso rápido às notificações (modo minimal): só logado; bolinha quando há não-lidas. -->
+                        <Grid Visibility="{Binding IsAuthenticated, Converter={StaticResource BoolVisibilityConverter}}">
+                            <Button x:Uid="NotificationsQuickButton" Style="{StaticResource CircleButtonStyle}" Background="Transparent" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Padding="10" Command="{Binding OpenNotificationsCommand}">
+                                <FontIcon FontFamily="{StaticResource SegoeMDLGlyphs}" Foreground="White" FontWeight="Light" FontSize="16" Glyph="&#xEA8F;"/>
+                            </Button>
+                            <Ellipse Width="8" Height="8"
+                                     Fill="#01b96b"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Top"
+                                     Margin="0,6,6,0"
+                                     IsHitTestVisible="False"
+                                     Visibility="{Binding HasUnreadNotifications, Converter={StaticResource BoolVisibilityConverter}}"/>
+                        </Grid>
                         <Button Style="{StaticResource CircleButtonStyle}" Background="Transparent" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Padding="10" ToolTipService.ToolTip="Upload New File"  Command="{Binding InvokeUploadCommand}">
                             <FontIcon  FontFamily="{StaticResource FluentUIGlyphs}" Foreground="White" FontWeight="Light" FontSize="16" Glyph="&#xEE71;"/>
                         </Button>
@@ -512,21 +543,55 @@
                                 
                             </Grid>
                         </Grid>
-                        <StackPanel x:Name="HeaderCompactContent" Orientation="Horizontal" Padding="15,10,0,0" Height="48" Grid.ColumnSpan="3" Visibility="Collapsed" >
-                            <Image Height="24"  Source="ms-appx:///Assets/App/logo_transparent.png" VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
-                            <Image Height="20"  Margin="4,0,0,0"  Source="ms-appx:///Assets/App/sign_transparent.png"  VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
-                            <StackPanel.RenderTransform>
-                                <TranslateTransform x:Name="HeaderTranslate"/>
-                            </StackPanel.RenderTransform>
+                        <!-- Visibility: CompactInlineState (500–800px), como no GitHub.
+                             O painel interno some nas rotas sem search (editprofile) sem deixar os 48px de altura. -->
+                        <StackPanel x:Name="HeaderCompactContent" Grid.ColumnSpan="3" Visibility="Collapsed">
+                            <StackPanel Orientation="Horizontal" Padding="15,10,0,0" Height="48"
+                                        Visibility="{Binding IsSearchVisible, Converter={StaticResource BoolVisibilityConverter}}">
+                                <Image Height="24"  Source="ms-appx:///Assets/App/logo_transparent.png" VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
+                                <Image Height="20"  Margin="4,0,0,0"  Source="ms-appx:///Assets/App/sign_transparent.png"  VerticalAlignment="Center" Visibility="{Binding ElementName=NavigationView,Path=IsPaneOpen,Converter={StaticResource BoolNegationConverter}}"  />
+                                <StackPanel.RenderTransform>
+                                    <TranslateTransform x:Name="HeaderTranslate"/>
+                                </StackPanel.RenderTransform>
+                            </StackPanel>
                         </StackPanel>
 
-                        <toolkit:DropShadowPanel  Grid.Column="0" Opacity="1" Grid.ColumnSpan="2" BlurRadius="20" OffsetX="0" OffsetY="0" ShadowOpacity="1" Color="#01b96b" HorizontalContentAlignment="Stretch" x:Name="SearchBox" Visibility="Collapsed" HorizontalAlignment="Left"   Margin="15,15,30,10">
-                            <AutoSuggestBox x:Uid="ShellSearchBox"  Style="{StaticResource RoundedAutoSuggestBoxStyle}"  x:Name="AutoSuggestSearchBox" QuerySubmitted="SearchBox_QuerySubmitted"  QueryIcon="Find" BorderBrush="#1b1c1d" Windows10version1809:CornerRadius="15" BorderThickness="2" FocusVisualSecondaryBrush="BlueViolet" IsTabStop="False"  Background="#1b1c1d" VerticalAlignment="Top" />
-                        </toolkit:DropShadowPanel>
+                        <Grid x:Name="SearchHost"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Stretch"
+                              Visibility="{Binding IsSearchVisible, Converter={StaticResource BoolVisibilityConverter}}">
+                            <toolkit:DropShadowPanel Opacity="1" BlurRadius="20" OffsetX="0" OffsetY="0" ShadowOpacity="1" Color="#01b96b" HorizontalContentAlignment="Stretch" x:Name="SearchBox" Visibility="Collapsed" HorizontalAlignment="Left"   Margin="15,15,30,10">
+                                <AutoSuggestBox x:Uid="ShellSearchBox"  Style="{StaticResource RoundedAutoSuggestBoxStyle}"  x:Name="AutoSuggestSearchBox" QuerySubmitted="SearchBox_QuerySubmitted"  QueryIcon="Find" BorderBrush="#1b1c1d" Windows10version1809:CornerRadius="15" BorderThickness="2" FocusVisualSecondaryBrush="BlueViolet" IsTabStop="False"  Background="#1b1c1d" VerticalAlignment="Top" />
+                            </toolkit:DropShadowPanel>
+                        </Grid>
                         <Frame Grid.Row="1" Visibility="Visible" Canvas.ZIndex="-1" Background="Transparent" Padding="0,10,0,0" Grid.ColumnSpan="3"  x:Name="MainFrame"/>
                     </Grid>
                 </winui:NavigationView.Content>
             </winui:NavigationView>
+
+            <!-- Sobreposta ao TogglePaneButton (ButtonHolderGrid MinWidth 58, margem top 8, botão 40x40 centralizado).
+                 Não pode ir dentro do template do NavigationView: derruba o app no startup. -->
+            <Ellipse x:Name="HamburgerUnreadBadge"
+                     Width="8" Height="8"
+                     Fill="#01b96b"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     Margin="39,10,0,0"
+                     IsHitTestVisible="False"
+                     Visibility="Collapsed"/>
+
+            <!-- Faixa invisível da borda esquerda (Minimal): fica acima do ScrollViewer das páginas,
+                 que engole o toque. Começa abaixo do topo para não cobrir o hambúrguer. -->
+            <Grid x:Name="EdgeSwipeStrip"
+                  Width="16"
+                  Margin="0,56,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Stretch"
+                  Background="Transparent"
+                  ManipulationMode="TranslateX"
+                  ManipulationCompleted="EdgeSwipeStrip_ManipulationCompleted"
+                  Visibility="Collapsed"/>
         </Grid>
         <Grid x:Name="ShellNotificationGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Blue" />
 

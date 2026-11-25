@@ -30,18 +30,27 @@ namespace Imgur.Api.Services
             _accessTokenProvider = provider;
         }
 
+        private const int VisibleSecretChars = 4;
+
+        private static string MaskSecret(string secret)
+        {
+            if (string.IsNullOrEmpty(secret) || secret.Length <= VisibleSecretChars)
+                return "****";
+            return "****" + secret.Substring(secret.Length - VisibleSecretChars);
+        }
+
         protected void SetAuthHeader(HttpRequestMessage request, string accessToken = null)
         {
             var token = accessToken ?? _accessTokenProvider?.Invoke();
             if (!string.IsNullOrEmpty(token))
             {
-                Debug.WriteLine("Fazendo Request via AccessToken" + token);
+                Debug.WriteLine("Fazendo Request via AccessToken " + MaskSecret(token));
                 request.Headers.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
             }
             else if (!string.IsNullOrEmpty(_clientId))
             {
-                Debug.WriteLine("Fazendo Request via ClientId" + _clientId);
+                Debug.WriteLine("Fazendo Request via ClientId " + MaskSecret(_clientId));
 
                 request.Headers.Authorization =
                     new AuthenticationHeaderValue("Client-ID", _clientId);
@@ -125,14 +134,25 @@ namespace Imgur.Api.Services
                 };
             }
         }
-        protected async Task<ApiResponse<T>> PostAsync<T>(string endpoint, HttpContent body = null)
+        protected Task<ApiResponse<T>> PostAsync<T>(string endpoint, HttpContent body = null)
+        {
+            return SendAsync<T>(HttpMethod.Post, endpoint, body);
+        }
+
+        protected Task<ApiResponse<T>> PutAsync<T>(string endpoint, HttpContent body = null)
+        {
+            return SendAsync<T>(HttpMethod.Put, endpoint, body);
+        }
+
+        private async Task<ApiResponse<T>> SendAsync<T>(HttpMethod method, string endpoint, HttpContent body)
         {
             string json = null;
             HttpResponseMessage response = null;
+            var methodName = method.Method;
 
             try
             {
-                using (var request = new HttpRequestMessage(HttpMethod.Post, endpoint))
+                using (var request = new HttpRequestMessage(method, endpoint))
                 {
                     SetAuthHeader(request);
                     request.Content = body;
@@ -156,22 +176,22 @@ namespace Imgur.Api.Services
             }
             catch (JsonSerializationException ex)
             {
-                Debug.WriteLine($"[{GetType().Name}.PostAsync] Erro na desserialização JSON endpoint:{endpoint} — {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.{methodName}] Erro na desserialização JSON endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = response != null ? (int)response.StatusCode : 0, Data = default(T) };
             }
             catch (HttpRequestException ex)
             {
-                Debug.WriteLine($"[{GetType().Name}.PostAsync] Erro de rede endpoint:{endpoint} — {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.{methodName}] Erro de rede endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
             catch (TaskCanceledException ex)
             {
-                Debug.WriteLine($"[{GetType().Name}.PostAsync] Timeout endpoint:{endpoint} — {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.{methodName}] Timeout endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 408, Data = default(T) };
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[{GetType().Name}.PostAsync] Erro genérico endpoint:{endpoint} — {ex.Message}");
+                Debug.WriteLine($"[{GetType().Name}.{methodName}] Erro genérico endpoint:{endpoint} — {ex.Message}");
                 return new ApiResponse<T> { Success = false, Status = 0, Data = default(T) };
             }
         }

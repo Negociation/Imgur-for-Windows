@@ -35,6 +35,9 @@ namespace Imgur.Constants
 
         public const string LastAccountNotificationId = "LastAccountNotificationId";
 
+        /// <summary>True while the UWP process is in the foreground (for background toast suppression).</summary>
+        public const string AppIsForeground = "AppIsForeground";
+
         /// <summary>Selected UI language (<see cref="AppLanguage"/> as int). Default System.</summary>
         public const string SelectedLanguage = "SelectedLanguage";
 
@@ -54,6 +57,7 @@ namespace Imgur.Constants
             { AppRedirectCallback, "" },
             { LastRemindNotificationMediaId, "" },
             { LastAccountNotificationId, "" },
+            { AppIsForeground, false },
             { SelectedLanguage, (int)AppLanguage.System }
         };
     }

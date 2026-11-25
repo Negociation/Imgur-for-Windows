@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imgur.Uwp", "Imgur.Uwp\Imgu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imgur.Background", "Imgur.Background\Imgur.Background.csproj", "{CF6A82D4-F954-4E47-95C0-B9E4E8AF6A6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imgur.Tests", "Imgur.Tests\Imgur.Tests.csproj", "{783A4BB4-D221-4DC6-941A-980A51D6BBFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,26 @@ Global
 		{CF6A82D4-F954-4E47-95C0-B9E4E8AF6A6E}.Release|x64.Build.0 = Release|x64
 		{CF6A82D4-F954-4E47-95C0-B9E4E8AF6A6E}.Release|x86.ActiveCfg = Release|x86
 		{CF6A82D4-F954-4E47-95C0-B9E4E8AF6A6E}.Release|x86.Build.0 = Release|x86
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|ARM.Build.0 = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|x64.Build.0 = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Debug|x86.Build.0 = Debug|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|ARM.ActiveCfg = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|ARM.Build.0 = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|ARM64.Build.0 = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|x64.ActiveCfg = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|x64.Build.0 = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|x86.ActiveCfg = Release|Any CPU
+		{783A4BB4-D221-4DC6-941A-980A51D6BBFF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

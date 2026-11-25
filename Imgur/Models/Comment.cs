@@ -19,6 +19,9 @@ namespace Imgur.Models
         public string Platform { get; set; }
         public bool IsRootComment { get; set; }
 
+        /// <summary>True when the commented post is an album (API on_album).</summary>
+        public bool OnAlbum { get; set; }
+
         private int _ups;
         public int Ups
         {

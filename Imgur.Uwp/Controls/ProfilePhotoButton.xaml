@@ -1,0 +1,67 @@
+<UserControl
+    x:Class="Imgur.Uwp.Controls.ProfilePhotoButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    RequestedTheme="Dark"
+    mc:Ignorable="d"
+    d:DesignWidth="36"
+    d:DesignHeight="36"
+    Width="36"
+    Height="36"
+    IsHitTestVisible="True">
+
+    <!-- Pencil badge over avatar — no flyout menu (UI stub). -->
+    <Button x:Name="RootButton"
+            Width="36"
+            Height="36"
+            Padding="0"
+            MinWidth="0"
+            MinHeight="0"
+            BorderThickness="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="#E6FFFFFF"
+            Command="{x:Bind EditCommand, Mode=OneWay}"
+            AutomationProperties.Name="Edit profile photo">
+        <Button.Template>
+            <ControlTemplate TargetType="Button">
+                <Grid>
+                    <Ellipse x:Name="Fill"
+                             Fill="{TemplateBinding Background}"
+                             Stroke="#33000000"
+                             StrokeThickness="1"/>
+                    <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Foreground="{TemplateBinding Foreground}"/>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal"/>
+                            <VisualState x:Name="PointerOver">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Fill"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0.9"
+                                                     Duration="0"/>
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Fill"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0.75"
+                                                     Duration="0"/>
+                                </Storyboard>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </Grid>
+            </ControlTemplate>
+        </Button.Template>
+        <FontIcon Glyph="&#xE70F;"
+                  FontFamily="{StaticResource SegoeMDLGlyphs}"
+                  FontSize="14"
+                  Foreground="#19191C"/>
+    </Button>
+</UserControl>

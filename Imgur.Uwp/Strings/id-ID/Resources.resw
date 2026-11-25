@@ -807,4 +807,50 @@
   <data name="AppLanguageReopenTitle" xml:space="preserve">
     <value>Buka ulang Imgur?</value>
   </data>
-</root>
+  <data name="EditProfilePageTitle.Text" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="EditProfileUsernameLabel.Text" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="EditProfileUsername.PlaceholderText" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="EditProfileBioLabel.Text" xml:space="preserve">
+    <value>Public bio</value>
+  </data>
+  <data name="EditProfileBio.PlaceholderText" xml:space="preserve">
+    <value>Tell people a little about yourself</value>
+  </data>
+  <data name="EditProfilePrivateSection.Text" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="EditProfileEmailLabel.Text" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EditProfileEmail.PlaceholderText" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EditProfileChangePassword.Content" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="EditProfileDeleteAccount.Content" xml:space="preserve">
+    <value>Delete account</value>
+  </data>
+  <data name="EditProfileEditCover.Text" xml:space="preserve">
+    <value>Edit cover</value>
+  </data>  <data name="SettingsStartupLaunch.Header" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
+  <data name="SettingsStartupLaunch.Text" xml:space="preserve">
+    <value>Launch Imgur when you sign in to Windows (Desktop).</value>
+  </data>
+  <data name="SettingsPinStartTile.Header" xml:space="preserve">
+    <value>Pin to Start</value>
+  </data>
+  <data name="SettingsPinStartTile.Text" xml:space="preserve">
+    <value>Pin an Imgur tile to the Start screen.</value>
+  </data>
+  <data name="SettingsPinStartTileButton.Text" xml:space="preserve">
+    <value>Pin</value>
+  </data></root>

@@ -1,9 +1,5 @@
-﻿using Imgur.Contracts;
-using Imgur.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Imgur.Contracts;
+using Imgur.Helpers;
 using System.Threading.Tasks;
 using Windows.Security.Credentials;
 
@@ -26,12 +22,15 @@ namespace Imgur.Uwp.Services
             {
                 var cred = _vault.FindAllByResource(Resource)[0];
                 cred.RetrievePassword();
-                var parts = cred.Password.Split('|');
+
+                if (!TokenVaultPayload.TryParse(cred.Password, out var access, out var refresh, out var expiresAt))
+                    return Task.FromResult<StoredToken>(null);
 
                 return Task.FromResult(new StoredToken
                 {
-                    AccessToken = parts[0],
-                    RefreshToken = parts[1],
+                    AccessToken = access,
+                    RefreshToken = refresh,
+                    ExpiresAtUnix = expiresAt,
                     AccountName = cred.UserName
                 });
             }
@@ -40,11 +39,11 @@ namespace Imgur.Uwp.Services
 
         public Task SaveTokenAsync(StoredToken token)
         {
-            RemoveFromVault(); // limpa anterior
+            RemoveFromVault();
             _vault.Add(new PasswordCredential(
                 Resource,
                 token.AccountName,
-                $"{token.AccessToken}|{token.RefreshToken}"
+                TokenVaultPayload.Serialize(token.AccessToken, token.RefreshToken, token.ExpiresAtUnix)
             ));
             return Task.CompletedTask;
         }

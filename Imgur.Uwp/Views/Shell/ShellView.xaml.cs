@@ -1,4 +1,5 @@
-﻿using Imgur.Contracts;
+using Imgur.Contracts;
+using Imgur.Helpers;
 using Imgur.Uwp.Helpers;
 using Imgur.Uwp.Views.Explorer;
 using Imgur.ViewModels.Shell;
@@ -7,13 +8,15 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-
 // O modelo de item de Página em Branco está documentado em https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Imgur.Uwp.Views.Shell
@@ -37,9 +40,10 @@ namespace Imgur.Uwp.Views.Shell
             Loaded += Page_Loaded;
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
             _notificationPresenter = new InAppNotificationPresenter(ShellGrid);
+            NavigationView.DisplayModeChanged += (s, e) => UpdateEdgeSwipeStrip();
         }
 
-        private async void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             //Recieve Fullscreen Mode (Title Bar)
             if(e.PropertyName == nameof(ViewModel.IsFullScreenMode))
@@ -63,11 +67,51 @@ namespace Imgur.Uwp.Views.Shell
                 }
                 else
                 {
-                    this.NavigationView.SelectedItem = -1;
+                    this.NavigationView.SelectedItem = null;
                 }
             }
 
-            await Task.Delay(1000);
+            if (e.PropertyName == nameof(ViewModel.IsSearchVisible))
+            {
+                ApplyPaneSearchVisibility();
+            }
+
+            if (e.PropertyName == nameof(ViewModel.HasUnreadNotifications)
+                || e.PropertyName == nameof(ViewModel.IsAuthenticated))
+            {
+                UpdateHamburgerUnreadBadge();
+            }
+        }
+
+        private void UpdateHamburgerUnreadBadge()
+        {
+            bool show = ViewModel != null
+                && ViewModel.IsAuthenticated
+                && ViewModel.HasUnreadNotifications
+                && NavigationView.IsPaneToggleButtonVisible
+                && !NavigationView.IsPaneOpen;
+            HamburgerUnreadBadge.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void ApplyPaneSearchVisibility()
+        {
+            if (ViewModel == null)
+                return;
+
+            // AutoSuggestBox cannot be wrapped; hide via Opacity/hit-test when route disables search.
+            if (PaneSearchBox != null)
+            {
+                if (ViewModel.IsSearchVisible)
+                {
+                    PaneSearchBox.Opacity = 0.9;
+                    PaneSearchBox.IsHitTestVisible = true;
+                }
+                else
+                {
+                    PaneSearchBox.Opacity = 0;
+                    PaneSearchBox.IsHitTestVisible = false;
+                }
+            }
         }
         
         private void LoadDesignAdapters()
@@ -95,6 +139,8 @@ namespace Imgur.Uwp.Views.Shell
             {
                 VisualStateManager.GoToState(this, "SearchDesktopInlineState", false);
             }
+
+            UpdateHamburgerUnreadBadge();
         }
 
         private void MobileWindow_SizeChanged(object sender, WindowSizeChangedEventArgs e)
@@ -129,6 +175,7 @@ namespace Imgur.Uwp.Views.Shell
 
             _notificationPresenter?.Attach();
             ViewModel.Initialize();
+            UpdateHamburgerUnreadBadge();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -195,16 +242,19 @@ namespace Imgur.Uwp.Views.Shell
                     sbOut.Begin();
                 }
 
-                // Restaurar opacidade do header compacto e da search box
-                if (HeaderCompactContent.Opacity < 1)
+                // Brand volta sempre a 1: em rotas sem search o conteúdo interno já está Collapsed por binding
+                double brandTarget = 1.0;
+                double searchTarget = ViewModel?.IsSearchVisible == true ? 1.0 : 0.0;
+
+                if (HeaderCompactContent.Opacity != brandTarget || SearchBox.Opacity != searchTarget)
                 {
                     var sb = new Storyboard();
 
-                    var fadeHeader = new DoubleAnimation { To = 1.0, Duration = TimeSpan.FromMilliseconds(200) };
+                    var fadeHeader = new DoubleAnimation { To = brandTarget, Duration = TimeSpan.FromMilliseconds(200) };
                     Storyboard.SetTarget(fadeHeader, HeaderCompactContent);
                     Storyboard.SetTargetProperty(fadeHeader, "Opacity");
 
-                    var fadeSearch = new DoubleAnimation { To = 1.0, Duration = TimeSpan.FromMilliseconds(200) };
+                    var fadeSearch = new DoubleAnimation { To = searchTarget, Duration = TimeSpan.FromMilliseconds(200) };
                     Storyboard.SetTarget(fadeSearch, SearchBox);
                     Storyboard.SetTargetProperty(fadeSearch, "Opacity");
 
@@ -227,7 +277,7 @@ namespace Imgur.Uwp.Views.Shell
                     AcrylicBarFullScrenBase.Opacity = 0;
                 }
                 HeaderCompactContent.Opacity = 1;
-                SearchBox.Opacity = 1;
+                SearchBox.Opacity = ViewModel?.IsSearchVisible == true ? 1 : 0;
             }
         }
 
@@ -248,6 +298,9 @@ namespace Imgur.Uwp.Views.Shell
                 VisualStateManager.GoToState(this, "SearchMobileInlineState", false);
             }
 
+            ApplyPaneSearchVisibility();
+            UpdateHamburgerUnreadBadge();
+            UpdateEdgeSwipeStrip();
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -285,6 +338,35 @@ namespace Imgur.Uwp.Views.Shell
         {
             Debug.WriteLine("Abriu");
             PaneSearchBox.IsEnabled = true;
+            UpdateHamburgerUnreadBadge();
+            UpdateEdgeSwipeStrip();
+        }
+
+        private void NavigationView_PaneClosed(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
+        {
+            UpdateHamburgerUnreadBadge();
+            UpdateEdgeSwipeStrip();
+        }
+
+        // Swipe da borda esquerda (só touch, só no Minimal) abre o menu hambúrguer.
+        private void EdgeSwipeStrip_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            if (e.PointerDeviceType != PointerDeviceType.Touch || !CanOpenPaneByEdgeSwipe())
+                return;
+
+            if (SwipeGesture.Classify(e.Cumulative.Translation.X, e.Velocities.Linear.X) == SwipeDirection.Right)
+                NavigationView.IsPaneOpen = true;
+        }
+
+        private void UpdateEdgeSwipeStrip()
+        {
+            EdgeSwipeStrip.Visibility = CanOpenPaneByEdgeSwipe() ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private bool CanOpenPaneByEdgeSwipe()
+        {
+            return NavigationView.DisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Minimal
+                && !NavigationView.IsPaneOpen;
         }
     }
 }

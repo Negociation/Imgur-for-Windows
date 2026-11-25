@@ -1,4 +1,6 @@
-﻿using Imgur.Contracts;
+﻿using Imgur.Api.Services.Models.Enum;
+using Imgur.Collections;
+using Imgur.Contracts;
 using Imgur.Enums;
 using Imgur.Factories;
 using Imgur.Models;
@@ -157,6 +159,41 @@ namespace Imgur.Uwp.Services
             commentVm.OnCommentPosted = () => dialog.Hide();
 
             await dialog.ShowAsync();
+        }
+
+        public async Task ShowFocusedCommentDialogAsync(CommentViewModel commentVm)
+        {
+            if (commentVm == null)
+                return;
+
+            var dialog = new FocusedCommentDialog
+            {
+                DataContext = commentVm
+            };
+            await dialog.ShowAsync();
+        }
+
+        public async Task ShowNotificationsDialogAsync()
+        {
+            var inbox = App.Services.GetService(typeof(IAccountInboxService)) as IAccountInboxService;
+            var factory = App.Services.GetService(typeof(IIncrementalCollectionFactory)) as IIncrementalCollectionFactory;
+            if (inbox == null || factory == null)
+                return;
+
+            var vm = new Imgur.ViewModels.Notifications.NotificationsDialogViewModel(inbox, factory);
+            await vm.InitializeAsync();
+            var dialog = new NotificationsDialog { DataContext = vm };
+            await dialog.ShowAsync();
+        }
+
+        public async Task<ImgurAvatar?> ShowAvatarPickerDialogAsync(ImgurAvatar? current = null)
+        {
+            var vm = new AvatarPickerViewModel(current);
+            var dialog = new AvatarPickerDialog { DataContext = vm };
+            await dialog.ShowAsync();
+            if (dialog.Confirmed && vm.HasSelection)
+                return vm.SelectedItem.Avatar;
+            return null;
         }
     }
 }

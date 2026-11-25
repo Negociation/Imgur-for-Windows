@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Name="ExplorerViewPage"
     x:Class="Imgur.Uwp.Views.Explorer.ExplorerView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -14,6 +14,7 @@
     xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
     xmlns:mediavm="using:Imgur.ViewModels.Media"
     xmlns:models="using:Imgur.Models"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
     <Page.Resources>
         <Style x:Key="ComboBoxTextBoxStyle" TargetType="TextBox">
@@ -642,6 +643,9 @@
                     que rola junto com a lista sem quebrar a virtualização.
                 -->
                 <pr:PullToRefreshBox x:Name="PullContainerGrid" Grid.Row="1" Grid.RowSpan="2" HorizontalContentAlignment="Stretch" RefreshInvoked="PullContainerGrid_RefreshInvoked"  RefreshThreshold="65">
+                    <pr:PullToRefreshBox.RenderTransform>
+                        <TranslateTransform x:Name="GallerySwipeTransform"/>
+                    </pr:PullToRefreshBox.RenderTransform>
                     <pr:PullToRefreshBox.TopIndicatorTemplate>
                         <DataTemplate>
                             <Grid Height="70" VerticalAlignment="Center">
@@ -665,13 +669,16 @@
                         ItemsSource="{Binding RetrievedMediaVmCollection,Mode=OneWay}"
                         IsItemClickEnabled="True"
                         DataFetchSize="1"
-                        SelectionMode="None">
+                        SelectionMode="None" ShowsScrollingPlaceholders="False">
                         <toolkit:AdaptiveGridView.ItemContainerStyle>
                             <Style TargetType="GridViewItem">
+                                <Setter Property="Background" Value="Transparent"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                 <Setter Property="Margin" Value="0"/>
                                 <Setter Property="Padding" Value="0"/>
+                                <!-- Dentro do ScrollViewer: vertical segue no scroll (System), horizontal vira swipe do pivot. -->
+                                <Setter Property="ManipulationMode" Value="TranslateX,System"/>
                             </Style>
                         </toolkit:AdaptiveGridView.ItemContainerStyle>
 

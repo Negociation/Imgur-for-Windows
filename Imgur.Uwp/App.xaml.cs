@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -34,6 +34,7 @@ using Imgur.ViewModels.FileUpload;
 using Imgur.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Windows.Storage;
 using Imgur.Constants;
 using Imgur.Collections;
@@ -68,7 +69,63 @@ namespace Imgur.Uwp
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += OnResuming;
+            this.EnteredBackground += OnEnteredBackground;
+            this.LeavingBackground += OnLeavingBackground;
+            this.UnhandledException += OnUnhandledException;
+            TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
             var _ = Google.Protobuf.ByteString.Empty;
+        }
+
+        private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            LogException("App.UnhandledException", e.Exception, e.Message);
+        }
+
+        private void OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            LogException("App.UnobservedTaskException", e.Exception, e.Exception?.Message);
+        }
+
+        private void LogException(string source, Exception exception, string message)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"[{DateTime.UtcNow:O}] {source}");
+            builder.AppendLine($"Message: {message}");
+            builder.AppendLine($"Type: {exception?.GetType().FullName ?? "<null>"}");
+            builder.AppendLine($"HRESULT: 0x{exception?.HResult:X8}");
+            builder.AppendLine($"StackTrace: {exception?.StackTrace ?? "<none>"}");
+
+            var currentException = exception?.InnerException;
+            var innerLevel = 0;
+            while (currentException != null)
+            {
+                innerLevel++;
+                builder.AppendLine($"InnerException[{innerLevel}] Type: {currentException.GetType().FullName}");
+                builder.AppendLine($"InnerException[{innerLevel}] HRESULT: 0x{currentException.HResult:X8}");
+                builder.AppendLine($"InnerException[{innerLevel}] Message: {currentException.Message}");
+                var innerStackTrace = currentException.StackTrace ?? "<none>";
+                builder.AppendLine($"InnerException[{innerLevel}] StackTrace: {innerStackTrace}");
+                currentException = currentException.InnerException;
+            }
+
+            var log = builder.ToString();
+            Debug.WriteLine(log);
+            var _ = AppendExceptionLogAsync(log);
+        }
+
+        private async Task AppendExceptionLogAsync(string log)
+        {
+            try
+            {
+                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(
+                    "unhandled-errors.log",
+                    CreationCollisionOption.OpenIfExists);
+                await FileIO.AppendTextAsync(file, log + Environment.NewLine);
+            }
+            catch (Exception logException)
+            {
+                Debug.WriteLine($"[App.ExceptionLogger] Não foi possível gravar o log: {logException}");
+            }
         }
 
         // ── Entry Points ───────────────────────────────────────
@@ -97,7 +154,7 @@ namespace Imgur.Uwp
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"OnActivated: {ex}");
+                LogException("App.OnActivated", ex, ex.Message);
             }
         }
 
@@ -169,9 +226,13 @@ namespace Imgur.Uwp
                 var rootFrame = Window.Current.Content as Frame;
                 if (rootFrame == null)
                 {
-                    rootFrame = new Frame();
+                    rootFrame = new Frame { RequestedTheme = ElementTheme.Dark };
                     Window.Current.Content = rootFrame;
 
+                }
+                else
+                {
+                    rootFrame.RequestedTheme = ElementTheme.Dark;
                 }
 
                 HardwareButtons.BackPressed -= hardwareButtonsBackPressedAsync;
@@ -277,6 +338,24 @@ namespace Imgur.Uwp
                 await LiveTilesService.EnsureBackgroundTaskRegisteredAsync();
                 await RemindNotificationsService.EnsureBackgroundTaskRegisteredAsync();
                 await Imgur.Uwp.Services.AccountNotificationsService.EnsureBackgroundTaskRegisteredAsync();
+                await Imgur.Uwp.Services.ReputationSnapshotService.EnsureBackgroundTaskRegisteredAsync();
+                try
+                {
+                    await Services.GetRequiredService<IImgurLocalStore>().InitializeAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[App] ImgurLocalStore init: " + ex.Message);
+                }
+
+                try
+                {
+                    await Services.GetRequiredService<INotificationRouter>().StartAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[App] NotificationRouter start: " + ex.Message);
+                }
             }
 
             this.FocusVisualKind = FocusVisualKind.Reveal;
@@ -293,10 +372,14 @@ namespace Imgur.Uwp
             var rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)
             {
-                rootFrame = new Frame();
+                rootFrame = new Frame { RequestedTheme = ElementTheme.Dark };
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 Window.Current.Content = rootFrame;
                 _serviceProvider = configureServices(isShareTarget);
+            }
+            else
+            {
+                rootFrame.RequestedTheme = ElementTheme.Dark;
             }
             return rootFrame;
         }
@@ -355,8 +438,12 @@ namespace Imgur.Uwp
                 .AddSingleton<IContentStorageService, ContentStorageService>()
                 .AddSingleton<IFolderDialogService, FolderDialogService>()
                 .AddSingleton<ILiveTilesService, LiveTilesService>()
+                .AddSingleton<IStartupLaunchService, StartupLaunchService>()
+                .AddSingleton<IStartTilePinService, StartTilePinService>()
                 .AddSingleton<IRemindNotificationsService, RemindNotificationsService>()
                 .AddSingleton<IAccountNotificationsService, Imgur.Uwp.Services.AccountNotificationsService>()
+                .AddSingleton<IAccountInboxService, AccountInboxService>()
+                .AddSingleton<INotificationRouter, NotificationRouter>()
                 .AddSingleton<IDialogService, DialogService>()
                 .AddSingleton<ITokenService, TokenService>()
                 .AddSingleton<IImgurApiCredentialsProvider, ImgurApiCredentialsProvider>()
@@ -367,6 +454,8 @@ namespace Imgur.Uwp
                 .AddSingleton<ISystemNotificationService, SystemNotificationService>()
                 .AddSingleton<IUriLauncher, UriLauncher>()
                 .AddSingleton<IViewHistoryStore, SqliteViewHistoryStore>()
+                .AddSingleton<IImgurLocalStore, SqliteImgurStore>()
+                .AddSingleton<IReputationSnapshotService, ReputationSnapshotService>()
 
                 // Contextos Singleton
                 .AddSingleton<IUserContext, Imgur.Services.UserContext>()
@@ -391,6 +480,7 @@ namespace Imgur.Uwp
                 // ViewModels Transient
                 .AddTransient<ShellViewModel>()
                 .AddTransient<SettingsViewModel>()
+                .AddTransient<EditProfileViewModel>()
                 .AddTransient<ShutdownViewModel>()
                 .AddTransient<ExplorerViewModel>()
                 .AddTransient<MediaViewModel>()
@@ -589,11 +679,43 @@ namespace Imgur.Uwp
             }
         }
 
+        private void OnEnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        {
+            try
+            {
+                Services.GetRequiredService<INotificationRouter>().SetForeground(false);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] EnteredBackground: " + ex.Message);
+            }
+        }
+
+        private void OnLeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        {
+            try
+            {
+                Services.GetRequiredService<INotificationRouter>().SetForeground(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] LeavingBackground: " + ex.Message);
+            }
+        }
+
         private void OnResuming(object sender, object e)
         {
             HardwareButtons.BackPressed += hardwareButtonsBackPressedAsync;
             // Retoma monitoramento
             Services.GetRequiredService<IClipboardService>().StartMonitoring();
+            try
+            {
+                Services.GetRequiredService<INotificationRouter>().SetForeground(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[App] Resuming router: " + ex.Message);
+            }
         }
 
         private async void hardwareButtonsBackPressedAsync(object sender, BackPressedEventArgs e)

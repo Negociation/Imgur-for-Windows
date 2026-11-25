@@ -1,4 +1,4 @@
-﻿using Imgur.Api.Services.Contracts;
+using Imgur.Api.Services.Contracts;
 using Imgur.Api.Services.Models.Common;
 using Imgur.Api.Services.Models.Response.Image;
 using System;
@@ -49,6 +49,15 @@ namespace Imgur.Api.Services.Actions
         {
             Debug.WriteLine($"[ImageService] GetImage: {imageId}");
             return await GetAsync<ImageResponse>($"image/{imageId}");
+        }
+
+        public async Task<ApiResponse<bool>> DeleteImageAsync(string deleteHash)
+        {
+            Debug.WriteLine($"[ImageService] DeleteImage: {deleteHash}");
+            if (string.IsNullOrWhiteSpace(deleteHash))
+                return new ApiResponse<bool> { Success = false, Status = 0 };
+
+            return await DeleteAsync<bool>($"image/{deleteHash}");
         }
     }
 }

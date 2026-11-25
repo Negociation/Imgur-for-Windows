@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Name="ExplorerSearchViewPage"
     x:Class="Imgur.Uwp.Views.Explorer.ExplorerSearchView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,7 +7,8 @@
     xmlns:controls="using:Imgur.Uwp.Controls"
     xmlns:mediavm="using:Imgur.ViewModels.Media"
     xmlns:tagvm="using:Imgur.ViewModels.Tags"
-    xmlns:accountvm="using:Imgur.ViewModels.Account">
+    xmlns:accountvm="using:Imgur.ViewModels.Account"
+    RequestedTheme="Dark">
 
     <Grid>
 
@@ -131,7 +132,7 @@
                             IncrementalLoadingTrigger="None"
                             ItemsSource="{Binding TagsSearchPartialMediaVmCollection, Mode=OneWay}"
                             IsItemClickEnabled="True"
-                            SelectionMode="None">
+                            SelectionMode="None" ShowsScrollingPlaceholders="False">
                             <toolkit:AdaptiveGridView.ItemTemplate>
                                 <DataTemplate x:Name="UserTagsItemTemplate" x:DataType="tagvm:TagViewModel">
                                     <controls:TagTileControl ViewModel="{Binding}"/>
@@ -139,7 +140,8 @@
                             </toolkit:AdaptiveGridView.ItemTemplate>
                             <toolkit:AdaptiveGridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                     <Setter Property="Margin" Value="0"/>
                                     <Setter Property="Padding" Value="0"/>
                                     <Setter Property="Width" Value="220"/>
@@ -183,7 +185,7 @@
                             IncrementalLoadingTrigger="None"
                             ItemsSource="{Binding GallerySearchPartialMediaVmCollection, Mode=OneWay}"
                             IsItemClickEnabled="True"
-                            SelectionMode="None">
+                            SelectionMode="None" ShowsScrollingPlaceholders="False">
                             <toolkit:AdaptiveGridView.ItemTemplate>
                                 <DataTemplate x:Name="SearchGalleriesItemTemplate" x:DataType="mediavm:MediaViewModel">
                                     <controls:MediaTileControl ViewModel="{Binding}"/>
@@ -191,7 +193,8 @@
                             </toolkit:AdaptiveGridView.ItemTemplate>
                             <toolkit:AdaptiveGridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                     <Setter Property="Margin" Value="0"/>
                                     <Setter Property="Padding" Value="0"/>
                                     <Setter Property="Width" Value="220"/>
@@ -235,7 +238,7 @@
                             IncrementalLoadingTrigger="None"
                             ItemsSource="{Binding UsersSearchPartialMediaVmCollection, Mode=OneWay}"
                             IsItemClickEnabled="True"
-                            SelectionMode="None">
+                            SelectionMode="None" ShowsScrollingPlaceholders="False">
                             <toolkit:AdaptiveGridView.ItemTemplate>
                                 <DataTemplate x:Name="SearchUsersItemTemplate" x:DataType="accountvm:AccountViewModel">
                                     <controls:AccountTileControl ViewModel="{Binding}"/>
@@ -243,7 +246,8 @@
                             </toolkit:AdaptiveGridView.ItemTemplate>
                             <toolkit:AdaptiveGridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                     <Setter Property="Margin" Value="0"/>
                                     <Setter Property="Padding" Value="0"/>
                                     <Setter Property="Width" Value="220"/>
@@ -336,7 +340,7 @@
                         ItemsSource="{Binding StaffPicksItems, Mode=OneWay}"
                         IsItemClickEnabled="True"
                         SelectionMode="None"
-                        Visibility="{Binding LoadedStaffPicks}">
+                        Visibility="{Binding LoadedStaffPicks}" ShowsScrollingPlaceholders="False">
                         <toolkit:AdaptiveGridView.ItemTemplate>
                             <DataTemplate x:Name="StaffPickItemTemplate" x:DataType="mediavm:MediaViewModel">
                                 <controls:MediaTileControl ViewModel="{Binding}"/>
@@ -344,6 +348,7 @@
                         </toolkit:AdaptiveGridView.ItemTemplate>
                         <toolkit:AdaptiveGridView.ItemContainerStyle>
                             <Style TargetType="GridViewItem">
+                                <Setter Property="Background" Value="Transparent"/>
                                 <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                 <Setter Property="Margin" Value="0"/>
                                 <Setter Property="Padding" Value="0"/>
@@ -368,7 +373,11 @@
                     DesiredWidth="300"
                     ItemHeight="220"
                     SelectionMode="None"
-                    Margin="5,0,5,20">
+                    Margin="5,0,5,20"
+                    ShowsScrollingPlaceholders="False">
+                    <toolkit:AdaptiveGridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem" BasedOn="{StaticResource VirtualizedGridViewItemStyle}"/>
+                    </toolkit:AdaptiveGridView.ItemContainerStyle>
                     <toolkit:AdaptiveGridView.ItemTemplate>
                         <DataTemplate x:DataType="mediavm:MediaViewModel">
                             <controls:MediaTileControl ViewModel="{Binding}"/>

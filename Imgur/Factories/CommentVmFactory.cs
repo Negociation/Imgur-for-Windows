@@ -38,6 +38,7 @@ namespace Imgur.Factories
             var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
             var navigator = _serviceProvider.GetRequiredService<INavigator>();
             var accountVmFactory = _serviceProvider.GetRequiredService<IAccountVmFactory>();
+            var mediaVmFactory = _serviceProvider.GetRequiredService<IMediaVmFactory>();
             var accountService = _serviceProvider.GetRequiredService<AccountService>();
 
             return new CommentViewModel(
@@ -50,6 +51,7 @@ namespace Imgur.Factories
                 navigator,
                 accountVmFactory,
                 this,
+                mediaVmFactory,
                 accountService,
                 galleryId);
         }

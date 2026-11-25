@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Imgur.Uwp.Views.Explorer.ExplorerBrowserUsersView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,6 +8,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls="using:Imgur.Uwp.Controls"
     xmlns:accountvm="using:Imgur.ViewModels.Account"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
     <Grid>
 
@@ -62,7 +63,7 @@
                             StretchContentForSingleRow="True"
                             ItemsSource="{Binding UsersVmCollection, Mode=OneWay}"
                             IsItemClickEnabled="True"
-                            SelectionMode="None">
+                            SelectionMode="None" ShowsScrollingPlaceholders="False">
                 <toolkit:AdaptiveGridView.ItemTemplate>
                     <DataTemplate x:Name="SearchUsersItemTemplate" x:DataType="accountvm:AccountViewModel">
                         <controls:AccountTileControl ViewModel="{Binding}" EnableCompactMode="True"/>
@@ -70,7 +71,8 @@
                 </toolkit:AdaptiveGridView.ItemTemplate>
                 <toolkit:AdaptiveGridView.ItemContainerStyle>
                     <Style TargetType="GridViewItem">
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                         <Setter Property="Margin" Value="0,1"/>
                         <Setter Property="Padding" Value="0"/>
                         <Setter Property="Width" Value="220"/>

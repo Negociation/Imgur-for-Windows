@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Name="NavigationViewItemControl"
     x:Class="Imgur.Uwp.Controls.NavigationViewItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    RequestedTheme="Dark"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -17,7 +18,16 @@
                     <ColumnDefinition Width="38" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <FontIcon x:Name="ItemIcon" Visibility="Visible"  Grid.Column="0" FontSize="20" Width="38"  FontWeight="Normal"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{Binding FontIcon, ElementName=NavigationViewItemControl}" Foreground="#7b7b7b" Opacity="0.9" Glyph="{Binding Icon,ElementName=NavigationViewItemControl,FallbackValue = '&#xE7FC;'}"/>
+                <Grid Grid.Column="0" Width="38" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <FontIcon x:Name="ItemIcon" Visibility="Visible" FontSize="20" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{Binding FontIcon, ElementName=NavigationViewItemControl}" Foreground="#7b7b7b" Opacity="0.9" Glyph="{Binding Icon,ElementName=NavigationViewItemControl,FallbackValue = '&#xE7FC;'}"/>
+                    <Ellipse x:Name="UnreadBadge"
+                             Width="8" Height="8"
+                             Fill="#01b96b"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Top"
+                             Margin="0,2,4,0"
+                             Visibility="{Binding ShowBadge, ElementName=NavigationViewItemControl, Converter={StaticResource BoolVisibilityConverter}}"/>
+                </Grid>
                 <TextBlock x:Name="ItemText" Grid.Column="1" Text="{Binding Text,ElementName=NavigationViewItemControl}" Margin="10,0,10,0"  FontWeight="SemiBold" FontSize="14" Foreground="White" Opacity="0.7"/>
             </Grid>
         </Button>

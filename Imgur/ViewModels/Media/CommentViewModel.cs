@@ -72,6 +72,7 @@ namespace Imgur.ViewModels.Media
         private readonly INavigator _navigator;
         private readonly IAccountVmFactory _accountVmFactory;
         private readonly ICommentVmFactory _commentVmFactory;
+        private readonly IMediaVmFactory _mediaVmFactory;
         private readonly AccountService _accountService;
 
         public CommentViewModel(
@@ -84,6 +85,7 @@ namespace Imgur.ViewModels.Media
             INavigator navigator,
             IAccountVmFactory accountVmFactory,
             ICommentVmFactory commentVmFactory,
+            IMediaVmFactory mediaVmFactory,
             AccountService accountService,
             string galleryId = null
             ) : base(dialogService, appNotificationService, userContext)
@@ -95,7 +97,49 @@ namespace Imgur.ViewModels.Media
             _navigator = navigator;
             _accountVmFactory = accountVmFactory;
             _commentVmFactory = commentVmFactory;
+            _mediaVmFactory = mediaVmFactory;
             _accountService = accountService;
+        }
+
+        /// <summary>Gallery id used for reply/vote when this VM was created for a media thread.</summary>
+        public string GalleryId => _galleryId;
+
+        /// <summary>
+        /// Opens replies from already-mapped Children (Account payload may include them).
+        /// </summary>
+        public void ExpandRepliesForFocus()
+        {
+            if (!HasReplies)
+                return;
+
+            ShowReplies = true;
+            OnPropertyChanged(nameof(RepliesVisibility));
+            EnsureRepliesInitialized();
+        }
+
+        private void EnsureRepliesInitialized()
+        {
+            if (_repliesInitialized || !HasReplies)
+                return;
+
+            try
+            {
+                Replies = new ObservableCollection<CommentViewModel>(
+                    Comment.Children.Select(reply =>
+                    {
+                        var replyVm = _commentVmFactory.GetMediaCommentViewModel(_galleryId, reply);
+                        replyVm.OpenAlbumPosition = OpenAlbumPosition;
+                        return replyVm;
+                    })
+                );
+
+                _repliesInitialized = true;
+                OnRepliesRequested?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[CommentVM] EnsureRepliesInitialized: {ex.Message}");
+            }
         }
 
         private ICommand _openAuthorProfileCommand;
@@ -198,33 +242,46 @@ namespace Imgur.ViewModels.Media
                         if (!HasReplies) return;
 
                         ShowReplies = !ShowReplies;
-                        OnPropertyChanged("RepliesVisibility");
-                        if (ShowReplies && !_repliesInitialized)
-                        {
-                            try
-                            {
-                                Replies = new ObservableCollection<CommentViewModel>(
-                                    Comment.Children.Select(reply =>
-                                    {
-                                        var replyVm = _commentVmFactory.GetMediaCommentViewModel(_galleryId, reply);
-                                        replyVm.OpenAlbumPosition = OpenAlbumPosition;
-                                        return replyVm;
-                                    })
-                                );
-
-                                _repliesInitialized = true;
-                                OnRepliesRequested?.Invoke();
-                            }
-                            catch
-                            {
-                                Debug.WriteLine("Erro");
-                            }
-                        }
+                        OnPropertyChanged(nameof(RepliesVisibility));
+                        if (ShowReplies)
+                            EnsureRepliesInitialized();
 
                         Debug.WriteLine($"[CommentVM] ShowReplies: {ShowReplies}");
                     });
                 }
                 return _toggleRepliesCommand;
+            }
+        }
+
+        private ICommand _openOriginPostCommand;
+        public ICommand OpenOriginPostCommand
+        {
+            get
+            {
+                if (_openOriginPostCommand == null)
+                {
+                    _openOriginPostCommand = new RelayCommand(() =>
+                    {
+                        var imageId = Comment?.ImageId;
+                        if (string.IsNullOrWhiteSpace(imageId) || _mediaVmFactory == null)
+                            return;
+
+                        var childrenCount = Comment.Children?.Count ?? 0;
+                        Debug.WriteLine(
+                            $"[CommentVM] OpenOriginPost id={Comment.Id} imageId={imageId} onAlbum={Comment.OnAlbum} children={childrenCount}");
+
+                        var media = CommentOriginPostHelper.CreateMedia(Comment);
+                        if (media == null)
+                            return;
+
+                        var mediaVm = _mediaVmFactory.GetMediaViewModel(media);
+                        var focused = _commentVmFactory.GetMediaCommentViewModel(imageId, Comment);
+                        focused.ExpandRepliesForFocus();
+                        mediaVm.FocusedComment = focused;
+                        _navigator.Navigate("media", mediaVm);
+                    });
+                }
+                return _openOriginPostCommand;
             }
         }
 

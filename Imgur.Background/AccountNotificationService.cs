@@ -1,6 +1,7 @@
 using Imgur.Api.Services.Models.Response.Notification;
 using Imgur.Constants;
 using Imgur.Contracts;
+using Imgur.Helpers;
 using Imgur.Services;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System;
@@ -45,6 +46,13 @@ namespace Imgur.Background
                 return;
             }
 
+            // App UI is open: foreground router shows InApp — skip toast.
+            if (localSettings.Get<bool>(LocalSettingsConstants.AppIsForeground))
+            {
+                Debug.WriteLine("Account notifications: app foreground, skip toast");
+                return;
+            }
+
             var accessToken = TryGetAccessToken();
             if (string.IsNullOrEmpty(accessToken))
             {
@@ -72,11 +80,18 @@ namespace Imgur.Background
                     return;
                 }
 
-                var lastId = localSettings.Get<string>(LocalSettingsConstants.LastAccountNotificationId);
                 var newestId = newest.Id.ToString();
-                if (string.Equals(lastId, newestId, StringComparison.Ordinal))
+                string kind = "account";
+                bool isNew = await BackgroundImgurDb.TryMarkNotificationSeenAsync(
+                    newestId,
+                    kind,
+                    DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+
+                // Migração: também respeita o último Id em LocalSettings até limpar.
+                var lastId = localSettings.Get<string>(LocalSettingsConstants.LastAccountNotificationId);
+                if (!isNew || string.Equals(lastId, newestId, StringComparison.Ordinal))
                 {
-                    Debug.WriteLine($"Account notifications: skip, mesmo Id ({newestId})");
+                    Debug.WriteLine($"Account notifications: skip, já visto ({newestId})");
                     return;
                 }
 
@@ -171,8 +186,12 @@ namespace Imgur.Background
                 var vault = new PasswordVault();
                 var cred = vault.FindAllByResource(VaultResource)[0];
                 cred.RetrievePassword();
-                var parts = cred.Password.Split('|');
-                return parts.Length > 0 ? parts[0] : null;
+                string access;
+                string refresh;
+                long? expires;
+                if (!TokenVaultPayload.TryParse(cred.Password, out access, out refresh, out expires))
+                    return null;
+                return access;
             }
             catch
             {

@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5" IgnorableNamespaces="uap uap5 mp">
   <Identity Name="9f75d559-951d-4dde-a8ea-a013f216d3f5" Publisher="CN=mtiag" Version="3.3.1.0" />
   <mp:PhoneIdentity PhoneProductId="9f75d559-951d-4dde-a8ea-a013f216d3f5" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
@@ -21,7 +21,8 @@
             <uap:ShowOn Tile="square150x150Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#073169" />
+        <uap:LockScreen Notification="badgeAndTileText" BadgeLogo="Assets\Square44x44Logo.png" />
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.shareTarget">
@@ -55,6 +56,14 @@
             <Task Type="timer" />
           </BackgroundTasks>
         </Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="Imgur.Background.ReputationSnapshotBackgroundTask">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
+        <uap5:Extension Category="windows.startupTask" Executable="Imgur.Uwp.exe" EntryPoint="Imgur.Uwp.App">
+          <uap5:StartupTask TaskId="ImgurStartup" Enabled="false" DisplayName="Imgur for Windows" />
+        </uap5:Extension>
       </Extensions>
     </Application>
   </Applications>

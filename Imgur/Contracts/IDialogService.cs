@@ -1,4 +1,5 @@
-﻿using Imgur.Enums;
+﻿using Imgur.Api.Services.Models.Enum;
+using Imgur.Enums;
 using Imgur.Models;
 using Imgur.ViewModels.Account;
 using Imgur.ViewModels.Media;
@@ -24,5 +25,13 @@ namespace Imgur.Contracts
         Task ShowCommentDialog(MediaViewModel vm);
 
         Task ShowReplyDialog(CommentViewModel commentVm);
+
+        /// <summary>Read-focused comment thread (e.g. from Account → origin post).</summary>
+        Task ShowFocusedCommentDialogAsync(CommentViewModel commentVm);
+
+        Task ShowNotificationsDialogAsync();
+
+        /// <summary>Returns the selected preset, or null if cancelled.</summary>
+        Task<ImgurAvatar?> ShowAvatarPickerDialogAsync(ImgurAvatar? current = null);
     }
 }

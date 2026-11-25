@@ -359,6 +359,20 @@
     <value>Explore Tags</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
   </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>Notifications</value>
+    <comment>ShellView -&gt; NavigationViewItem</comment>
+  </data>
+  <data name="NotificationsQuickButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Notifications</value>
+    <comment>ShellView -&gt; PaneFooter quick access (minimal mode)</comment>
+  </data>
+  <data name="NotificationsDialogTitle.Text" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NotificationsDialogEmpty.Text" xml:space="preserve">
+    <value>All caught up. No notifications to show...</value>
+  </data>
   <data name="Upload.Text" xml:space="preserve">
     <value>Upload new file</value>
     <comment>ShellView -&gt; NavigationViewItem</comment>
@@ -548,6 +562,18 @@
   </data>
   <data name="notification_api_warning_content" xml:space="preserve">
     <value>The Imgur API is currently experiencing degraded performance. Some features in the app may behave unexpectedly.</value>
+  </data>
+  <data name="notification_feature_unavailable_title" xml:space="preserve">
+    <value>Not available</value>
+  </data>
+  <data name="notification_feature_unavailable" xml:space="preserve">
+    <value>This feature is not available through the Imgur API.</value>
+  </data>
+  <data name="AvatarPickerDialogTitle.Text" xml:space="preserve">
+    <value>Choose avatar</value>
+  </data>
+  <data name="AvatarPickerDialogSelect.Content" xml:space="preserve">
+    <value>Select</value>
   </data>
   <data name="notification_open_account" xml:space="preserve">
     <value>Open Imgurian Profile ?</value>
@@ -744,6 +770,13 @@
     <value>Reply Post</value>
     <comment>ReplyDialog header title</comment>
   </data>
+  <data name="FocusedCommentDialog.Title" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="FocusedCommentDialogTitle.Text" xml:space="preserve">
+    <value>Comment</value>
+    <comment>FocusedCommentDialog header</comment>
+  </data>
   <data name="UploadInterceptorIntro.Text" xml:space="preserve">
     <value>In order to upload a file, is required to set a custom API Key to avoid breaking general features.</value>
   </data>
@@ -807,4 +840,50 @@
   <data name="AppLanguageReopenTitle" xml:space="preserve">
     <value>Reopen Imgur?</value>
   </data>
-</root>
+  <data name="EditProfilePageTitle.Text" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="EditProfileUsernameLabel.Text" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="EditProfileUsername.PlaceholderText" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="EditProfileBioLabel.Text" xml:space="preserve">
+    <value>Public bio</value>
+  </data>
+  <data name="EditProfileBio.PlaceholderText" xml:space="preserve">
+    <value>Tell people a little about yourself</value>
+  </data>
+  <data name="EditProfilePrivateSection.Text" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="EditProfileEmailLabel.Text" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EditProfileEmail.PlaceholderText" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EditProfileChangePassword.Content" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="EditProfileDeleteAccount.Content" xml:space="preserve">
+    <value>Delete account</value>
+  </data>
+  <data name="EditProfileEditCover.Text" xml:space="preserve">
+    <value>Edit cover</value>
+  </data>  <data name="SettingsStartupLaunch.Header" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
+  <data name="SettingsStartupLaunch.Text" xml:space="preserve">
+    <value>Launch Imgur when you sign in to Windows (Desktop).</value>
+  </data>
+  <data name="SettingsPinStartTile.Header" xml:space="preserve">
+    <value>Pin to Start</value>
+  </data>
+  <data name="SettingsPinStartTile.Text" xml:space="preserve">
+    <value>Pin an Imgur tile to the Start screen.</value>
+  </data>
+  <data name="SettingsPinStartTileButton.Text" xml:space="preserve">
+    <value>Pin</value>
+  </data></root>

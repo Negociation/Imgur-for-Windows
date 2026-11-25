@@ -22,5 +22,10 @@ namespace Imgur.Contracts
         void AddUserClipboardNotification(AccountViewModel tag);
 
         void AddApiWarningNotification(string status);
+
+        void AddFeatureUnavailableNotification();
+
+        /// <summary>In-app tip with already-localized title/body (no .resw key lookup on Message).</summary>
+        void AddPlainTextNotification(string title, string message, string imageUrl = null);
     }
 }

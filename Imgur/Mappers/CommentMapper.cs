@@ -29,6 +29,7 @@ namespace Imgur.Mappers
                 Downs = dto.Downs,
                 Vote = dto.Vote,
                 IsRootComment = isRoot,
+                OnAlbum = dto.OnAlbum,
                 AuthorAvatar = $"https://imgur.com/user/{dto.Author}/avatar"
             };
 

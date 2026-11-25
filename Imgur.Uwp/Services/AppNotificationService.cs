@@ -69,6 +69,30 @@ namespace Imgur.Uwp.Services
             NotificationAdded?.Invoke(this, notificationVm);
         }
 
+        public void AddFeatureUnavailableNotification()
+        {
+            var resourceLoader = ResourceLoader.GetForCurrentView();
+            var notificationVm = new NotificationViewModel
+            {
+                Title = resourceLoader.GetString("notification_feature_unavailable_title"),
+                Message = resourceLoader.GetString("notification_feature_unavailable")
+            };
+            notifications.Add(notificationVm);
+            NotificationAdded?.Invoke(this, notificationVm);
+        }
+
+        public void AddPlainTextNotification(string title, string message, string imageUrl = null)
+        {
+            var notificationVm = new NotificationViewModel
+            {
+                Title = title ?? string.Empty,
+                Message = message ?? string.Empty,
+                ImageUrl = imageUrl
+            };
+            notifications.Add(notificationVm);
+            NotificationAdded?.Invoke(this, notificationVm);
+        }
+
         public void RemoveNotification(NotificationViewModel notification)
         {
             notifications.Remove(notification);

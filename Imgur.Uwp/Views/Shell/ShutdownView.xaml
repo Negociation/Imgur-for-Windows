@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Imgur.Uwp.Views.Shell.ShutdownView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,6 +9,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Core1="using:Microsoft.Xaml.Interactions.Media"
     xmlns:core="http://microsoft.com/winfx/2006/xaml/presentation"
+    RequestedTheme="Dark"
     mc:Ignorable="d"
        Background="#01b96b">
 

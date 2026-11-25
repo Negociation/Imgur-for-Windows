@@ -75,6 +75,15 @@ namespace Imgur.Uwp.Controls
 
 
 
+        public bool ShowBadge
+        {
+            get { return (bool)GetValue(ShowBadgeProperty); }
+            set { SetValue(ShowBadgeProperty, value); }
+        }
+
+        public static readonly DependencyProperty ShowBadgeProperty =
+            DependencyProperty.Register(nameof(ShowBadge), typeof(bool), typeof(NavigationViewItem), new PropertyMetadata(false));
+
         public FontFamily FontIcon
         {
             get { return (FontFamily)GetValue(FontIconProperty); }

@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Imgur.Uwp.Views.Explorer.ExplorerBrowserGalleriesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,6 +8,7 @@
     xmlns:mediavm="using:Imgur.ViewModels.Media"
     xmlns:controls="using:Imgur.Uwp.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
     <Grid>
 
@@ -47,7 +48,7 @@
                             StretchContentForSingleRow="False"
                             ItemsSource="{Binding GalleryMediaVmCollection, Mode=OneWay}"
                             IsItemClickEnabled="True"
-                            SelectionMode="None">
+                            SelectionMode="None" ShowsScrollingPlaceholders="False">
                 <toolkit:AdaptiveGridView.ItemTemplate>
                     <DataTemplate x:Name="SearchGalleriesItemTemplate" x:DataType="mediavm:MediaViewModel">
                         <controls:MediaTileControl ViewModel="{Binding}"/>
@@ -55,7 +56,8 @@
                 </toolkit:AdaptiveGridView.ItemTemplate>
                 <toolkit:AdaptiveGridView.ItemContainerStyle>
                     <Style TargetType="GridViewItem">
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                         <Setter Property="Margin" Value="0"/>
                         <Setter Property="Padding" Value="0"/>
                         <Setter Property="Width" Value="220"/>

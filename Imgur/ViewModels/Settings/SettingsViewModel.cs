@@ -1,4 +1,4 @@
-﻿using Imgur.Constants;
+using Imgur.Constants;
 using Imgur.Contracts;
 using Imgur.Helpers;
 using Imgur.Models;
@@ -20,6 +20,11 @@ namespace Imgur.ViewModels.Settings
         private IAppLifeCycleService _appLifecycle;
         private readonly IUserContext _userContext;
         private readonly IAppLanguageService _appLanguage;
+        private readonly IStartupLaunchService _startupLaunch;
+        private readonly IStartTilePinService _startTilePin;
+
+        private StartupLaunchState _startupState = StartupLaunchState.NotSupported;
+        private bool _isSyncingStartupToggle;
 
         public SettingsViewModel(
             ILocalSettings localSettings,
@@ -30,7 +35,9 @@ namespace Imgur.ViewModels.Settings
             IDialogService dialogService,
             IAppLifeCycleService appLifecycle,
             IUserContext userContext,
-            IAppLanguageService appLanguage
+            IAppLanguageService appLanguage,
+            IStartupLaunchService startupLaunch,
+            IStartTilePinService startTilePin
             )
         {
             _localSettings = localSettings;
@@ -42,6 +49,8 @@ namespace Imgur.ViewModels.Settings
             _appLifecycle = appLifecycle;
             _userContext = userContext;
             _appLanguage = appLanguage;
+            _startupLaunch = startupLaunch;
+            _startTilePin = startTilePin;
 
             ChangeLanguageCommand = new RelayCommand<object>(param =>
             {
@@ -52,7 +61,31 @@ namespace Imgur.ViewModels.Settings
                     index = parsed;
                 _ = ChangeLanguageAsync(index);
             });
+
+            PinStartTileCommand = new RelayCommand(async () =>
+            {
+                await _startTilePin.PinAsync();
+            });
+
+            _ = RefreshStartupStateAsync();
         }
+
+        public bool IsStartupLaunchSupported => _startupLaunch.IsSupported;
+
+        public bool CanToggleStartupLaunch => StartupLaunchPresentation.CanToggle(_startupState);
+
+        public bool StartupLaunchEnabled
+        {
+            get => StartupLaunchPresentation.IsOn(_startupState);
+            set
+            {
+                if (_isSyncingStartupToggle || value == StartupLaunchPresentation.IsOn(_startupState))
+                    return;
+                _ = SetStartupLaunchAsync(value);
+            }
+        }
+
+        public ICommand PinStartTileCommand { get; }
 
 
         public bool RemindNotificationsEnabled
@@ -230,6 +263,38 @@ namespace Imgur.ViewModels.Settings
                 OnPropertyChanged(nameof(SelectedLanguageIndex));
                 OnPropertyChanged(nameof(SelectedLanguageOption));
             }
+        }
+
+        private async System.Threading.Tasks.Task RefreshStartupStateAsync()
+        {
+            try
+            {
+                _startupState = await _startupLaunch.GetStateAsync();
+            }
+            catch (Exception)
+            {
+                _startupState = StartupLaunchState.NotSupported;
+            }
+
+            _isSyncingStartupToggle = true;
+            OnPropertyChanged(nameof(IsStartupLaunchSupported));
+            OnPropertyChanged(nameof(CanToggleStartupLaunch));
+            OnPropertyChanged(nameof(StartupLaunchEnabled));
+            _isSyncingStartupToggle = false;
+        }
+
+        private async System.Threading.Tasks.Task SetStartupLaunchAsync(bool enabled)
+        {
+            try
+            {
+                _startupState = await _startupLaunch.SetEnabledAsync(enabled);
+            }
+            catch (Exception)
+            {
+                // keep previous mapped state via refresh
+            }
+
+            await RefreshStartupStateAsync();
         }
     }
 }

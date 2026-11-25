@@ -1,4 +1,5 @@
-﻿using Imgur.Api.Services.Models.Common;
+using Imgur.Api.Services.Models.Common;
+using Imgur.Api.Services.Models.Request;
 using Imgur.Api.Services.Models.Response;
 using Imgur.Api.Services.Models.Response.Account;
 using Imgur.Api.Services.Models.Response.Comment;
@@ -6,6 +7,7 @@ using Imgur.Api.Services.Models.Response.Image;
 using Imgur.Api.Services.Models.Response.Notification;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+// IEnumerable used by MarkNotificationsViewedAsync
 
 namespace Imgur.Api.Services.Contracts
 {
@@ -22,11 +24,26 @@ namespace Imgur.Api.Services.Contracts
         /// <param name="onlyNew">true = só não vistas (default da API).</param>
         Task<ApiResponse<AccountNotificationsData>> GetNotificationsAsync(bool onlyNew = true);
 
+        Task<ApiResponse<bool>> MarkNotificationViewedAsync(long notificationId);
+
+        Task<ApiResponse<bool>> MarkNotificationsViewedAsync(IEnumerable<long> notificationIds);
+
         Task<ApiResponse<List<AccountResponse>>> AccountSearchAsync(string query, int page = 0);
 
         Task<ApiResponse<bool>> FollowUserAsync(string username);
         Task<ApiResponse<bool>> UnfollowUserAsync(string username);
 
         Task<ApiResponse<AccountResponse>> GetFollowStatusAsync(string username);
+
+        Task<ApiResponse<AccountSettingsResponse>> GetAccountSettingsAsync();
+
+        Task<ApiResponse<bool>> UpdateAccountSettingsAsync(UpdateAccountSettingsRequest settings);
+
+        Task<ApiResponse<AvailableAvatarsResponse>> GetAvailableAvatarsAsync();
+
+        Task<ApiResponse<AccountAvatarResponse>> GetAccountAvatarAsync();
+
+        Task<ApiResponse<bool>> BlockUserAsync(string username);
+        Task<ApiResponse<bool>> UnblockUserAsync(string username);
     }
 }

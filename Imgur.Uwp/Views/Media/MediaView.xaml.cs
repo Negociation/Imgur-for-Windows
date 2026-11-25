@@ -46,6 +46,16 @@ namespace Imgur.Uwp.Views.Media
         {
             base.OnNavigatedTo(e);
             this.DataContext = e.Parameter as MediaViewModel;
+
+            // Focused comment from Account: open dialog without blocking media load.
+            var focused = ViewModel?.FocusedComment;
+            if (focused != null)
+            {
+                ViewModel.FocusedComment = null;
+                var dialogs = App.Services.GetRequiredService<IDialogService>();
+                _ = dialogs.ShowFocusedCommentDialogAsync(focused);
+            }
+
             await ViewModel.InitializeAsync();
 
             App.Services.GetRequiredService<IShareService>().Initialize();

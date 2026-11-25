@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Name="TagViewPage"
     x:Class="Imgur.Uwp.Views.Tags.TagView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,6 +10,7 @@
     xmlns:mediavm="using:Imgur.ViewModels.Media"
     xmlns:controls="using:Imgur.Uwp.Controls"
     Margin="0"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
 
     <Grid Margin="0">
@@ -226,10 +227,11 @@
                 </Grid>
 
                 <!-- Conteúdo da página -->
-                <toolkit:AdaptiveGridView Grid.Row="1 " Padding="0,0,0,70" ScrollViewer.VerticalScrollMode="Disabled" x:Name="ContentRepeaterControl"  ItemsSource="{Binding RetrievedMediaVmCollectionSmall,Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"  Margin="10,50,10,0">
+                <toolkit:AdaptiveGridView Grid.Row="1 " Padding="0,0,0,70" ScrollViewer.VerticalScrollMode="Disabled" x:Name="ContentRepeaterControl"  ItemsSource="{Binding RetrievedMediaVmCollectionSmall,Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"  Margin="10,50,10,0" ShowsScrollingPlaceholders="False">
                     <toolkit:AdaptiveGridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                             <Setter Property="Margin" Value="0"/>
                             <Setter Property="Padding" Value="0"/>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -167,6 +167,9 @@
     <Compile Include="Controls\NavigationViewItem.xaml.cs">
       <DependentUpon>NavigationViewItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ProfilePhotoButton.xaml.cs">
+      <DependentUpon>ProfilePhotoButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SettingBox.xaml.cs">
       <DependentUpon>SettingBox.xaml</DependentUpon>
     </Compile>
@@ -201,8 +204,17 @@
     <Compile Include="Converters\StringToURIConverter.cs" />
     <Compile Include="Converters\TimestampToElapsedTimeConverter .cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="Dialogs\AvatarPickerDialog.xaml.cs">
+      <DependentUpon>AvatarPickerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\CommentDialog.xaml.cs">
       <DependentUpon>CommentDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FocusedCommentDialog.xaml.cs">
+      <DependentUpon>FocusedCommentDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\NotificationsDialog.xaml.cs">
+      <DependentUpon>NotificationsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\CustomApiKeySettingsDialog.xaml.cs">
       <DependentUpon>CustomApiKeySettingsDialog.xaml</DependentUpon>
@@ -224,6 +236,7 @@
     </Compile>
     <Compile Include="Helpers\CompatibleImageLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AccountInboxService.cs" />
     <Compile Include="Services\AccountNotificationsService.cs" />
     <Compile Include="Services\AppLanguageService.cs" />
     <Compile Include="Services\AppLifeCycleService.cs" />
@@ -236,9 +249,13 @@
     <Compile Include="Services\FolderDialogService.cs" />
     <Compile Include="Services\LiveTilesService.cs" />
     <Compile Include="Services\RemindNotificationsService.cs" />
+    <Compile Include="Services\ReputationSnapshotService.cs" />
+    <Compile Include="Services\StartupLaunchService.cs" />
+    <Compile Include="Services\StartTilePinService.cs" />
     <Compile Include="Services\LocalSettings.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />
     <Compile Include="Services\Navigator.cs" />
+    <Compile Include="Services\NotificationRouter.cs" />
     <Compile Include="Services\AppNotificationService.cs" />
     <Compile Include="Services\ShareService.cs" />
     <Compile Include="Services\SystemInfoProvider.cs" />
@@ -246,10 +263,14 @@
     <Compile Include="Services\TokenService.cs" />
     <Compile Include="Services\UriLauncher.cs" />
     <Compile Include="Services\SqliteViewHistoryStore.cs" />
+    <Compile Include="Services\SqliteImgurStore.cs" />
     <Compile Include="TemplateSelectors\MediaContainerTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\MediaElementTemplateSelector.cs" />
     <Compile Include="Views\Accounts\AccountView.xaml.cs">
       <DependentUpon>AccountView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Accounts\EditProfileView.xaml.cs">
+      <DependentUpon>EditProfileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Explorer\ExplorerBrowserUsersView.xaml.cs">
       <DependentUpon>ExplorerBrowserUsersView.xaml</DependentUpon>
@@ -323,6 +344,7 @@
     <Content Include="Assets\App\raccon.png" />
     <Content Include="Assets\App\sign_transparent.png" />
     <Content Include="Assets\App\Upvote.svg" />
+    <Content Include="Assets\Avatars\*.png" />
     <Content Include="Assets\App\white_logo_transparent.png" />
     <Content Include="Assets\App\observatory.svg" />
     <Content Include="Assets\Square150x150Logo.scale-100.png" />
@@ -384,6 +406,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\ProfilePhotoButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SettingBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -400,7 +426,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AvatarPickerDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\CommentDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\FocusedCommentDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\NotificationsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -441,6 +479,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Accounts\AccountView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Accounts\EditProfileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
