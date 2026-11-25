@@ -742,9 +742,6 @@
     <value>Responder Post</value>
     <comment>ReplyDialog header title</comment>
   </data>
-  <data name="FocusedCommentDialog.Title" xml:space="preserve">
-    <value>Comentário</value>
-  </data>
   <data name="FocusedCommentDialogTitle.Text" xml:space="preserve">
     <value>Comentário</value>
     <comment>FocusedCommentDialog header</comment>

@@ -770,9 +770,6 @@
     <value>Reply Post</value>
     <comment>ReplyDialog header title</comment>
   </data>
-  <data name="FocusedCommentDialog.Title" xml:space="preserve">
-    <value>Comment</value>
-  </data>
   <data name="FocusedCommentDialogTitle.Text" xml:space="preserve">
     <value>Comment</value>
     <comment>FocusedCommentDialog header</comment>

@@ -7,8 +7,6 @@
     xmlns:controls="using:Imgur.Uwp.Controls"
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
-    x:Uid="FocusedCommentDialog"
-    Title="Comment"
     RequestedTheme="Dark"
     Background="#34343A"
     Opacity="0.98"
